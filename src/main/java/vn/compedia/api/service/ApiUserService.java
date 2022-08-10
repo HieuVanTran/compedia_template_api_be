@@ -57,7 +57,7 @@ public class ApiUserService {
 	}
 
 	public Account findByEmail(String email) throws UserNotFoundException {
-		return apiUserRepository.findByEmailAndRoleId(email, DbConstant.ROLE_ID_USER)
+		return apiUserRepository.findByEmail(email)
 				.orElseThrow(() -> new UserNotFoundException("Account with email: " + email + " not found"));
 	}
 
@@ -153,8 +153,6 @@ public class ApiUserService {
 
 	private Account signUpUser(ApiSignUpDTO apiSignUpDTO) {
 		Account account = new Account();
-		account.setPhone(apiSignUpDTO.getPhoneNumber());
-		// account.setLogin(apiSignUpDTO.getFullName());
 		String encodedPassword = encodePassword(apiSignUpDTO.getPassword());
 		account.setPassword(encodedPassword);
 		account.setRoleId(DbConstant.ROLE_ID_USER);

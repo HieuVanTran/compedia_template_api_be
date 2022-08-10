@@ -26,46 +26,15 @@ import java.util.Date;
 public class BaseEntity implements Serializable {
 
     @Column(name = "create_by", updatable = false)
-    @JsonProperty(value = "create_by")
-    //  @NotNull
     private Long createBy;
 
     @Column(name = "create_date", updatable = false)
-    @JsonProperty(value = "create_date")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = Constant.TIME_ZONE_DEFAULT)
-    @ApiModelProperty(hidden = true)
-    // @NotNull
     private Date createDate;
 
     @Column(name = "update_by")
-    @JsonProperty(value = "update_by")
-    //   @NotNull
     private Long updateBy;
 
     @Column(name = "update_date")
-    @JsonProperty(value = "update_date")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = Constant.TIME_ZONE_DEFAULT)
-    @ApiModelProperty(hidden = true)
-    // @NotNull
     private Date updateDate;
 
-    public BaseEntity(Long createBy, Date createDate) {
-        this.createBy = createBy;
-        this.createDate = createDate;
-    }
-
-    public BaseEntity(Date createDate) {
-        this.createDate = createDate;
-    }
-
-    @PrePersist
-    protected void prepareCreateEntity() {
-        createDate = Timestamp.from(Instant.now());
-        updateDate = Timestamp.from(Instant.now());
-    }
-
-    @PreUpdate
-    protected void prepareUpdateEntity() {
-        updateDate = Timestamp.from(Instant.now());
-    }
 }

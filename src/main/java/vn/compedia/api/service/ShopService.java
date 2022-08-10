@@ -96,22 +96,8 @@ public class ShopService {
 
         shopResponse.setAccountFullName(account.getFullName());
         shopResponse.setAccountPhone(account.getPhone());
-        shopResponse.setAccountDob(account.getDob());
-        shopResponse.setAccountGender(account.getGender());
         shopResponse.setAccountEmail(account.getEmail());
-        shopResponse.setAccountProvinceId(account.getProvinceId());
-        shopResponse.setAccountDistrictId(account.getDistrictId());
-        shopResponse.setAccountCommuneId(account.getCommuneId());
-        if (account.getProvinceId() != null) {
-            shopResponse.setAccountProvinceName(provinceRepository.finNameById(shopResponse.getAccountProvinceId()));
-        }
-        if (account.getDistrictId() != null) {
-            shopResponse.setAccountDistrictName(districtRepository.findNameById(shopResponse.getAccountDistrictId()));
-        }
-        if (account.getCommuneId() != null) {
-            shopResponse.setAccountCommuneName(communeRepository.findNameById(shopResponse.getAccountCommuneId()));
-        }
-        shopResponse.setAccountImages((StringUtil.buildURI(staticContext, account.getImages())));
+
         return shopResponse;
     }
 
@@ -157,16 +143,9 @@ public class ShopService {
             account.setFullName(accountRequest.getFullName());
             account.setPhone(accountRequest.getPhone());
             // account.setDob(accountRequest.getDob());
-            account.setGender(accountRequest.getGender());
             account.setEmail(accountRequest.getEmail());
-            account.setProvinceId(accountRequest.getProvinceId());
-            account.setDistrictId(accountRequest.getDistrictId());
-            account.setCommuneId(accountRequest.getCommuneId());
-            account.setAddress(accountRequest.getAddress());
+
             account.setStatus(DbConstant.ACCOUNT_ACTIVE);
-            if (accountRequest.getImages() != null) {
-                account.setImages(FileUtil.saveFile(accountRequest.getImages()));
-            }
             String newSalt = StringUtil.generateSalt();
             account.setSalt(newSalt);
             account.setPassword(StringUtil.encryptPassword(account.getPassword(), newSalt));
@@ -207,14 +186,8 @@ public class ShopService {
             account.setFullName(accountRequest.getFullName());
             account.setPhone(accountRequest.getPhone());
             //  account.setDob(accountRequest.getDob());
-            account.setGender(accountRequest.getGender());
             account.setEmail(accountRequest.getEmail());
-            account.setProvinceId(accountRequest.getProvinceId());
-            account.setDistrictId(accountRequest.getDistrictId());
-            account.setCommuneId(accountRequest.getCommuneId());
-            if (accountRequest.getImages() != null) {
-                account.setImages(FileUtil.saveFile(accountRequest.getImages()));
-            }
+
             account.setUpdateDate(new Date());
             account.setUpdateBy(UserContextHolder.getUser().getAccountId());
             accountRepository.save(account);

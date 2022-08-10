@@ -165,6 +165,12 @@
 			<version>0.14.0</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.mariadb.jdbc</groupId>
+			<artifactId>mariadb-java-client</artifactId>
+			<version>2.1.2</version>
+		</dependency>
+
 		<!--Validate-->
 		<dependency>
 			<groupId>org.hibernate</groupId>

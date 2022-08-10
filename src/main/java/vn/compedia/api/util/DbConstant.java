@@ -5,7 +5,7 @@ public class DbConstant {
     // role table
     public static final int ROLE_ID_ADMIN = 1;
     public static final int ROLE_ID_USER = 2;
-
+    public static final int ROLE_ID_STAFF= 3;
     public static final int ACTIVE_STATUS = 1;
 
     // trạng thái tài khoản

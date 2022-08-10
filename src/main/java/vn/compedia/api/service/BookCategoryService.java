@@ -1,0 +1,54 @@
+package vn.compedia.api.service;
+
+import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import vn.compedia.api.entity.Author;
+import vn.compedia.api.entity.BookCategory;
+import vn.compedia.api.repository.BookCategoryRepository;
+import vn.compedia.api.request.BookCategoryCreateRequest;
+
+
+import java.util.List;
+
+@Log4j2
+@Service
+public class BookCategoryService {
+
+    @Autowired
+    private BookCategoryRepository bookCategoryRepository;
+
+
+    public List<BookCategory> getAll() {
+        List<BookCategory> list = bookCategoryRepository.findAll();
+        return list;
+    }
+
+    public BookCategory getOne(Long idtypeBook) {
+        BookCategory bookCategory = bookCategoryRepository.findById(idtypeBook).orElse(null);
+        if (bookCategory == null) {
+            bookCategory = new BookCategory();
+        }
+        return bookCategory;
+    }
+
+    public void create(BookCategoryCreateRequest request) {
+       BookCategory bookCategory = new BookCategory();
+        bookCategory.setBookName(request.getBookName());
+        bookCategory.setCode(request.getCode());
+        bookCategoryRepository.save(bookCategory);
+    }
+
+    public void update(BookCategoryCreateRequest request) {
+        BookCategory bookCategory = new BookCategory();
+        bookCategory.setIdtypeBook(request.getId());
+        bookCategory.setBookName(request.getBookName());
+        bookCategory.setCode(request.getCode());
+        bookCategoryRepository.save(bookCategory);
+    }
+
+    public void delete(Long id) {
+
+        bookCategoryRepository.deleteById(id);
+    }
+}

@@ -81,17 +81,6 @@ public class ApiAuthController extends GlobalExceptionHandler {
 		return toResponse(tokens, "Refresh token successfully");
 	}
 
-	@GetMapping("current")
-	@ResponseBody
-	public Account getCurrentUser() throws VietTienNotFoundException {
-		Optional<Account> account = accountRepository.findById(UserContextHolder.getUser().getAccountId());
-		if (!account.isPresent()) {
-			throw new VietTienNotFoundException(Account.class);
-		}
-		account.get().setImages(StringUtil.buildURI(staticContext, account.get().getImages()));
-		return account.get();
-	}
-
 	private ResponseEntity<?> toResponse(Tokens tokens, String message) {
 		return VietTienResponseDto.ok(new RefreshTokenDTO(tokens), message);
 	}

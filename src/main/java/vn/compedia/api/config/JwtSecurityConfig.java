@@ -66,6 +66,7 @@ public class JwtSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/api/v1/verify/otp/send").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/v1/account/check_otp").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/v1/verify/otp").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/v1/student/get-list-student").permitAll()
                 .antMatchers(AUTH_WHITELIST).permitAll()
                 .anyRequest().authenticated();
 

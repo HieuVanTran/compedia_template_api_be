@@ -61,6 +61,7 @@ public class AuthService {
 			BundleUserDetailsService.BundleUserDetails userDetails =
 					(BundleUserDetailsService.BundleUserDetails) authenticationManager
 							.authenticate(authentication).getPrincipal();
+
 			Account account = userDetails.getAccount();
 			return createToken(account);
 		} catch (AuthenticationException exception) {
