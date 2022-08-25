@@ -8,7 +8,6 @@ import vn.compedia.api.util.MessageUtil;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
-import java.text.DecimalFormat;
 
 @Getter
 @Setter
@@ -16,11 +15,14 @@ import java.text.DecimalFormat;
 @AllArgsConstructor
 @Entity
 @Table(name = "collect_money")
-public class CollectMoney extends BaseEntity {
+public class CollectMoney  {
     @javax.persistence.Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "card_id")
-    private Long cardId;
+    @Column(name= "collect_money_id")
+    private Long collectMoneyId;
+
+    @Column(name = "user_id")
+    private Long userId;
 
     @Column(name = "full_name")
     @Size(max = 50,message = MessageUtil.FULL_NAME_HAS_MAX_LENGTH)

@@ -3,12 +3,9 @@ package vn.compedia.api.service;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import vn.compedia.api.entity.Book;
 import vn.compedia.api.entity.Role;
 import vn.compedia.api.repository.RoleRepository;
 import vn.compedia.api.request.RoleCreateRequest;
-
-import javax.persistence.criteria.Root;
 import java.util.List;
 
 @Log4j2
@@ -31,14 +28,14 @@ public class RoleService {
     }
     public void create(RoleCreateRequest request) {
         Role role = new Role();
-        role.setCode(request.getCode());
+        role.setCodeRole(request.getCodeRole());
         role.setName(request.getName());
         roleRepository.save(role);
     }
-
     public void update(RoleCreateRequest request) {
         Role role = new Role();
-        role.setCode(request.getCode());
+        role.setRoleId(request.getRoleId());
+        role.setCodeRole(request.getCodeRole());
         role.setName(request.getName());
         roleRepository.save(role);
     }

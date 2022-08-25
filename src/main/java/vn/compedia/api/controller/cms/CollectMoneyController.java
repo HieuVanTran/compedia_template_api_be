@@ -1,18 +1,20 @@
-package vn.compedia.api.controller.auth;
+package vn.compedia.api.controller.cms;
 
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import vn.compedia.api.dto.VietTienPageDto;
 import vn.compedia.api.dto.VietTienResponseDto;
 import vn.compedia.api.entity.CollectMoney;
-import vn.compedia.api.entity.Role;
 import vn.compedia.api.exception.GlobalExceptionHandler;
 import vn.compedia.api.request.CollectMoneyCreateRequest;
-import vn.compedia.api.request.RoleCreateRequest;
+import vn.compedia.api.response.book.CollectMoneyResponse;
 import vn.compedia.api.service.CollectMoneyService;
-import vn.compedia.api.service.RoleService;
+
 
 import java.util.List;
 
@@ -29,7 +31,7 @@ public class CollectMoneyController extends GlobalExceptionHandler {
 
     @GetMapping(value = "collect-money")
     public ResponseEntity<?> getAll() {
-        List<CollectMoney> list = collectMoneyService.getAll();
+        List<CollectMoneyResponse> list = collectMoneyService.getAll();
         return VietTienResponseDto.ok(list, "Get list account success");
     }
 
@@ -38,15 +40,35 @@ public class CollectMoneyController extends GlobalExceptionHandler {
         CollectMoney collectMoney = collectMoneyService.getOne(cardID);
         return VietTienResponseDto.ok(collectMoney, "Get list account success");
     }
+    @GetMapping(value = "search")
+    public ResponseEntity<?> search(@RequestParam(name = "fullName", required = false) String fullName,
+                                    @RequestParam(name = "page") Integer page,
+                                    @RequestParam(name = "size") Integer size,
+                                    @RequestParam(name ="sort_field", required = false) String sortField,
+                                    @RequestParam(name ="sort_order", required = false) String sortOrder,
+                                    @RequestParam(name ="name_staff",required = false) String nameStaff) {
+        Page<CollectMoneyResponse> list = collectMoneyService.search(fullName, nameStaff,sortField,sortOrder,page,size);
+        return VietTienResponseDto.ok(VietTienPageDto.build(list), "Search list book success");
+    }
     @PostMapping
     public ResponseEntity<?> create(@RequestBody CollectMoneyCreateRequest request) {
-        collectMoneyService.create(request);
+        try {
+            collectMoneyService.create(request);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
         return VietTienResponseDto.ok("", "Save success");
     }
 
     @PutMapping()
     public ResponseEntity<?> update(@RequestBody CollectMoneyCreateRequest request) {
-        collectMoneyService.update(request);
+        try {
+            collectMoneyService.update(request);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
         return VietTienResponseDto.ok("", "Save success");
     }
 

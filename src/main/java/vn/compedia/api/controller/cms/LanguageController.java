@@ -1,4 +1,4 @@
-package vn.compedia.api.controller.auth;
+package vn.compedia.api.controller.cms;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

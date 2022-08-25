@@ -2,11 +2,13 @@ package vn.compedia.api.service;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import vn.compedia.api.entity.Author;
 import vn.compedia.api.entity.BookCategory;
 import vn.compedia.api.repository.BookCategoryRepository;
 import vn.compedia.api.request.BookCategoryCreateRequest;
+import vn.compedia.api.response.book.BookCategoryResponse;
 
 
 import java.util.List;
@@ -34,21 +36,23 @@ public class BookCategoryService {
 
     public void create(BookCategoryCreateRequest request) {
        BookCategory bookCategory = new BookCategory();
-        bookCategory.setBookName(request.getBookName());
-        bookCategory.setCode(request.getCode());
+        bookCategory.setCategoryName(request.getCategoryName());
         bookCategoryRepository.save(bookCategory);
     }
 
     public void update(BookCategoryCreateRequest request) {
         BookCategory bookCategory = new BookCategory();
-        bookCategory.setIdtypeBook(request.getId());
-        bookCategory.setBookName(request.getBookName());
-        bookCategory.setCode(request.getCode());
+        bookCategory.setIdTypeBook(request.getId());
+        bookCategory.setCategoryName(request.getCategoryName());
         bookCategoryRepository.save(bookCategory);
     }
 
     public void delete(Long id) {
 
         bookCategoryRepository.deleteById(id);
+    }
+
+    public Page<BookCategoryResponse> search(String categoryName, String bookName, String sortField, String sortOrder, Integer page, Integer size ) {
+        return bookCategoryRepository.search(categoryName, bookName,sortField,sortOrder,page,size, PageRequest.of(page, size));
     }
 }

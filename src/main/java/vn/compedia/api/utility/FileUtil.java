@@ -19,7 +19,7 @@ public class FileUtil {
     public final static String EXT_PDF = "pdf";
     public final static String EXT_OFFICE = "xls,xlsx,doc,docx,ppt";
     private static final String FOLDER_NAME_PARENT = "resources";
-    private static final String FOLDER_NAME_IMAGE = "upload_image";
+    private static final String FOLDER_NAME_IMAGE = "image";
     private static final String FOLDER_NAME_FILE = "upload_file";
     private static final String SEPARATOR = "/";
 

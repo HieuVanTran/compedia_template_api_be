@@ -22,7 +22,6 @@ import vn.compedia.api.util.user.ChangePasswordRequest;
 import vn.compedia.api.util.user.GridData;
 import vn.compedia.api.util.user.UserContextHolder;
 import vn.compedia.api.util.user.builder.PageableBuilder;
-
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;

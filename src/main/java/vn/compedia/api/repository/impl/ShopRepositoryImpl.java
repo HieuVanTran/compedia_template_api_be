@@ -1,5 +1,6 @@
 package vn.compedia.api.repository.impl;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -82,6 +83,7 @@ public class ShopRepositoryImpl implements ShopRepositoryCustom {
         if (filters.containsKey("status")) {
             sb.append("and sh.status = :status ");
         }
+
     }
 
     public Query createQuery(StringBuilder sb, Map<String, Object> filters) {

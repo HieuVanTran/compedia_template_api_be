@@ -11,6 +11,10 @@ public class CollectMoneyCreateRequest  {
 
     Long Id;
 
+
+    @JsonProperty("user_id")
+    private Long userId;
+
     @JsonProperty("full_name")
     private String fullName;
 

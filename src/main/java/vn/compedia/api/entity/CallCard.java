@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import vn.compedia.api.response.book.CallCardListResponse;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -15,7 +16,7 @@ import java.util.Date;
 @Entity
 @Table(name = "call_card")
 
-public class CallCard {
+public class CallCard  {
 
     @javax.persistence.Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,7 +41,9 @@ public class CallCard {
     @Column(name = "note")
     private String note;
 
-    @Column(name = "create_date")
-    private Date createDate;
+    @Column(name = "user_id")
+    private Long userId;
+
+
 
 }

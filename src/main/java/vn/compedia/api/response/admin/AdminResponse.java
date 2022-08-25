@@ -14,13 +14,17 @@ public class AdminResponse {
 
     private String username;
 
-    @JsonProperty("role_id")
-    private Long roleId;
+    private String email;
 
     @JsonProperty("full_name")
     private String fullName;
 
-    private String email;
+    @JsonProperty("role_id")
+    private Long roleId;
+
+    @JsonProperty("code_role")
+    private String codeRole;
+
 
 
 

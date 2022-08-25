@@ -1,4 +1,4 @@
-package vn.compedia.api.controller.auth;
+package vn.compedia.api.controller.cms;
 
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import vn.compedia.api.dto.VietTienResponseDto;
-import vn.compedia.api.entity.Book;
 import vn.compedia.api.entity.Role;
 import vn.compedia.api.exception.GlobalExceptionHandler;
 import vn.compedia.api.request.RoleCreateRequest;

@@ -20,14 +20,17 @@ public class UserCreateRequest {
 
     private String address;
 
-    @JsonProperty("staff_id")
-    private Long staffId;
-
-    @JsonProperty("card_number")
-    private String cardNumber;
+    @JsonProperty("phone")
+    private String phone;
 
     @JsonProperty("account_id")
     private Long accountId;
+
+    @JsonProperty("call_card_id")
+    private Long callCardId;
+
+    @JsonProperty("create_date")
+    private String createDate;
 
 
 }

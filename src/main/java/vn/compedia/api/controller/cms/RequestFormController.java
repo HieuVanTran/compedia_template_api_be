@@ -1,4 +1,4 @@
-package vn.compedia.api.controller.auth;
+package vn.compedia.api.controller.cms;
 
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -6,11 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import vn.compedia.api.dto.VietTienResponseDto;
-import vn.compedia.api.entity.Author;
 import vn.compedia.api.entity.RequestForm;
 import vn.compedia.api.exception.GlobalExceptionHandler;
-import vn.compedia.api.request.AuthorCreateRequest;
-import vn.compedia.api.service.AuthorService;
 import vn.compedia.api.service.RequestFormService;
 
 import java.util.List;

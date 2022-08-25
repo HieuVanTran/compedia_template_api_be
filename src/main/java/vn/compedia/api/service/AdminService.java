@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import vn.compedia.api.entity.Account;
 import vn.compedia.api.repository.AccountRepository;
 import vn.compedia.api.request.AdminCreateRequest;
-import vn.compedia.api.util.DateUtil;
 import vn.compedia.api.util.StringUtil;
 import vn.compedia.api.util.user.UserContextHolder;
 
@@ -36,7 +35,7 @@ public class AdminService {
         account.setSalt(StringUtil.generateSalt());
         account.setPassword(StringUtil.encryptPassword(request.getPassword(), account.getSalt()));
         account.setUsername(request.getUsername());
-        account.setRoleId(request.getRoleId());
+//        account.setCodeRole(request.getCodeRole());
         account.setCreateDate(new Date());
         account.setCreateBy(UserContextHolder.getUser().getAccountId());
         accountRepository.save(account);

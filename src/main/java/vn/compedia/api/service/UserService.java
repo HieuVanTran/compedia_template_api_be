@@ -1,17 +1,20 @@
 package vn.compedia.api.service;
 
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import vn.compedia.api.entity.Account;
 import vn.compedia.api.entity.User;
 import vn.compedia.api.repository.UserRepository;
+import vn.compedia.api.request.AdminCreateRequest;
 import vn.compedia.api.request.UserCreateRequest;
-import vn.compedia.api.response.book.AuthorResponse;
-import vn.compedia.api.response.book.UserResponse;
-import vn.compedia.api.util.DateUtil;
-
+import vn.compedia.api.response.user.UserResponse;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Date;
 import java.util.List;
 
@@ -19,13 +22,16 @@ import java.util.List;
 @Service
 
 public class UserService {
+    @Value("${validate.phone_number.regex}")
+    private String phoneNumberRegex;
+
     @Autowired
     private UserRepository userRepository;
 
     private MessageSource messageSource;
 
-    public List<User> getAll() {
-        List<User> list = userRepository.findAll();
+    public List<UserResponse> getAll() {
+        List<UserResponse> list = userRepository.getAllUser();
         return list;
     }
 
@@ -36,30 +42,58 @@ public class UserService {
         }
         return user;
     }
-    public void create(UserCreateRequest request) {
+
+    public void validateData(UserCreateRequest request) throws Exception {
+        if(StringUtils.isBlank(request.getFullName().trim())) {
+            throw new Exception ("Fullname không được để trống");
+        }
+        if(request.getFullName().trim().length() > 50 ) {
+            throw new Exception("Độ dài FullName không quá 50 ký tự");
+        }
+        if(StringUtils.isBlank(request.getPhone().trim())){
+            throw new Exception("PhoneNumber không được để trống");
+        }
+        if (request.getPhone().trim().length() > 11 ) {
+            throw new Exception("Độ dài PhoneNumber không quá 11 ký tự");
+        }
+        if(!request.getPhone().trim().matches(phoneNumberRegex)) {
+            throw  new Exception("Không đúng định dạng phoneNumber");
+        }
+        if (StringUtils.isBlank(request.getAddress().trim())) {
+            throw new Exception("Không được để trống Address");
+        }
+        if (request.getAddress().trim().length() > 50 ) {
+            throw new Exception("Độ dài Address không vượt quá 50 ký tự");
+        }
+    }
+    public void create(UserCreateRequest request) throws Exception {
+        validateData(request);
         User user = new User();
         user.setAddress(request.getAddress());
-        user.setCardNumber(request.getCardNumber());
+        user.setPhone(request.getPhone());
+        user.setCallCardId(request.getCallCardId());
         user.setAccountId(request.getAccountId());
         user.setFullName(request.getFullName());
-        user.setStaffId(request.getStaffId());
-        user.setCreateDate(new Date());
-        Date ed = DateUtil.formatDatePattern(request.getExpirationDate(), DateUtil.DATE_FORMAT_YEAR);
-        user.setExpirationDate(ed);
+        user.setCreateDate(request.getCreateDate());
+//        Date ed = DateUtil.formatDatePattern(request.getExpirationDate(), DateUtil.DATE_FORMAT_YEAR);
+//        user.setExpirationDate(ed);
+        user.setExpirationDate(request.getExpirationDate());
         userRepository.save(user);
     }
 
-    public void update(UserCreateRequest request) {
+    public void update(UserCreateRequest request) throws Exception {
+        validateData(request);
         User user = new User();
-        user.setCardId(request.getId());
+        user.setUserId(request.getId());
         user.setAddress(request.getAddress());
-        user.setCardNumber(request.getCardNumber());
+        user.setPhone(request.getPhone());
+        user.setCallCardId(request.getCallCardId());
         user.setAccountId(request.getAccountId());
         user.setFullName(request.getFullName());
-        user.setStaffId(request.getStaffId());
-        user.setCreateDate(new Date());
-        Date ed = DateUtil.formatDatePattern(request.getExpirationDate(), DateUtil.DATE_FORMAT_YEAR);
-        user.setExpirationDate(ed);
+        user.setCreateDate(request.getCreateDate());
+//        Date ed = DateUtil.formatDatePattern(request.getExpirationDate(), DateUtil.DATE_FORMAT_YEAR);
+//        user.setExpirationDate(ed);
+        user.setExpirationDate(request.getExpirationDate());
         userRepository.save(user);
     }
 
@@ -67,7 +101,8 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
-    public List<UserResponse> search(String fullName) {
-        return userRepository.search(fullName);
+    public Page<UserResponse> search(String fullName, String address, String phone,
+                                     String sortField,String sortOrder, Integer page, Integer size) {
+        return userRepository.search(fullName, address, phone,sortField,sortOrder,page,size, PageRequest.of(page, size));
     }
 }

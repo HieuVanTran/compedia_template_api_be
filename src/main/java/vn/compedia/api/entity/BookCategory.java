@@ -19,17 +19,10 @@ public class BookCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_type_book")
-    private Long idtypeBook;
+    private Long idTypeBook;
 
-    @Column(name = "code")
-    private String code;
-
-    @Column(name = "book_name")
-    @Size(max = 50,message = MessageUtil.FULL_NAME_HAS_MAX_LENGTH)
-    private String bookName;
-
-
-
+    @Column(name = "category_name")
+    private String categoryName;
 
 
 }

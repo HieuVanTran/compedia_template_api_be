@@ -29,6 +29,6 @@ public class Staff {
     private String address;
 
     @Column(name = "date_of_birth")
-    private Date dateOfBirth;
+    private String dateOfBirth;
 
 }

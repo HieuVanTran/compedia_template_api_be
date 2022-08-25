@@ -29,7 +29,7 @@ public class CustomerRepositoryImpl implements CustomerRepositoryCustom {
     public Page<ShopListResponse> search(Map<String, Object> filters, Map<String, String> sorts, Pageable pageable) {
         StringBuilder sb = new StringBuilder();
         sb.append("select ct.customer_id AS customerId," +
-                "ct.name AS name," +
+        "ct.name AS name," +
                 "ct.phone AS phone," +
                 "ct.logo AS logo," +
                 "ct.status AS status ");
@@ -48,7 +48,8 @@ public class CustomerRepositoryImpl implements CustomerRepositoryCustom {
 
     public BigInteger countSearch(Map<String, Object> filters) {
         StringBuilder sb = new StringBuilder();
-        sb.append("SELECT COUNT(ct.customer_id) ");
+        sb.append("select count(0) ");
+
         appendQuery(sb, filters);
         Query query = createQuery(sb, filters);
         return (BigInteger) query.getSingleResult();

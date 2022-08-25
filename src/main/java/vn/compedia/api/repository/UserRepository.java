@@ -6,7 +6,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import vn.compedia.api.entity.Author;
 import vn.compedia.api.entity.User;
-import vn.compedia.api.response.book.UserResponse;
 
 import java.util.List;
 

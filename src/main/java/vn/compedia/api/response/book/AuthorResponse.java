@@ -14,6 +14,14 @@ public class AuthorResponse {
     @JsonProperty("author_name")
     private String authorName;
 
+    @JsonProperty("address")
+    private String address;
+
+    @JsonProperty("title")
     private String title;
+
+
+    @JsonProperty("note")
+    private String note;
 }
 

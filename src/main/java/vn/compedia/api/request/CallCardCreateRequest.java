@@ -31,4 +31,5 @@ public class CallCardCreateRequest {
     @JsonProperty("list_book")
     private List<CallCardDetailsRequest> listBook;
 
+
 }

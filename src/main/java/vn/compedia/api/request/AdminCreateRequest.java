@@ -4,17 +4,21 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter @Setter
+import java.util.Date;
+
+@Getter
+@Setter
 public class AdminCreateRequest {
 
     private Long Id;
     @JsonProperty("full_name")
     private String fullName;
 
+
     private String DOB;
 
     private String email;
-    private String address;
+
 
     private String phone;
 
@@ -22,5 +26,12 @@ public class AdminCreateRequest {
 
     private String password;
 
+    @JsonProperty("role_id")
     private Integer roleId;
+
+
+
+
+
+
 }

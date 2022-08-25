@@ -1,23 +1,18 @@
 package vn.compedia.api.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Date;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Data
 @Entity
 @Table(name = "publish_company")
 public class PublishCompany {
+
     @javax.persistence.Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_company")
+    @Column(name = "company_id")
     private Long idPub;
 
     @Column(name = "publish_name")
@@ -33,6 +28,7 @@ public class PublishCompany {
     private String agentPeople;
 
     @Column(name = "date_founding")
-    private Date dateFounding;
+    private String dateFounding;
+
 
 }

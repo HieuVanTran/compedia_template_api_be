@@ -11,10 +11,10 @@ public class BookCategoryCreateRequest {
 
     private Long Id;
 
-    @JsonProperty("book_name")
-    private String bookName;
+    @JsonProperty("category_name")
+    private String categoryName;
 
-    private String code;
+
 
 
 }

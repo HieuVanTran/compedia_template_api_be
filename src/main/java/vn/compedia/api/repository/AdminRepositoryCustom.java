@@ -1,11 +1,12 @@
 package vn.compedia.api.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import vn.compedia.api.response.admin.AdminResponse;
 
-import java.util.List;
-
 public interface AdminRepositoryCustom {
-     List<AdminResponse> search(String username, String email, String fullName, String roleId);
+     Page<AdminResponse> search(String username, String email, Integer roleId,String codeRole, String fullName,
+                                String sortField,String sortOrder, Integer page, Integer size, Pageable pageable);
 
 
 

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import vn.compedia.api.response.CallCardDetailsResponse;
 
 import javax.persistence.*;
 
@@ -13,7 +14,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Entity
 @Table(name = "call_card_details")
-public class CallCardDetails {
+public class CallCardDetails  {
 
     @javax.persistence.Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

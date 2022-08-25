@@ -8,7 +8,6 @@ import vn.compedia.api.util.MessageUtil;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
-import java.util.Date;
 
 @Getter
 @Setter
@@ -27,11 +26,8 @@ public class Book  {
     @Size(max = 50,message = MessageUtil.FULL_NAME_HAS_MAX_LENGTH)
     private String bookName;
 
-    @Column(name = "id_author")
-    private Long idAuthor;
-
     @Column(name = "publishing_year")
-    private Date publishingYear;
+    private String publishingYear;
 
     @Column(name = "page_number")
     private Integer pageNumber;
@@ -45,8 +41,8 @@ public class Book  {
     @Column(name = "id_type_book")
     private Long idTypeBook;
 
-    @Column(name = "id_company")
-    private Long idCompany;
+    @Column(name = "company_id")
+    private Long companyId;
 
     @Column(name = "amount")
     private Integer amount;
@@ -55,6 +51,8 @@ public class Book  {
     @Column(name = "status")
     private Integer status;
 
+    @Column(name = "id_author")
+    private Long idAuthor;
 
 
 }

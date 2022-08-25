@@ -37,6 +37,7 @@ import java.util.Map;
 
 @Log4j2
 @Service
+
 public class ShopService {
     @Value("${vn.compedia.static.context}")
     private String staticContext;
@@ -134,6 +135,8 @@ public class ShopService {
         Page<ShopResponse> showPage = shopRepository.search(filters, sorts, PageRequest.of(page - 1, pageSize));
         return VietTienPageDto.build(showPage);
     }
+
+
 
     @Transactional
     public void createShop(AccountRequest accountRequest, ShopRequest shopRequest) throws VietTienException, VietTienInvalidParamsException {
