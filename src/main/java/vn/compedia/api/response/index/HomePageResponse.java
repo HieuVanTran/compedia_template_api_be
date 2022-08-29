@@ -1,14 +1,13 @@
-package vn.compedia.api.response.book;
+package vn.compedia.api.response.index;
+
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
-
 @Getter
 @Setter
-public class BookResponse {
-
+public class HomePageResponse {
     @JsonProperty("book_id")
     private Long bookId;
 
@@ -18,30 +17,14 @@ public class BookResponse {
     @JsonProperty("id_author")
     private Long idAuthor;
 
-    @JsonProperty("name_author")
-    private String nameAuthor;
-
+    @JsonProperty("author_name")
+    private String authorName;
 
     @JsonProperty("id_type_book")
     private Long idTypeBook;
 
     @JsonProperty("category_name")
     private String categoryName;
-
-    @JsonProperty("page_number")
-    private Integer pageNumber;
-
-    @JsonProperty("publishing_year")
-    private String publishingYear;
-
-    @JsonProperty("price")
-    private Integer price;
-
-    @JsonProperty("amount")
-    private Integer amount;
-
-    @JsonProperty("status")
-    private Integer status;
 
     @JsonProperty("company_id")
     private Long companyId;
@@ -54,5 +37,6 @@ public class BookResponse {
 
     @JsonProperty("note")
     private String note;
+
 
 }

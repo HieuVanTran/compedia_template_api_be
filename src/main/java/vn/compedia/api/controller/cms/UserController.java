@@ -18,7 +18,7 @@ import vn.compedia.api.service.UserService;
 
 import java.util.List;
 
-@Api(tags = "User")
+@Api(tags = "User(locked)")
 @RestController
 @RequestMapping("/api/v1/user")
 @Validated

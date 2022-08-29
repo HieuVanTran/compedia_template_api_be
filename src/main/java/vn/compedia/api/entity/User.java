@@ -33,8 +33,8 @@ public class User {
     @Column(name = "account_id")
     private Long accountId;
 
-    @Column(name = "call_card_id")
-    private Long callCardId;
+    @Column(name = "card_number")
+    private String cardNumber;
 
     @Column(name = "create_date")
     private String createDate;

@@ -13,8 +13,8 @@ public class CallCardResponse {
     @JsonProperty("call_card_id")
     private Long callCardId;
 
-    @JsonProperty("card_number")
-    private String cardNumber;
+    @JsonProperty("username")
+    private String userName;
 
     @JsonProperty("staff_id")
     private Long staffId;
@@ -25,8 +25,6 @@ public class CallCardResponse {
     @JsonProperty("status")
     private Integer status;
 
-    @JsonProperty("call_card_details_id")
-    private Long callCardDetailsId;
 
     @JsonProperty("amount")
     private Integer amount;
@@ -43,8 +41,14 @@ public class CallCardResponse {
     @JsonProperty("book_id")
     private Long bookId;
 
-    @JsonProperty("user_id")
-    private Long userId;
+    @JsonProperty("account_id")
+    private Long accountId;
+
+    @JsonProperty("book_name")
+    private String bookName;
+
+
+
 
 }
 

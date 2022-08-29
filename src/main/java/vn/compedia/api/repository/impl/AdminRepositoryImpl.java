@@ -21,7 +21,7 @@ public class AdminRepositoryImpl implements AdminRepositoryCustom {
     private EntityManager entityManager;
 
     @Override
-    public Page<AdminResponse> search(String username, String email, Integer roleId,String codeRole, String fullName,
+    public Page<AdminResponse> search(String username, String email, Integer roleId, String codeRole, String fullName,
                                       String sortField, String sortOrder, Integer page, Integer size, Pageable pageable) {
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT a.account_id, a.username, a.email, a.role_id, r.code_role, a.full_name " +
@@ -29,10 +29,10 @@ public class AdminRepositoryImpl implements AdminRepositoryCustom {
                 "         INNER JOIN role r ON a.role_id = r.role_id " +
                 "WHERE 1 = 1  ");
 
-        appendQuery(sb, username, email, roleId,codeRole, fullName);
+        appendQuery(sb, username, email, roleId, codeRole, fullName);
 
         setSortOrder(sortField, sortOrder, sb);
-        Query query = createQuery(sb, username, email, roleId,codeRole, fullName);
+        Query query = createQuery(sb, username, email, roleId, codeRole, fullName);
 
         if (pageable.getPageSize() > 0) {
             query.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
@@ -63,9 +63,11 @@ public class AdminRepositoryImpl implements AdminRepositoryCustom {
     private BigInteger countSearch(String username, String email, Integer roleId, String codeRole, String fullName) {
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT count(0) " +
-                " FROM account a WHERE 1 = 1 ");
+                " FROM account a " +
+                "        INNER JOIN role r ON a.role_id = r.role_id " +
+                "WHERE 1 = 1 ");
         appendQuery(sb, username, email, roleId, codeRole, fullName);
-        Query query = createQuery(sb, username, email, roleId,codeRole, fullName);
+        Query query = createQuery(sb, username, email, roleId, codeRole, fullName);
         return (BigInteger) query.getSingleResult();
     }
 

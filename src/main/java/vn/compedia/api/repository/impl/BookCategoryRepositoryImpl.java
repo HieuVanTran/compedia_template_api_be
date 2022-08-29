@@ -60,7 +60,9 @@ public class BookCategoryRepositoryImpl implements BookCategoryRepositoryCustom 
     private BigInteger countSearch(String categoryName, String bookName  ) {
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT count(0) " +
-                " FROM book_category bc WHERE 1 = 1 ");
+                " FROM book_category bc " +
+                "inner join book b on bc.id_type_book = b.id_type_book " +
+                "WHERE 1 = 1 ");
         appendQuery(sb, categoryName, bookName);
         Query query = createQuery(sb, categoryName, bookName);
         return (BigInteger) query.getSingleResult();

@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import vn.compedia.api.response.book.CallCardListResponse;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -23,8 +22,8 @@ public class CallCard  {
     @Column(name = "call_card_id")
     private Long callCardId;
 
-    @Column(name = "card_number")
-    private String cardNumber;
+//    @Column(name = "username")
+//    private String userName;
 
     @Column(name = "staff_id")
     private Long staffId;
@@ -41,9 +40,14 @@ public class CallCard  {
     @Column(name = "note")
     private String note;
 
-    @Column(name = "user_id")
-    private Long userId;
+    @Column(name = "account_id")
+    private Long accountId;
 
+    @Column(name = "book_id")
+    private Long bookId;
+
+    @Column(name = "amount")
+    private Integer amount;
 
 
 }

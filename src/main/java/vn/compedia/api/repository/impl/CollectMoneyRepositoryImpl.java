@@ -99,7 +99,10 @@ public class CollectMoneyRepositoryImpl implements CollectMoneyRepositoryCustom 
     private BigInteger countSearch(String fullName, String nameStaff) {
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT count(0) " +
-                " FROM collect_money c WHERE 1 = 1 ");
+                " FROM collect_money c " +
+                "INNER JOIN staff s ON c.staff_id = s.staff_id " +
+                "INNER JOIN user u ON c.user_id = u.user_id " +
+                "WHERE 1 = 1 ");
         appendQuery(sb, fullName,nameStaff);
         Query query = createQuery(sb, fullName,nameStaff);
         return (BigInteger) query.getSingleResult();

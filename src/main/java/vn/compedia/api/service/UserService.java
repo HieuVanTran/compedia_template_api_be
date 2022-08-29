@@ -71,7 +71,7 @@ public class UserService {
         User user = new User();
         user.setAddress(request.getAddress());
         user.setPhone(request.getPhone());
-        user.setCallCardId(request.getCallCardId());
+        user.setCardNumber(request.getCardNumber());
         user.setAccountId(request.getAccountId());
         user.setFullName(request.getFullName());
         user.setCreateDate(request.getCreateDate());
@@ -87,7 +87,7 @@ public class UserService {
         user.setUserId(request.getId());
         user.setAddress(request.getAddress());
         user.setPhone(request.getPhone());
-        user.setCallCardId(request.getCallCardId());
+        user.setCardNumber(request.getCardNumber());
         user.setAccountId(request.getAccountId());
         user.setFullName(request.getFullName());
         user.setCreateDate(request.getCreateDate());

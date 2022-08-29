@@ -43,9 +43,8 @@ public class DetailBookController extends GlobalExceptionHandler {
                                     @RequestParam(name = "page") Integer page,
                                     @RequestParam(name = "size") Integer size,
                                     @RequestParam(name ="sort_field", required = false) String sortField,
-                                    @RequestParam(name ="sort_order", required = false) String sortOrder,
-                                    @RequestParam(name = "authorName", required = false) String authorName) {
-        Page<BookResponse> list = bookService.search(bookName, authorName,categoryName,publishName,sortField,sortOrder,page,size);
+                                    @RequestParam(name ="sort_order", required = false) String sortOrder) {
+        Page<BookResponse> list = bookService.search(bookName, nameAuthor,categoryName,publishName,sortField,sortOrder,page,size);
         return VietTienResponseDto.ok(VietTienPageDto.build(list), "Search list book success");
     }
 

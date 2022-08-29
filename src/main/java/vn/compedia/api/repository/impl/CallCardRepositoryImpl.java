@@ -24,19 +24,21 @@ public class CallCardRepositoryImpl implements CallCardRepositoryCustom {
     public List<CallCardResponse> findAllCustomCallCardList() {
         StringBuilder sb = new StringBuilder();
         sb.append(" SELECT ca.call_card_id," +
-                "       u.card_number," +
+                "       a.username," +
                 "       s.staff_id," +
                 "       ca.status," +
                 "       s.name_staff," +
-                "       ccd.call_card_details_id," +
                 "       ca.note," +
                 "       ca.start_date," +
                 "       ca.end_date,  " +
-                "       u.user_id " +
+                "       a.account_id, " +
+                "       b.book_id, " +
+                "       b.book_name, " +
+                "       ca.amount " +
                 "FROM call_card ca " +
-                "         INNER JOIN call_card_details ccd on ca.call_card_id = ccd.call_card_id " +
+                "         INNER JOIN book b on ca.book_id = b.book_id " +
                 "         INNER JOIN staff s on ca.staff_id = s.staff_id " +
-                "         INNER JOIN user u on ca.user_id = u.user_id " +
+                "        INNER JOIN account a on ca.account_id = a.account_id " +
                 "WHERE 1 = 1 ");
         sb.append(" ORDER BY ca.call_card_id DESC");
         Query query = entityManager.createNativeQuery(sb.toString());
@@ -46,15 +48,18 @@ public class CallCardRepositoryImpl implements CallCardRepositoryCustom {
         for (Object[] obj : result) {
             CallCardResponse dto = new CallCardResponse();
             dto.setCallCardId(ValueUtil.getLongByObject(obj[0]));
-            dto.setCardNumber(ValueUtil.getStringByObject(obj[1]));
+            dto.setUserName(ValueUtil.getStringByObject(obj[1]));
             dto.setStaffId(ValueUtil.getLongByObject(obj[2]));
             dto.setStatus(ValueUtil.getIntegerByObject(obj[3]));
             dto.setNameStaff(ValueUtil.getStringByObject(obj[4]));
-            dto.setCallCardDetailsId(ValueUtil.getLongByObject(obj[5]));
-            dto.setNote(ValueUtil.getStringByObject(obj[6]));
-            dto.setStartDate(ValueUtil.getStringByObject(obj[7]));
-            dto.setEndDate(ValueUtil.getStringByObject(obj[8]));
-            dto.setUserId(ValueUtil.getLongByObject(obj[9]));
+            dto.setNote(ValueUtil.getStringByObject(obj[5]));
+            dto.setStartDate(ValueUtil.getStringByObject(obj[6]));
+            dto.setEndDate(ValueUtil.getStringByObject(obj[7]));
+            dto.setAccountId(ValueUtil.getLongByObject(obj[8]));
+            dto.setBookId(ValueUtil.getLongByObject(obj[9]));
+            dto.setBookName(ValueUtil.getStringByObject(obj[10]));
+            dto.setAmount(ValueUtil.getIntegerByObject(obj[11]));
+
 
             CallCardResponses.add(dto);
         }
@@ -62,27 +67,25 @@ public class CallCardRepositoryImpl implements CallCardRepositoryCustom {
     }
 
     @Override
-    public Page<CallCardResponse> search(String cardNumber, Integer status, String nameStaff,
+    public Page<CallCardResponse> search(String username, Integer status, String nameStaff,
                                          String sortField, String sortOrder, Integer page, Integer size, Pageable pageable) {
 
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT ca.call_card_id," +
-                "       u.card_number," +
+                "       a.username," +
                 "       s.staff_id," +
                 "       ca.status," +
                 "       s.name_staff," +
-                "       ccd.call_card_details_id," +
-                "       u.user_id " +
+                "       a.account_id " +
                 "" +
                 "FROM call_card ca " +
-                "         INNER JOIN call_card_details ccd on ca.call_card_id = ccd.call_card_id  " +
                 "         INNER JOIN staff s on ca.staff_id = s.staff_id " +
-                "        INNER JOIN user u on ca.user_id = u.user_id " +
+                "        INNER JOIN account a on ca.account_id = a.account_id " +
                 "" +
                 "WHERE 1 = 1");
-        appendQuery(sb, cardNumber, status, nameStaff);
+        appendQuery(sb, username, status, nameStaff);
         setSortOrder(sortField, sortOrder, sb);
-        Query query = createQuery(sb, cardNumber, status, nameStaff);
+        Query query = createQuery(sb, username, status, nameStaff);
 
         if (pageable.getPageSize() > 0) {
             query.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
@@ -97,32 +100,34 @@ public class CallCardRepositoryImpl implements CallCardRepositoryCustom {
         for (Object[] obj : result) {
             CallCardResponse dto = new CallCardResponse();
             dto.setCallCardId(ValueUtil.getLongByObject(obj[0]));
-            dto.setCardNumber(ValueUtil.getStringByObject(obj[1]));
+            dto.setUserName(ValueUtil.getStringByObject(obj[1]));
             dto.setStaffId(ValueUtil.getLongByObject(obj[2]));
             dto.setStatus(ValueUtil.getIntegerByObject(obj[3]));
             dto.setNameStaff(ValueUtil.getStringByObject(obj[4]));
-            dto.setCallCardDetailsId(ValueUtil.getLongByObject(obj[5]));
-            dto.setUserId(ValueUtil.getLongByObject(obj[6]));
+            dto.setAccountId(ValueUtil.getLongByObject(obj[5]));
             list.add(dto);
         }
 
-        return new PageImpl<>(list, pageable, countSearch(cardNumber, status, nameStaff).longValue());
+        return new PageImpl<>(list, pageable, countSearch(username, status, nameStaff).longValue());
     }
 
-    private BigInteger countSearch(String cardNumber, Integer status, String nameStaff) {
+    private BigInteger countSearch(String username, Integer status, String nameStaff) {
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT count(0) " +
-                " FROM call_card ca WHERE 1 = 1 ");
-        appendQuery(sb, cardNumber, status, nameStaff);
-        Query query = createQuery(sb, cardNumber, status, nameStaff);
+                " FROM call_card ca " +
+                "         INNER JOIN staff s on ca.staff_id = s.staff_id " +
+                "        INNER JOIN account a on ca.account_id = a.account_id " +
+                "WHERE 1 = 1 ");
+        appendQuery(sb, username, status, nameStaff);
+        Query query = createQuery(sb, username, status, nameStaff);
         return (BigInteger) query.getSingleResult();
     }
 
     private void setSortOrder(String sortField, String sortOrder, StringBuilder sb) {
         if (StringUtils.isNotBlank(sortField)) {
             sb.append(" ORDER BY ");
-            if (sortField.toLowerCase().equals("cardNumber")) {
-                sb.append(" ca.cardNumber ");
+            if (sortField.toLowerCase().equals("username")) {
+                sb.append(" a.username ");
             } else if (sortField.toLowerCase().equals("nameStaff")) {
                 sb.append(" s.nameStaff ");
             }
@@ -132,9 +137,9 @@ public class CallCardRepositoryImpl implements CallCardRepositoryCustom {
         }
     }
 
-    public void appendQuery(StringBuilder sb, String cardNumber, Integer status, String nameStaff) {
-        if (StringUtils.isNotBlank(cardNumber)) {
-            sb.append(" and ca.card_number like :cardNumber ");
+    public void appendQuery(StringBuilder sb, String username, Integer status, String nameStaff) {
+        if (StringUtils.isNotBlank(username)) {
+            sb.append(" and a.username like :username ");
         }
         if (status != null) {
             sb.append("and sh.status = :status ");
@@ -146,10 +151,10 @@ public class CallCardRepositoryImpl implements CallCardRepositoryCustom {
 
     }
 
-    public Query createQuery(StringBuilder sb, String cardNumber, Integer status, String nameStaff) {
+    public Query createQuery(StringBuilder sb, String username, Integer status, String nameStaff) {
         Query query = entityManager.createNativeQuery(sb.toString());
-        if (StringUtils.isNotBlank(cardNumber)) {
-            query.setParameter("cardNumber", buildFilterLike(cardNumber));
+        if (StringUtils.isNotBlank(username)) {
+            query.setParameter("username", buildFilterLike(username));
         }
         if (status != null) {
             query.setParameter("status", status);

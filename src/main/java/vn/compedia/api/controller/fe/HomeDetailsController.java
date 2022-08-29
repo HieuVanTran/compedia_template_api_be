@@ -15,37 +15,27 @@ import vn.compedia.api.dto.VietTienPageDto;
 import vn.compedia.api.dto.VietTienResponseDto;
 import vn.compedia.api.exception.GlobalExceptionHandler;
 import vn.compedia.api.response.book.BookResponse;
-import vn.compedia.api.response.index.HomeCategoryResponse;
-import vn.compedia.api.response.index.HomePageResponse;
-import vn.compedia.api.service.HomePageService;
-import java.util.List;
+import vn.compedia.api.response.index.HomeDetailsResponse;
+import vn.compedia.api.service.HomeDetailsService;
+import java.util.Optional;
 
-@Api(tags = "Fe-PageController")
+@Api(tags = "Fe-DetailsController")
+@RequestMapping("/api/v1/home-details")
 @RestController
-@RequestMapping("/api/v1/home-page")
 @Validated
-
-public class HomePageController extends GlobalExceptionHandler {
+public class HomeDetailsController extends GlobalExceptionHandler {
 
     @Autowired
-    private HomePageService homePageService;
-
-    @GetMapping()
-    public ResponseEntity<?> getAll() {
-        List<HomePageResponse> list = homePageService.getAll();
-        return VietTienResponseDto.ok(list, "Get list account success");
-    }
+    private HomeDetailsService homeDetailsService;
     @GetMapping(value = "get-one")
-    public ResponseEntity<?> getOne(@RequestParam(name = "idTypeBook") Long idTypeBook ) {
+    public ResponseEntity<?> getOne(@RequestParam(name = "book_id") Long bookId ) {
         try {
-            List<HomePageResponse> home = homePageService.getOne(idTypeBook);
-            return VietTienResponseDto.ok(home, "Get list account success");
+            HomeDetailsResponse details = homeDetailsService.getOne(bookId);
+            return VietTienResponseDto.ok(details, "Get list account success");
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-//        List<HomePageResponse> home = homePageService.getOne(idTypeBook);
-//        return VietTienResponseDto.ok(home, "Get list account success");
     }
     @GetMapping(value = "search")
     public ResponseEntity<?> search(@RequestParam(name = "bookName", required = false) String bookName,
@@ -56,7 +46,7 @@ public class HomePageController extends GlobalExceptionHandler {
                                     @RequestParam(name = "size") Integer size,
                                     @RequestParam(name ="sort_field", required = false) String sortField,
                                     @RequestParam(name ="sort_order", required = false) String sortOrder) {
-        Page<BookResponse> list = homePageService.search(bookName, nameAuthor,categoryName,publishName,sortField,sortOrder,page,size);
+        Page<BookResponse> list = homeDetailsService.search(bookName, nameAuthor,categoryName,publishName,sortField,sortOrder,page,size);
         return VietTienResponseDto.ok(VietTienPageDto.build(list), "Search list book success");
     }
 }

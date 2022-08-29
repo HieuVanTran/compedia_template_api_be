@@ -63,14 +63,14 @@ public class CallCardController extends GlobalExceptionHandler {
         return VietTienResponseDto.ok(loan, "Get list account success");
     }
     @GetMapping(value = "search")
-    public ResponseEntity<?> search(@RequestParam(name = "cardNumber", required = false) String cardNumber,
+    public ResponseEntity<?> search(@RequestParam(name = "username", required = false) String username,
                                     @RequestParam(name = "page") Integer page,
                                     @RequestParam(name = "size") Integer size,
                                     @RequestParam(name ="sort_field", required = false) String sortField,
                                     @RequestParam(name ="sort_order", required = false) String sortOrder,
                                     @RequestParam(name = "nameStaff", required = false) String nameStaff,
                                     @RequestParam(name = "status", required = false) Integer status) {
-        Page<CallCardResponse> list = callCardService.search(cardNumber, status, nameStaff,sortField,sortOrder,page,size);
+        Page<CallCardResponse> list = callCardService.search(username, status, nameStaff,sortField,sortOrder,page,size);
         return VietTienResponseDto.ok(VietTienPageDto.build(list), "Search list book success");
     }
 

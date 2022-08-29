@@ -54,5 +54,7 @@ public class Book  {
     @Column(name = "id_author")
     private Long idAuthor;
 
+    @Column(name = "note")
+    private String note;
 
 }

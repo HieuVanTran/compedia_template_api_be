@@ -12,7 +12,7 @@ import vn.compedia.api.service.RequestFormService;
 
 import java.util.List;
 
-@Api(tags = "RequestFrom")
+@Api(tags = "RequestFrom(locked)")
 @RestController
 @RequestMapping("/api/v1/request-form")
 @Validated

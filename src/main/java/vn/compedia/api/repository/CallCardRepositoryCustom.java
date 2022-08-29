@@ -17,7 +17,7 @@ import java.util.Map;
 public interface CallCardRepositoryCustom {
     List<CallCardResponse> findAllCustomCallCardList();
 
-    Page<CallCardResponse> search(String cardNumber, Integer status, String nameStaff ,
+    Page<CallCardResponse> search(String username, Integer status, String nameStaff ,
                                   String sortField, String sortOrder, Integer page, Integer size, Pageable pageable);
 
     List<MonthDataResponse> getAmountBorrow();

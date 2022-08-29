@@ -16,7 +16,7 @@ import vn.compedia.api.service.CallCardDetailsService;
 
 import java.util.List;
 
-@Api(tags = "CallCardControllerDetails")
+@Api(tags = "CallCardControllerDetails(locked)")
 @RestController
 @RequestMapping("/api/v1/call-card-details")
 @Validated

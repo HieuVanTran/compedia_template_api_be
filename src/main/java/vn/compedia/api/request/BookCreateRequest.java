@@ -30,5 +30,7 @@ public class BookCreateRequest {
 
     private Integer status;
 
+    private String note;
+
 
 }

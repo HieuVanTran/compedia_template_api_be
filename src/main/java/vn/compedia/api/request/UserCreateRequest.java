@@ -26,8 +26,8 @@ public class UserCreateRequest {
     @JsonProperty("account_id")
     private Long accountId;
 
-    @JsonProperty("call_card_id")
-    private Long callCardId;
+    @JsonProperty("card_number")
+    private String cardNumber;
 
     @JsonProperty("create_date")
     private String createDate;

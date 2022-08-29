@@ -13,8 +13,8 @@ import java.util.List;
 
 @Repository
 public interface CallCardRepository extends JpaRepository<CallCard, Long>, CallCardRepositoryCustom {
-    @Query("select ca from CallCard ca where ca.cardNumber like :cardNumber")
-    List<CallCard> findByName(@Param("cardNumber") String cardNumber);
+//    @Query("select ca from CallCard ca where ca.userName like :userName")
+//    List<CallCard> findByName(@Param("userName") String userName);
 
 }
 

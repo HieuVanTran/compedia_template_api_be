@@ -52,13 +52,23 @@ public class BookService {
     public void validateData(BookCreateRequest request) throws Exception {
 
         if (StringUtils.isBlank(request.getBookName().trim())) {
-            throw new Exception("Không được để trống!");
+            throw new Exception("Không được để trống BookName!");
         }
         if (request.getBookName().trim().length() > 50){
             throw new Exception("Vượt quá 50 ký tự, yêu cầu nhập lại fullName");
         }
-
+        if (StringUtils.isBlank(request.getPublishingYear().trim())) {
+            throw new Exception("Không được để trống PublishingYear!");
         }
+        if (StringUtils.isBlank(request.getNote().trim())) {
+            throw new Exception("Không được để trống Note!");
+        }
+        if (request.getNote().trim().length() > 65.535){
+            throw new Exception("Vượt quá  ký tự cho phép");
+        }
+
+
+    }
     
 
     public void create(BookCreateRequest request, MultipartFile file) throws Exception {
@@ -71,6 +81,7 @@ public class BookService {
         book.setCompanyId(request.getCompanyId());
         book.setPageNumber(request.getPageNumber());
         book.setPrice(request.getPrice());
+        book.setNote(request.getNote());
 //        book.setImage(FileUtil.saveImage(MultipartFile (uploadedFile.getInputStream()));
 //        Date pby = DateUtil.formatDatePattern(request.getPublishingYear(), DateUtil.DATE_FORMAT_YEAR);
 //        book.setPublishingYear(pby);
@@ -80,7 +91,7 @@ public class BookService {
 //        Image img = FileUtil.saveImage(file.getOriginalFilename(), FileUtil.);
 //        book.setImage(img);
         book.setPublishingYear(request.getPublishingYear());
-        book.setStatus(request.getStatus());
+        book.setStatus(1);
         bookRepository.save(book);
     }
 
@@ -96,7 +107,9 @@ public class BookService {
         book.setPrice(request.getPrice());
         book.setImage(FileUtil.saveImage(file));
         book.setPublishingYear(request.getPublishingYear());
-        book.setStatus(request.getStatus());
+        book.setNote(request.getNote());
+        book.setPageNumber(request.getPageNumber());
+        book.setStatus(1);
         bookRepository.save(book);
     }
 
@@ -104,9 +117,9 @@ public class BookService {
         bookRepository.deleteById(id);
     }
 
-    public Page<BookResponse> search(String bookName, String authorName, String categoryName, String publishName,
+    public Page<BookResponse> search(String bookName, String nameAuthor, String categoryName, String publishName,
                                      String sortField, String sortOrder, Integer page, Integer size) {
-        return bookRepository.search(bookName, authorName,categoryName,publishName,sortField,sortOrder,page,size, PageRequest.of(page, size));
+        return bookRepository.search(bookName, nameAuthor,categoryName,publishName,sortField,sortOrder,page,size, PageRequest.of(page, size));
     }
 }
 
