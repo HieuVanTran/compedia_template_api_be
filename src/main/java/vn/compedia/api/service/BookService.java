@@ -63,7 +63,7 @@ public class BookService {
         if (StringUtils.isBlank(request.getNote().trim())) {
             throw new Exception("Không được để trống Note!");
         }
-        if (request.getNote().trim().length() > 65.535){
+        if (request.getNote().trim().length() > 16777215){
             throw new Exception("Vượt quá  ký tự cho phép");
         }
 

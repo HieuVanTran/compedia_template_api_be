@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public interface CallCardRepositoryCustom {
     List<CallCardResponse> findAllCustomCallCardList();
@@ -21,4 +22,6 @@ public interface CallCardRepositoryCustom {
                                   String sortField, String sortOrder, Integer page, Integer size, Pageable pageable);
 
     List<MonthDataResponse> getAmountBorrow();
+
+    Optional<CallCardResponse> findByIdCallCard(Long callCardId);
 }

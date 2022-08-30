@@ -17,6 +17,7 @@ import vn.compedia.api.request.AdminCreateRequest;
 import vn.compedia.api.response.admin.AccountNeResponse;
 import vn.compedia.api.response.admin.AdminResponse;
 
+import vn.compedia.api.response.book.CallCardResponse;
 import vn.compedia.api.util.StringUtil;
 import vn.compedia.api.util.user.UserContextHolder;
 
@@ -45,12 +46,12 @@ public class AccountService {
         return accountRepository.getAllAccount();
     }
 
-    public Account getOne(Long accountId) {
-        Account account = accountRepository.findById(accountId).orElse(null);
-        if (account == null) {
-            account = new Account();
+    public AccountNeResponse getOne(Long accountId) throws Exception {
+        Optional<AccountNeResponse> admin = accountRepository.findByAccountId(accountId);
+        if (!admin.isPresent()) {
+            throw new Exception(" EMPTY");
         }
-        return account;
+        return admin.get();
     }
 
     public void validateData(AdminCreateRequest request) throws Exception {

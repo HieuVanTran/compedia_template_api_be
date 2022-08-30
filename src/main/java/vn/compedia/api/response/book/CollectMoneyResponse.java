@@ -20,8 +20,8 @@ public class CollectMoneyResponse {
     @JsonProperty("staff_name")
     private String staffName;
 
-    @JsonProperty("user_id")
-    private Long userId;
+    @JsonProperty("account_id")
+    private Long accountId;
 
     @JsonProperty("user_name")
     private String userName;

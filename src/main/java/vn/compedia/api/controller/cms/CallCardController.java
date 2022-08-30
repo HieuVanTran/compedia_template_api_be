@@ -13,6 +13,7 @@ import vn.compedia.api.entity.CallCard;
 import vn.compedia.api.entity.CallCardDetails;
 import vn.compedia.api.exception.GlobalExceptionHandler;
 import vn.compedia.api.request.CallCardCreateRequest;
+import vn.compedia.api.response.CallCardDetailsResponse;
 import vn.compedia.api.response.book.CallCardListResponse;
 import vn.compedia.api.response.book.CallCardResponse;
 import vn.compedia.api.service.CallCardService;
@@ -58,10 +59,14 @@ public class CallCardController extends GlobalExceptionHandler {
     }
 
     @GetMapping(value = "get-one")
-    public ResponseEntity<?> getOne(@RequestParam(name = "id") Long callCardId) {
-        CallCard loan = callCardService.getOne(callCardId);
-        return VietTienResponseDto.ok(loan, "Get list account success");
-    }
+    public ResponseEntity<?> getOne(@RequestParam(name = "id") Long collectMoneyId) {
+        try {
+            CallCardResponse loan = callCardService.getOne(collectMoneyId);
+            return VietTienResponseDto.ok(loan, "Get list account success");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }}
     @GetMapping(value = "search")
     public ResponseEntity<?> search(@RequestParam(name = "username", required = false) String username,
                                     @RequestParam(name = "page") Integer page,

@@ -12,6 +12,7 @@ import vn.compedia.api.dto.VietTienResponseDto;
 import vn.compedia.api.entity.CollectMoney;
 import vn.compedia.api.exception.GlobalExceptionHandler;
 import vn.compedia.api.request.CollectMoneyCreateRequest;
+import vn.compedia.api.response.book.CallCardResponse;
 import vn.compedia.api.response.book.CollectMoneyResponse;
 import vn.compedia.api.service.CollectMoneyService;
 
@@ -36,39 +37,34 @@ public class CollectMoneyController extends GlobalExceptionHandler {
     }
 
     @GetMapping(value = "get-one")
-    public ResponseEntity<?> getOne(@RequestParam(name = "id") Long cardID) {
-        CollectMoney collectMoney = collectMoneyService.getOne(cardID);
-        return VietTienResponseDto.ok(collectMoney, "Get list account success");
-    }
+    public ResponseEntity<?> getOne(@RequestParam(name = "id") Long callCardId) {
+        try {
+            CollectMoneyResponse loan = collectMoneyService.getOne(callCardId);
+            return VietTienResponseDto.ok(loan, "Get list account success");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }}
     @GetMapping(value = "search")
     public ResponseEntity<?> search(@RequestParam(name = "fullName", required = false) String fullName,
                                     @RequestParam(name = "page") Integer page,
                                     @RequestParam(name = "size") Integer size,
                                     @RequestParam(name ="sort_field", required = false) String sortField,
                                     @RequestParam(name ="sort_order", required = false) String sortOrder,
+                                    @RequestParam(name = "username", required = false) String username,
                                     @RequestParam(name ="name_staff",required = false) String nameStaff) {
-        Page<CollectMoneyResponse> list = collectMoneyService.search(fullName, nameStaff,sortField,sortOrder,page,size);
+        Page<CollectMoneyResponse> list = collectMoneyService.search(fullName, nameStaff,username,sortField,sortOrder,page,size);
         return VietTienResponseDto.ok(VietTienPageDto.build(list), "Search list book success");
     }
     @PostMapping
     public ResponseEntity<?> create(@RequestBody CollectMoneyCreateRequest request) {
-        try {
-            collectMoneyService.create(request);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
+        collectMoneyService.create(request);
         return VietTienResponseDto.ok("", "Save success");
     }
 
     @PutMapping()
     public ResponseEntity<?> update(@RequestBody CollectMoneyCreateRequest request) {
-        try {
-            collectMoneyService.update(request);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
+        collectMoneyService.update(request);
         return VietTienResponseDto.ok("", "Save success");
     }
 

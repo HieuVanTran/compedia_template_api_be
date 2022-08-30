@@ -15,6 +15,7 @@ import vn.compedia.api.request.AdminCreateRequest;
 import vn.compedia.api.response.AccountResponse;
 import vn.compedia.api.response.admin.AccountNeResponse;
 import vn.compedia.api.response.admin.AdminResponse;
+import vn.compedia.api.response.book.CallCardResponse;
 import vn.compedia.api.service.AccountService;
 
 import java.util.List;
@@ -35,10 +36,14 @@ public class AccountController extends GlobalExceptionHandler {
     }
 
     @GetMapping(value = "get-one")
-    public ResponseEntity<?> getOne(@RequestParam(name = "id") Long acountId) {
-       Account account = accountService.getOne(acountId);
-        return VietTienResponseDto.ok(account, "Get list account success");
-    }
+    public ResponseEntity<?> getOne(@RequestParam(name = "id") Long accountId) {
+        try {
+            AccountNeResponse admin = accountService.getOne(accountId);
+            return VietTienResponseDto.ok(admin, "Get list account success");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }}
 
     @GetMapping(value = "search")
     public ResponseEntity<?> search(@RequestParam(name = "username", required = false) String username,

@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.validation.annotation.Validated;
 import vn.compedia.api.repository.AuthorRepositoryCustom;
 import vn.compedia.api.response.admin.AccountNeResponse;
 import vn.compedia.api.response.book.AuthorResponse;
@@ -78,6 +79,7 @@ public class AuthorRepositoryImpl implements AuthorRepositoryCustom {
             dto.setAuthorName(ValueUtil.getStringByObject(obj[1]));
             dto.setAddress(ValueUtil.getStringByObject(obj[2]));
             dto.setTitle(ValueUtil.getStringByObject(obj[3]));
+            dto.setNote(ValueUtil.getStringByObject(obj[4]));
             list.add(dto);
         }
 

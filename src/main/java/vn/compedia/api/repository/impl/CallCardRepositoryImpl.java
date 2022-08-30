@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.util.CollectionUtils;
 import vn.compedia.api.repository.CallCardRepositoryCustom;
 import vn.compedia.api.response.MonthDataResponse;
 import vn.compedia.api.response.book.CallCardResponse;
@@ -15,6 +16,7 @@ import javax.persistence.Query;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class CallCardRepositoryImpl implements CallCardRepositoryCustom {
     @PersistenceContext
@@ -71,18 +73,23 @@ public class CallCardRepositoryImpl implements CallCardRepositoryCustom {
                                          String sortField, String sortOrder, Integer page, Integer size, Pageable pageable) {
 
         StringBuilder sb = new StringBuilder();
-        sb.append("SELECT ca.call_card_id," +
+        sb.append(" SELECT ca.call_card_id," +
                 "       a.username," +
                 "       s.staff_id," +
                 "       ca.status," +
                 "       s.name_staff," +
-                "       a.account_id " +
-                "" +
+                "       ca.note," +
+                "       ca.start_date," +
+                "       ca.end_date,  " +
+                "       a.account_id, " +
+                "       b.book_id, " +
+                "       b.book_name, " +
+                "       ca.amount " +
                 "FROM call_card ca " +
+                "         INNER JOIN book b on ca.book_id = b.book_id " +
                 "         INNER JOIN staff s on ca.staff_id = s.staff_id " +
                 "        INNER JOIN account a on ca.account_id = a.account_id " +
-                "" +
-                "WHERE 1 = 1");
+                "WHERE 1 = 1 ");
         appendQuery(sb, username, status, nameStaff);
         setSortOrder(sortField, sortOrder, sb);
         Query query = createQuery(sb, username, status, nameStaff);
@@ -104,7 +111,14 @@ public class CallCardRepositoryImpl implements CallCardRepositoryCustom {
             dto.setStaffId(ValueUtil.getLongByObject(obj[2]));
             dto.setStatus(ValueUtil.getIntegerByObject(obj[3]));
             dto.setNameStaff(ValueUtil.getStringByObject(obj[4]));
-            dto.setAccountId(ValueUtil.getLongByObject(obj[5]));
+            dto.setNote(ValueUtil.getStringByObject(obj[5]));
+            dto.setStartDate(ValueUtil.getStringByObject(obj[6]));
+            dto.setEndDate(ValueUtil.getStringByObject(obj[7]));
+            dto.setAccountId(ValueUtil.getLongByObject(obj[8]));
+            dto.setBookId(ValueUtil.getLongByObject(obj[9]));
+            dto.setBookName(ValueUtil.getStringByObject(obj[10]));
+            dto.setAmount(ValueUtil.getIntegerByObject(obj[11]));
+
             list.add(dto);
         }
 
@@ -199,6 +213,51 @@ public class CallCardRepositoryImpl implements CallCardRepositoryCustom {
         }
 
         return list;
+    }
+
+    @Override
+    public Optional<CallCardResponse> findByIdCallCard(Long callCardId) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("SELECT ca.call_card_id, " +
+                "                       a.username, " +
+                "                       s.staff_id, " +
+                "                       ca.status, " +
+                "                       s.name_staff, " +
+                "                       ca.note, " +
+                "                       ca.start_date, " +
+                "                       ca.end_date,   " +
+                "                       a.account_id,  " +
+                "                       b.book_id,  " +
+                "                       b.book_name,  " +
+                "                       ca.amount  " +
+                "                FROM call_card ca  " +
+                "                         INNER JOIN book b on ca.book_id = b.book_id  " +
+                "                         INNER JOIN staff s on ca.staff_id = s.staff_id  " +
+                "                        INNER JOIN account a on ca.account_id = a.account_id  " +
+                "where ca.call_card_id = :callCardId");
+
+        Query query = entityManager.createNativeQuery(sb.toString());
+        query.setParameter("callCardId", callCardId);
+        List<Object[]> result = query.getResultList();
+        if (!CollectionUtils.isEmpty(result)) {
+            for (Object[] obj : result) {
+                CallCardResponse dto = new CallCardResponse();
+                dto.setCallCardId(ValueUtil.getLongByObject(obj[0]));
+                dto.setUserName(ValueUtil.getStringByObject(obj[1]));
+                dto.setStaffId(ValueUtil.getLongByObject(obj[2]));
+                dto.setStatus(ValueUtil.getIntegerByObject(obj[3]));
+                dto.setNameStaff(ValueUtil.getStringByObject(obj[4]));
+                dto.setNote(ValueUtil.getStringByObject(obj[5]));
+                dto.setStartDate(ValueUtil.getStringByObject(obj[6]));
+                dto.setEndDate(ValueUtil.getStringByObject(obj[7]));
+                dto.setAccountId(ValueUtil.getLongByObject(obj[8]));
+                dto.setBookId(ValueUtil.getLongByObject(obj[9]));
+                dto.setBookName(ValueUtil.getStringByObject(obj[10]));
+                dto.setAmount(ValueUtil.getIntegerByObject(obj[11]));
+                return Optional.of(dto);
+            }
+        }
+        return Optional.empty();
     }
 
     private String buildFilterLike(String query) {

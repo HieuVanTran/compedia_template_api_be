@@ -27,9 +27,5 @@ public class PublishCompanyResponse {
     @JsonProperty("date_founding")
     private String dateFounding;
 
-    @JsonProperty("book_name")
-    private String bookName;
-
-
 
 }

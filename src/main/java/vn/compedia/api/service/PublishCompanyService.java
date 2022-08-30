@@ -39,15 +39,13 @@ public class PublishCompanyService {
         if (!StringUtil.validateEmail(request.getEmail())) {
             throw new Exception("Địa chỉ email không đúng định dạng");
         }
-        if (!StringUtil.validateFullName(request.getPublishName())) {
-            throw  new Exception ("PublishName không đúng định dạng");
-        }
-        if(!StringUtil.isValid(request.getPublishName())){
-            throw new Exception("Nhập lại User có độ dài từ 5-30 ký tự");
-        }
         if (StringUtils.isBlank(request.getPublishName().trim())) {
             throw new Exception("Không được để trống!");
         }
+        if(request.getPublishName().trim().length()>50){
+            throw new Exception("Nhập lại PublishName có độ dài < 50 ký tự");
+        }
+
         if (StringUtils.isBlank(request.getAddress().trim())) {
             throw  new Exception("Không được để trống");
         }
@@ -60,8 +58,8 @@ public class PublishCompanyService {
         if(request.getEmail().trim().length() > 100){
             throw new Exception("Yêu cầu nhập lại Email có độ dài không quá 100 ký tự");
         }
-        if (!StringUtil.validateUser(request.getAgentPeople())) {
-            throw new Exception ("User không đúng định dạng");
+        if (StringUtils.isBlank(request.getAgentPeople().trim())) {
+            throw new Exception ("AgentPeople không được để trống");
         }
         if(request.getAgentPeople().trim().length() > 100){
             throw new Exception("Yêu cầu nhập lại AgentPeople có độ dài không quá 100 ký tự");
@@ -100,9 +98,9 @@ public class PublishCompanyService {
         publishCompanyRepository.deleteById(id);
     }
 
-    public Page<PublishCompanyResponse> search (String publishName, String email, String agentPeople, String bookName,
+    public Page<PublishCompanyResponse> search (String publishName, String email, String agentPeople,
                                                String sortField, String sortOrder, Integer page, Integer size)  {
-        return publishCompanyRepository.search(publishName, email, agentPeople,bookName,sortField,sortOrder,page,size, PageRequest.of(page, size));
+        return publishCompanyRepository.search(publishName, email, agentPeople,sortField,sortOrder,page,size, PageRequest.of(page, size));
 
     }
 }

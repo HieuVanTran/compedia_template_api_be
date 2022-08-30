@@ -12,6 +12,5 @@ import java.util.List;
 @Repository
 
 public interface CollectMoneyRepository extends JpaRepository<CollectMoney, Long>, CollectMoneyRepositoryCustom {
-    @Query("select c from CollectMoney c where c.fullName like :fullName")
-    List<CollectMoney> findByName(@Param("fullName")String fullName);
+
 }

@@ -47,7 +47,7 @@ public class StaffRepositoryImpl implements StaffRepositoryCustom {
                                       String sortField, String sortOrder, Integer page, Integer size, Pageable pageable) {
 
         StringBuilder sb = new StringBuilder();
-        sb.append("SELECT s.staff_id, s.name_staff, s.phone_number, s.address " +
+        sb.append("SELECT s.staff_id, s.name_staff, s.phone_number, s.address, s.date_of_birth " +
                 "FROM staff s WHERE 1 = 1");
         appendQuery(sb, nameStaff, phoneNumber, address);
         setSortOrder(sortField, sortOrder, sb);
@@ -69,6 +69,7 @@ public class StaffRepositoryImpl implements StaffRepositoryCustom {
             dto.setNameStaff(ValueUtil.getStringByObject(obj[1]));
             dto.setPhoneNumber(ValueUtil.getStringByObject(obj[2]));
             dto.setAddress(ValueUtil.getStringByObject(obj[3]));
+            dto.setDateOfBirth(ValueUtil.getStringByObject(obj[4]));
             list.add(dto);
         }
 

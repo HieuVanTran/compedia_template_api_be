@@ -3,6 +3,9 @@ package vn.compedia.api.request;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.xml.soap.Text;
+import java.awt.*;
+
 @Getter
 @Setter
 

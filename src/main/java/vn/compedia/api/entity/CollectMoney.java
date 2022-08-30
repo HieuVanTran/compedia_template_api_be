@@ -21,12 +21,8 @@ public class CollectMoney  {
     @Column(name= "collect_money_id")
     private Long collectMoneyId;
 
-    @Column(name = "user_id")
-    private Long userId;
-
-    @Column(name = "full_name")
-    @Size(max = 50,message = MessageUtil.FULL_NAME_HAS_MAX_LENGTH)
-    private String fullName;
+    @Column(name = "account_id")
+    private Long accountId;
 
     @Column(name = "fined_amount")
     private Double finedAmount;

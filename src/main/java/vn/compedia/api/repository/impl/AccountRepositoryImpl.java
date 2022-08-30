@@ -7,6 +7,7 @@ import vn.compedia.api.repository.AccountRepositoryCustom;
 import vn.compedia.api.response.AccountResponse;
 import vn.compedia.api.response.admin.AccountNeResponse;
 import vn.compedia.api.response.book.CallCardListResponse;
+import vn.compedia.api.response.book.CallCardResponse;
 import vn.compedia.api.util.ValueUtil;
 
 import javax.persistence.EntityManager;
@@ -77,5 +78,46 @@ public class AccountRepositoryImpl implements AccountRepositoryCustom {
             AccountNeResponse.add(dto);
         }
         return AccountNeResponse;
+    }
+    @Override
+    public Optional<AccountNeResponse> findByAccountId(Long accountId) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("SELECT a.account_id," +
+                "       a.username," +
+                "       a.password," +
+                "       a.create_date," +
+                "       r.role_id," +
+                "       a.full_name," +
+                "       a.email," +
+                "       a.phone," +
+                "       a.update_date," +
+                "       a.date_of_birth," +
+                "       r.code_role " +
+                "" +
+                "FROM account a " +
+                "         INNER JOIN role r on a.role_id = r.role_id " +
+                "WHERE a.account_id = :accountId ");
+
+        Query query = entityManager.createNativeQuery(sb.toString());
+        query.setParameter("accountId", accountId);
+        List<Object[]> result = query.getResultList();
+        if (!CollectionUtils.isEmpty(result)) {
+            for (Object[] obj : result) {
+                AccountNeResponse dto = new AccountNeResponse();
+                dto.setAccountId(ValueUtil.getLongByObject(obj[0]));
+                dto.setUsername(ValueUtil.getStringByObject(obj[1]));
+                dto.setPassword(ValueUtil.getStringByObject(obj[2]));
+                dto.setCreateDate(ValueUtil.getStringByObject(obj[3]));
+                dto.setRoleId(ValueUtil.getIntegerByObject(obj[4]));
+                dto.setFullName(ValueUtil.getStringByObject(obj[5]));
+                dto.setEmail(ValueUtil.getStringByObject(obj[6]));
+                dto.setPhone(ValueUtil.getStringByObject(obj[7]));
+                dto.setUpdate_date(ValueUtil.getStringByObject(obj[8]));
+                dto.setDateOfBirth(ValueUtil.getStringByObject(obj[9]));
+                dto.setCodeRole(ValueUtil.getStringByObject(obj[10]));
+                return Optional.of(dto);
+            }
+        }
+        return Optional.empty();
     }
 }

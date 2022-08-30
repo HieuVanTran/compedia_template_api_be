@@ -8,6 +8,8 @@ import vn.compedia.api.util.MessageUtil;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import javax.xml.soap.Text;
+import java.awt.*;
 
 @Getter
 @Setter

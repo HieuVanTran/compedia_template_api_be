@@ -55,17 +55,22 @@ public class PublishCompanyRepositoryImpl implements PublishCompanyRepositoryCus
 
 
     @Override
-    public Page<PublishCompanyResponse> search(String publishName, String email, String agentPeople, String bookName,
+    public Page<PublishCompanyResponse> search(String publishName, String email, String agentPeople,
                                                String sortField, String sortOrder, Integer page, Integer size, Pageable pageable) {
 
         StringBuilder sb = new StringBuilder();
-        sb.append("SELECT b.company_id, p.publish_name, p.email, p.agent_people,b.book_name " +
+        sb.append("SELECT p.company_id," +
+                "       p.publish_name," +
+                "       p.email," +
+                "       p.agent_people," +
+                "       p.address," +
+                "       p.date_founding " +
+                "" +
                 "FROM publish_company p " +
-                "INNER JOIN book b on p.company_id = b.company_id " +
-                "WHERE 1 = 1");
-        appendQuery(sb, publishName, email, agentPeople,bookName);
+                "WHERE 1 = 1  ");
+        appendQuery(sb, publishName, email, agentPeople);
         setSortOrder(sortField, sortOrder, sb);
-        Query query = createQuery(sb, publishName, email, agentPeople,bookName);
+        Query query = createQuery(sb, publishName, email, agentPeople);
 
         if (pageable.getPageSize() > 0) {
             query.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
@@ -83,19 +88,21 @@ public class PublishCompanyRepositoryImpl implements PublishCompanyRepositoryCus
             dto.setPublishName(ValueUtil.getStringByObject(obj[1]));
             dto.setEmail(ValueUtil.getStringByObject(obj[2]));
             dto.setAgentPeople(ValueUtil.getStringByObject(obj[3]));
-            dto.setBookName(ValueUtil.getStringByObject(obj[4]));
+            dto.setAddress(ValueUtil.getStringByObject(obj[4]));
+            dto.setDateFounding(ValueUtil.getStringByObject(obj[5]));
+
             list.add(dto);
         }
 
-        return new PageImpl<>(list, pageable, countSearch( publishName, email, agentPeople,bookName).longValue());
+        return new PageImpl<>(list, pageable, countSearch( publishName, email, agentPeople).longValue());
     }
 
-    private BigInteger countSearch(String publishName, String email, String agentPeople, String bookName ) {
+    private BigInteger countSearch(String publishName, String email, String agentPeople ) {
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT count(0) " +
                 " FROM publish_company p WHERE 1 = 1 ");
-        appendQuery(sb, publishName,email,agentPeople,bookName);
-        Query query = createQuery(sb, publishName,email,agentPeople,bookName);
+        appendQuery(sb, publishName,email,agentPeople);
+        Query query = createQuery(sb, publishName,email,agentPeople);
         return (BigInteger) query.getSingleResult();
     }
     private void setSortOrder(String sortField, String sortOrder, StringBuilder sb) {
@@ -117,7 +124,7 @@ public class PublishCompanyRepositoryImpl implements PublishCompanyRepositoryCus
 
 
 
-    public void appendQuery(StringBuilder sb, String publishName, String email, String agentPeople, String bookName) {
+    public void appendQuery(StringBuilder sb, String publishName, String email, String agentPeople) {
         if (StringUtils.isNotBlank(publishName)) {
             sb.append(" and p.publish_name like :publishName ");
         }
@@ -126,14 +133,12 @@ public class PublishCompanyRepositoryImpl implements PublishCompanyRepositoryCus
         }
         if(StringUtils.isNotBlank(agentPeople)) {
             sb.append(" and p.agentPeople like :agentPeople ");
-        }
-        if(StringUtils.isNotBlank(bookName)) {
-            sb.append(" and b.bookName like :bookName ");
+
         }
     }
 
 
-    public Query createQuery(StringBuilder sb, String publishName, String email, String agentPeople, String bookName) {
+    public Query createQuery(StringBuilder sb, String publishName, String email, String agentPeople ) {
         Query query = entityManager.createNativeQuery(sb.toString());
         if (StringUtils.isNotBlank(publishName)) {
             query.setParameter("publishName", buildFilterLike(publishName));
@@ -143,9 +148,6 @@ public class PublishCompanyRepositoryImpl implements PublishCompanyRepositoryCus
         }
         if (StringUtils.isNotBlank(agentPeople)) {
             query.setParameter("agentPeople", buildFilterLike(agentPeople));
-        }
-        if (StringUtils.isNotBlank(bookName)){
-            query.setParameter("bookName",buildFilterLike(bookName));
         }
         return query;
     }
