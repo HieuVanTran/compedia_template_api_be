@@ -16,22 +16,22 @@ import java.io.Serializable;
 @Entity
 @Table(name = "product_size")
 public class ProductSize implements Serializable {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "product_size_id")
-	@JsonProperty("product_size_id")
-	private Long productSizeId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "product_size_id")
+    @JsonProperty("product_size_id")
+    private Long productSizeId;
 
-	@Column(name = "product_id")
-	@JsonProperty("product_id")
-	private Long productId;
+    @Column(name = "product_id")
+    @JsonProperty("product_id")
+    private Long productId;
 
-	@Column(name = "name_size")
-	@JsonProperty("name_size")
-	private String nameSize;
+    @Column(name = "name_size")
+    @JsonProperty("name_size")
+    private String nameSize;
 
-	@JsonProperty("quantity_in_stock")
-	@Column(name = "quantity_in_stock")
-	private String quantityInStock;
+    @JsonProperty("quantity_in_stock")
+    @Column(name = "quantity_in_stock")
+    private String quantityInStock;
 
 }

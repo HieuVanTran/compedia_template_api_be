@@ -11,7 +11,6 @@ import vn.compedia.api.response.index.HomeCategoryResponse;
 import vn.compedia.api.response.index.HomePageResponse;
 
 import java.util.List;
-import java.util.Optional;
 
 @Log4j2
 @Service
@@ -32,7 +31,7 @@ public class HomeCategoryService {
 //        }
 //        return category.get();
 
-    public List<HomeCategoryResponse> getOne(Long idTypeBook, Long idAuthor  )  {
+    public List<HomeCategoryResponse> getOne(Long idTypeBook, Long idAuthor) {
         return bookRepository.findByCategory(idTypeBook, idAuthor);
     }
 

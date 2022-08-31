@@ -8,7 +8,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import vn.compedia.api.repository.BookRepository;
 import vn.compedia.api.response.book.BookResponse;
-import vn.compedia.api.response.index.HomeCategoryResponse;
 import vn.compedia.api.response.index.HomePageResponse;
 
 import java.util.List;
@@ -25,9 +24,9 @@ public class HomePageService {
         return bookRepository.findAllHome();
     }
 
-    public List<HomePageResponse> getOne( Long idTypeBook  ) throws Exception {
+    public List<HomePageResponse> getOne(Long idTypeBook) throws Exception {
         List<HomePageResponse> home = bookRepository.findByHome(idTypeBook);
-        if ( home.isEmpty()) {
+        if (home.isEmpty()) {
             throw new Exception(" EMPTY ");
         }
         return home;

@@ -6,7 +6,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import vn.compedia.api.repository.StaffRepositoryCustom;
 import vn.compedia.api.response.admin.StaffResponse;
-import vn.compedia.api.response.user.UserResponse;
 import vn.compedia.api.util.ValueUtil;
 
 import javax.persistence.EntityManager;
@@ -30,9 +29,9 @@ public class StaffRepositoryImpl implements StaffRepositoryCustom {
         Query query = entityManager.createNativeQuery(sb.toString());
         List<Object[]> result = query.getResultList();
 
-        List<StaffResponse>  StaffResponse = new ArrayList<>();
+        List<StaffResponse> StaffResponse = new ArrayList<>();
         for (Object[] obj : result) {
-            StaffResponse dto = new  StaffResponse();
+            StaffResponse dto = new StaffResponse();
             dto.setStaffId(ValueUtil.getLongByObject(obj[0]));
             dto.setNameStaff(ValueUtil.getStringByObject(obj[1]));
             dto.setPhoneNumber(ValueUtil.getStringByObject(obj[2]));
@@ -42,6 +41,7 @@ public class StaffRepositoryImpl implements StaffRepositoryCustom {
         }
         return StaffResponse;
     }
+
     @Override
     public Page<StaffResponse> search(String nameStaff, String phoneNumber, String address,
                                       String sortField, String sortOrder, Integer page, Integer size, Pageable pageable) {

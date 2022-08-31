@@ -9,13 +9,10 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import vn.compedia.api.dto.VietTienPageDto;
 import vn.compedia.api.dto.VietTienResponseDto;
-import vn.compedia.api.entity.CollectMoney;
 import vn.compedia.api.exception.GlobalExceptionHandler;
 import vn.compedia.api.request.CollectMoneyCreateRequest;
-import vn.compedia.api.response.book.CallCardResponse;
 import vn.compedia.api.response.book.CollectMoneyResponse;
 import vn.compedia.api.service.CollectMoneyService;
-
 
 import java.util.List;
 
@@ -44,18 +41,21 @@ public class CollectMoneyController extends GlobalExceptionHandler {
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }}
+        }
+    }
+
     @GetMapping(value = "search")
     public ResponseEntity<?> search(@RequestParam(name = "fullName", required = false) String fullName,
                                     @RequestParam(name = "page") Integer page,
                                     @RequestParam(name = "size") Integer size,
-                                    @RequestParam(name ="sort_field", required = false) String sortField,
-                                    @RequestParam(name ="sort_order", required = false) String sortOrder,
+                                    @RequestParam(name = "sort_field", required = false) String sortField,
+                                    @RequestParam(name = "sort_order", required = false) String sortOrder,
                                     @RequestParam(name = "username", required = false) String username,
-                                    @RequestParam(name ="name_staff",required = false) String nameStaff) {
-        Page<CollectMoneyResponse> list = collectMoneyService.search(fullName, nameStaff,username,sortField,sortOrder,page,size);
+                                    @RequestParam(name = "name_staff", required = false) String nameStaff) {
+        Page<CollectMoneyResponse> list = collectMoneyService.search(fullName, nameStaff, username, sortField, sortOrder, page, size);
         return VietTienResponseDto.ok(VietTienPageDto.build(list), "Search list book success");
     }
+
     @PostMapping
     public ResponseEntity<?> create(@RequestBody CollectMoneyCreateRequest request) {
         collectMoneyService.create(request);
@@ -69,7 +69,7 @@ public class CollectMoneyController extends GlobalExceptionHandler {
     }
 
     @DeleteMapping()
-    public ResponseEntity<?> delete(@RequestParam Long id){
+    public ResponseEntity<?> delete(@RequestParam Long id) {
         collectMoneyService.delete(id);
         return VietTienResponseDto.ok("", "Save success");
     }

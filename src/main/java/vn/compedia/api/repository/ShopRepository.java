@@ -8,11 +8,11 @@ import java.util.List;
 
 @Repository
 public interface ShopRepository extends JpaRepository<Shop, Long>, ShopRepositoryCustom {
-	Shop findAccountByShopId(Long id);
+    Shop findAccountByShopId(Long id);
 
-	Shop findShopByShopId(Long id);
+    Shop findShopByShopId(Long id);
 
-	List<Shop> findLitsShopByAccountId(Long id);
+    List<Shop> findLitsShopByAccountId(Long id);
 
-	Shop findShopByAccountId(Long id);
+    Shop findShopByAccountId(Long id);
 }

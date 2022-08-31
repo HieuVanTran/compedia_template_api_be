@@ -1,19 +1,15 @@
 package vn.compedia.api.service;
 
 import lombok.extern.log4j.Log4j2;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import vn.compedia.api.entity.Account;
 import vn.compedia.api.entity.CollectMoney;
 import vn.compedia.api.repository.CollectMoneyRepository;
 import vn.compedia.api.request.CollectMoneyCreateRequest;
-import vn.compedia.api.request.UserCreateRequest;
-import vn.compedia.api.response.book.CallCardResponse;
 import vn.compedia.api.response.book.CollectMoneyResponse;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -37,7 +33,7 @@ public class CollectMoneyService {
         return money.get();
     }
 
-    public void create(CollectMoneyCreateRequest request)  {
+    public void create(CollectMoneyCreateRequest request) {
 
         CollectMoney collectMoney = new CollectMoney();
         collectMoney.setAccountId(request.getAccountId());
@@ -61,8 +57,9 @@ public class CollectMoneyService {
 
         collectMoneyRepository.deleteById(id);
     }
-    public Page<CollectMoneyResponse> search(String fullName, String nameStaff,String username, String sortField, String sortOrder, Integer page, Integer size) {
-        return collectMoneyRepository.search(fullName, nameStaff,username,sortField,sortOrder,page,size, PageRequest.of(page, size));
+
+    public Page<CollectMoneyResponse> search(String fullName, String nameStaff, String username, String sortField, String sortOrder, Integer page, Integer size) {
+        return collectMoneyRepository.search(fullName, nameStaff, username, sortField, sortOrder, page, size, PageRequest.of(page, size));
     }
 }
 

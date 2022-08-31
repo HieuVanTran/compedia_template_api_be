@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CollectMoneyCreateRequest  {
+public class CollectMoneyCreateRequest {
 
     Long Id;
 

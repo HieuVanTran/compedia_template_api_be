@@ -13,7 +13,7 @@ public interface CollectMoneyRepositoryCustom {
 
     List<CollectMoneyResponse> findAllCollectMoney();
 
-    Page<CollectMoneyResponse> search(String fullName, String nameStaff, String sortField,String username,
+    Page<CollectMoneyResponse> search(String fullName, String nameStaff, String sortField, String username,
                                       String sortOrder, Integer page, Integer size, Pageable pageable);
 
     BigDecimal getTotalMoney();

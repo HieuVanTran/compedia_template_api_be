@@ -8,8 +8,6 @@ import vn.compedia.api.util.MessageUtil;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
-import javax.xml.soap.Text;
-import java.awt.*;
 
 @Getter
 @Setter
@@ -18,14 +16,14 @@ import java.awt.*;
 @Entity
 
 @Table(name = "book")
-public class Book  {
+public class Book {
     @javax.persistence.Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "book_id")
     private Long bookId;
 
     @Column(name = "book_name")
-    @Size(max = 50,message = MessageUtil.FULL_NAME_HAS_MAX_LENGTH)
+    @Size(max = 50, message = MessageUtil.FULL_NAME_HAS_MAX_LENGTH)
     private String bookName;
 
     @Column(name = "publishing_year")

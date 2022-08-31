@@ -16,14 +16,14 @@ import java.util.Date;
 @AllArgsConstructor
 public class Tokens {
 
-	@JsonProperty("expires_in")
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = Constant.TIME_ZONE_DEFAULT)
-	private Date expiresIn;
+    @JsonProperty("expires_in")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = Constant.TIME_ZONE_DEFAULT)
+    private Date expiresIn;
 
-	@JsonProperty("access_token")
-	private String accessToken;
+    @JsonProperty("access_token")
+    private String accessToken;
 
-	@JsonProperty("refresh_token")
-	private String refreshToken;
+    @JsonProperty("refresh_token")
+    private String refreshToken;
 
 }

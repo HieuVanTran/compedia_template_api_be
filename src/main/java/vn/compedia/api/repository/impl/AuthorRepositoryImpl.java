@@ -4,16 +4,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.validation.annotation.Validated;
 import vn.compedia.api.repository.AuthorRepositoryCustom;
-import vn.compedia.api.response.admin.AccountNeResponse;
 import vn.compedia.api.response.book.AuthorResponse;
 import vn.compedia.api.util.ValueUtil;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,9 +34,9 @@ public class AuthorRepositoryImpl implements AuthorRepositoryCustom {
         Query query = entityManager.createNativeQuery(sb.toString());
         List<Object[]> result = query.getResultList();
 
-        List<AuthorResponse>  AuthorResponse = new ArrayList<>();
+        List<AuthorResponse> AuthorResponse = new ArrayList<>();
         for (Object[] obj : result) {
-            AuthorResponse dto = new  AuthorResponse();
+            AuthorResponse dto = new AuthorResponse();
             dto.setAuthorId(ValueUtil.getLongByObject(obj[0]));
             dto.setAuthorName(ValueUtil.getStringByObject(obj[1]));
             dto.setAddress(ValueUtil.getStringByObject(obj[2]));
@@ -103,8 +100,7 @@ public class AuthorRepositoryImpl implements AuthorRepositoryCustom {
             }
             if (sortField.toLowerCase().equals("ADDRESS")) {
                 sb.append(" au.ADDRESS ");
-            }
-            else if (sortField.toLowerCase().equals("TITLE")){
+            } else if (sortField.toLowerCase().equals("TITLE")) {
                 sb.append("au.TITLE");
             }
             sb.append(sortOrder);
@@ -140,6 +136,7 @@ public class AuthorRepositoryImpl implements AuthorRepositoryCustom {
         }
         return query;
     }
+
     @Override
     public BigInteger getTotalAuthor() {
         StringBuilder sb = new StringBuilder();

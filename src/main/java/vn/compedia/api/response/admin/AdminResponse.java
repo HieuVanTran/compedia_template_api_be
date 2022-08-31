@@ -26,6 +26,4 @@ public class AdminResponse {
     private String codeRole;
 
 
-
-
 }

@@ -1,7 +1,6 @@
 package vn.compedia.api.controller.cms;
 
 import io.swagger.annotations.Api;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -24,7 +23,7 @@ import java.util.List;
 @RequestMapping("/api/v1/author")
 @Validated
 
-public class AuthorController  extends GlobalExceptionHandler {
+public class AuthorController extends GlobalExceptionHandler {
     @Autowired
     private AuthorService authorService;
 
@@ -34,20 +33,22 @@ public class AuthorController  extends GlobalExceptionHandler {
         List<AuthorResponse> list = authorService.getAll();
         return VietTienResponseDto.ok(list, "Get list account success");
     }
+
     @GetMapping(value = "get-one")
     public ResponseEntity<?> getOne(@RequestParam(name = "id") Long idAuthor) {
         Author author = authorService.getOne(idAuthor);
         return VietTienResponseDto.ok(author, "Get list account success");
     }
+
     @GetMapping(value = "search")
     public ResponseEntity<?> search(@RequestParam(name = "authorName", required = false) String authorName,
                                     @RequestParam(name = "address", required = false) String address,
                                     @RequestParam(name = "page") Integer page,
                                     @RequestParam(name = "size") Integer size,
-                                    @RequestParam(name ="sort_field", required = false) String sortField,
-                                    @RequestParam(name ="sort_order", required = false) String sortOrder,
+                                    @RequestParam(name = "sort_field", required = false) String sortField,
+                                    @RequestParam(name = "sort_order", required = false) String sortOrder,
                                     @RequestParam(name = "title", required = false) String title) {
-        Page<AuthorResponse> list = authorService.search(authorName,address, title,sortField,sortField,page,size);
+        Page<AuthorResponse> list = authorService.search(authorName, address, title, sortField, sortField, page, size);
 //        return VietTienResponseDto.ok(list, "Search list book success");
         return VietTienResponseDto.ok(VietTienPageDto.build(list), "Search list book success");
     }
@@ -77,7 +78,7 @@ public class AuthorController  extends GlobalExceptionHandler {
 
 
     @DeleteMapping()
-    public ResponseEntity<?> delete(@RequestParam Long id ){
+    public ResponseEntity<?> delete(@RequestParam Long id) {
         authorService.delete(id);
         return VietTienResponseDto.ok("", "Save success");
     }

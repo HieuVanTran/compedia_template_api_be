@@ -5,12 +5,15 @@ public class BaseFilter {
     private int pageSize;
     private String sortBy;
     private String orderBy;
+
     public BaseFilter() {
     }
+
     public BaseFilter(int pageNumber, int pageSize) {
         this.pageNumber = pageNumber;
         this.pageSize = pageSize;
     }
+
     public BaseFilter(int pageNumber, int pageSize, String sortBy, String orderBy) {
         this.pageNumber = pageNumber;
         this.pageSize = pageSize;

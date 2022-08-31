@@ -5,9 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import vn.compedia.api.repository.PublishCompanyRepositoryCustom;
-import vn.compedia.api.response.book.AuthorResponse;
 import vn.compedia.api.response.book.PublishCompanyResponse;
-import vn.compedia.api.response.user.UserResponse;
 import vn.compedia.api.util.ValueUtil;
 
 import javax.persistence.EntityManager;
@@ -39,9 +37,9 @@ public class PublishCompanyRepositoryImpl implements PublishCompanyRepositoryCus
         Query query = entityManager.createNativeQuery(sb.toString());
         List<Object[]> result = query.getResultList();
 
-        List<PublishCompanyResponse>  PublishCompanyResponse = new ArrayList<>();
+        List<PublishCompanyResponse> PublishCompanyResponse = new ArrayList<>();
         for (Object[] obj : result) {
-            PublishCompanyResponse dto = new  PublishCompanyResponse();
+            PublishCompanyResponse dto = new PublishCompanyResponse();
             dto.setIdPub(ValueUtil.getLongByObject(obj[0]));
             dto.setPublishName(ValueUtil.getStringByObject(obj[1]));
             dto.setEmail(ValueUtil.getStringByObject(obj[2]));
@@ -94,17 +92,18 @@ public class PublishCompanyRepositoryImpl implements PublishCompanyRepositoryCus
             list.add(dto);
         }
 
-        return new PageImpl<>(list, pageable, countSearch( publishName, email, agentPeople).longValue());
+        return new PageImpl<>(list, pageable, countSearch(publishName, email, agentPeople).longValue());
     }
 
-    private BigInteger countSearch(String publishName, String email, String agentPeople ) {
+    private BigInteger countSearch(String publishName, String email, String agentPeople) {
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT count(0) " +
                 " FROM publish_company p WHERE 1 = 1 ");
-        appendQuery(sb, publishName,email,agentPeople);
-        Query query = createQuery(sb, publishName,email,agentPeople);
+        appendQuery(sb, publishName, email, agentPeople);
+        Query query = createQuery(sb, publishName, email, agentPeople);
         return (BigInteger) query.getSingleResult();
     }
+
     private void setSortOrder(String sortField, String sortOrder, StringBuilder sb) {
         if (StringUtils.isNotBlank(sortField)) {
             sb.append(" ORDER BY ");
@@ -112,8 +111,7 @@ public class PublishCompanyRepositoryImpl implements PublishCompanyRepositoryCus
                 sb.append(" p.publishName ");
             } else if (sortField.toLowerCase().equals("email")) {
                 sb.append(" p.email ");
-            }
-            else if (sortField.toLowerCase().equals("agentPeople")) {
+            } else if (sortField.toLowerCase().equals("agentPeople")) {
                 sb.append(" p.agentPeople ");
             }
             sb.append(sortOrder);
@@ -123,22 +121,21 @@ public class PublishCompanyRepositoryImpl implements PublishCompanyRepositoryCus
     }
 
 
-
     public void appendQuery(StringBuilder sb, String publishName, String email, String agentPeople) {
         if (StringUtils.isNotBlank(publishName)) {
             sb.append(" and p.publish_name like :publishName ");
         }
-        if(StringUtils.isNotBlank(email)){
+        if (StringUtils.isNotBlank(email)) {
             sb.append(" and p.email like :email ");
         }
-        if(StringUtils.isNotBlank(agentPeople)) {
+        if (StringUtils.isNotBlank(agentPeople)) {
             sb.append(" and p.agentPeople like :agentPeople ");
 
         }
     }
 
 
-    public Query createQuery(StringBuilder sb, String publishName, String email, String agentPeople ) {
+    public Query createQuery(StringBuilder sb, String publishName, String email, String agentPeople) {
         Query query = entityManager.createNativeQuery(sb.toString());
         if (StringUtils.isNotBlank(publishName)) {
             query.setParameter("publishName", buildFilterLike(publishName));
@@ -151,6 +148,7 @@ public class PublishCompanyRepositoryImpl implements PublishCompanyRepositoryCus
         }
         return query;
     }
+
     @Override
     public BigInteger getTotalPublisher() {
         StringBuilder sb = new StringBuilder();

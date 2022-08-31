@@ -42,6 +42,4 @@ public class UserResponse {
     private String email;
 
 
-
-
 }

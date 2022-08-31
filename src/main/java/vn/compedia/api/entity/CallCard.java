@@ -15,7 +15,7 @@ import java.util.Date;
 @Entity
 @Table(name = "call_card")
 
-public class CallCard  {
+public class CallCard {
 
     @javax.persistence.Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

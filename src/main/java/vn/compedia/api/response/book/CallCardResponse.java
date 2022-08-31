@@ -1,7 +1,6 @@
 package vn.compedia.api.response.book;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.models.auth.In;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -46,8 +45,6 @@ public class CallCardResponse {
 
     @JsonProperty("book_name")
     private String bookName;
-
-
 
 
 }

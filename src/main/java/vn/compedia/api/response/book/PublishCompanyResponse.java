@@ -19,7 +19,7 @@ public class PublishCompanyResponse {
     private String email;
 
     @JsonProperty("agent_people")
-    private  String agentPeople;
+    private String agentPeople;
 
     @JsonProperty("address")
     private String address;

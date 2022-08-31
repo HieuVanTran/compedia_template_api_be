@@ -21,11 +21,10 @@ public class RequestForm {
     private Long cardId;
 
     @Column(name = "book_name")
-    private String  bookName;
+    private String bookName;
 
     @Column(name = "amount")
     private Integer amount;
-
 
 
 }

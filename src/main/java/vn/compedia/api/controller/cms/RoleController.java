@@ -30,9 +30,10 @@ public class RoleController extends GlobalExceptionHandler {
 
     @GetMapping(value = "get-one")
     public ResponseEntity<?> getOne(@RequestParam(name = "id") Long roleId) {
-       Role role = roleService.getOne(roleId);
+        Role role = roleService.getOne(roleId);
         return VietTienResponseDto.ok(role, "Get list account success");
     }
+
     @PostMapping
     public ResponseEntity<?> create(@RequestBody RoleCreateRequest request) {
         roleService.create(request);
@@ -46,7 +47,7 @@ public class RoleController extends GlobalExceptionHandler {
     }
 
     @DeleteMapping()
-    public ResponseEntity<?> delete(@RequestParam Long id){
+    public ResponseEntity<?> delete(@RequestParam Long id) {
         roleService.delete(id);
         return VietTienResponseDto.ok("", "Save success");
     }

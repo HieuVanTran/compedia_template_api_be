@@ -5,7 +5,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import vn.compedia.api.repository.BookCategoryRepositoryCustom;
-import vn.compedia.api.response.book.AuthorResponse;
 import vn.compedia.api.response.book.BookCategoryResponse;
 import vn.compedia.api.util.ValueUtil;
 
@@ -57,7 +56,7 @@ public class BookCategoryRepositoryImpl implements BookCategoryRepositoryCustom 
     }
 
 
-    private BigInteger countSearch(String categoryName, String bookName  ) {
+    private BigInteger countSearch(String categoryName, String bookName) {
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT count(0) " +
                 " FROM book_category bc " +
@@ -73,8 +72,7 @@ public class BookCategoryRepositoryImpl implements BookCategoryRepositoryCustom 
             sb.append(" ORDER BY ");
             if (sortField.toLowerCase().equals("categoryName")) {
                 sb.append(" bc.categoryName ");
-            }
-            else if (sortField.toLowerCase().equals("bookName")) {
+            } else if (sortField.toLowerCase().equals("bookName")) {
                 sb.append(" b.bookName ");
             }
             sb.append(sortOrder);

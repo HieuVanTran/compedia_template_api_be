@@ -4,10 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import vn.compedia.api.util.MessageUtil;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 
 @Getter
 @Setter
@@ -15,10 +13,10 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 @Entity
 @Table(name = "collect_money")
-public class CollectMoney  {
+public class CollectMoney {
     @javax.persistence.Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name= "collect_money_id")
+    @Column(name = "collect_money_id")
     private Long collectMoneyId;
 
     @Column(name = "account_id")

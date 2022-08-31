@@ -1,6 +1,5 @@
 package vn.compedia.api.repository;
 
-import org.springframework.stereotype.Repository;
 import vn.compedia.api.entity.Account;
 import vn.compedia.api.response.admin.AccountNeResponse;
 

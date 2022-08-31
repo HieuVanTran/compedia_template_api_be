@@ -3,7 +3,6 @@ package vn.compedia.api.entity;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.Date;
 
 @Getter
 @Setter
@@ -23,7 +22,7 @@ public class Staff {
     private String nameStaff;
 
     @Column(name = "phone_number")
-    private String  phoneNumber;
+    private String phoneNumber;
 
     @Column(name = "address")
     private String address;

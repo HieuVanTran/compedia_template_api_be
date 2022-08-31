@@ -10,12 +10,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import vn.compedia.api.entity.User;
 import vn.compedia.api.repository.UserRepository;
-import vn.compedia.api.request.AdminCreateRequest;
 import vn.compedia.api.request.UserCreateRequest;
 import vn.compedia.api.response.user.UserResponse;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Date;
+
 import java.util.List;
 
 @Log4j2
@@ -44,28 +41,29 @@ public class UserService {
     }
 
     public void validateData(UserCreateRequest request) throws Exception {
-        if(StringUtils.isBlank(request.getFullName().trim())) {
-            throw new Exception ("Fullname không được để trống");
+        if (StringUtils.isBlank(request.getFullName().trim())) {
+            throw new Exception("Fullname không được để trống");
         }
-        if(request.getFullName().trim().length() > 50 ) {
+        if (request.getFullName().trim().length() > 50) {
             throw new Exception("Độ dài FullName không quá 50 ký tự");
         }
-        if(StringUtils.isBlank(request.getPhone().trim())){
+        if (StringUtils.isBlank(request.getPhone().trim())) {
             throw new Exception("PhoneNumber không được để trống");
         }
-        if (request.getPhone().trim().length() > 11 ) {
+        if (request.getPhone().trim().length() > 11) {
             throw new Exception("Độ dài PhoneNumber không quá 11 ký tự");
         }
-        if(!request.getPhone().trim().matches(phoneNumberRegex)) {
-            throw  new Exception("Không đúng định dạng phoneNumber");
+        if (!request.getPhone().trim().matches(phoneNumberRegex)) {
+            throw new Exception("Không đúng định dạng phoneNumber");
         }
         if (StringUtils.isBlank(request.getAddress().trim())) {
             throw new Exception("Không được để trống Address");
         }
-        if (request.getAddress().trim().length() > 50 ) {
+        if (request.getAddress().trim().length() > 50) {
             throw new Exception("Độ dài Address không vượt quá 50 ký tự");
         }
     }
+
     public void create(UserCreateRequest request) throws Exception {
         validateData(request);
         User user = new User();
@@ -102,7 +100,7 @@ public class UserService {
     }
 
     public Page<UserResponse> search(String fullName, String address, String phone,
-                                     String sortField,String sortOrder, Integer page, Integer size) {
-        return userRepository.search(fullName, address, phone,sortField,sortOrder,page,size, PageRequest.of(page, size));
+                                     String sortField, String sortOrder, Integer page, Integer size) {
+        return userRepository.search(fullName, address, phone, sortField, sortOrder, page, size, PageRequest.of(page, size));
     }
 }

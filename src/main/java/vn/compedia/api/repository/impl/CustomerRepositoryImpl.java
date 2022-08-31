@@ -29,7 +29,7 @@ public class CustomerRepositoryImpl implements CustomerRepositoryCustom {
     public Page<ShopListResponse> search(Map<String, Object> filters, Map<String, String> sorts, Pageable pageable) {
         StringBuilder sb = new StringBuilder();
         sb.append("select ct.customer_id AS customerId," +
-        "ct.name AS name," +
+                "ct.name AS name," +
                 "ct.phone AS phone," +
                 "ct.logo AS logo," +
                 "ct.status AS status ");

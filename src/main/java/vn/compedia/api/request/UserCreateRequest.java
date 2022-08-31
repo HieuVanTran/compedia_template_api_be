@@ -3,9 +3,6 @@ package vn.compedia.api.request;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.web.bind.annotation.GetMapping;
-
-import java.util.Date;
 
 @Getter
 @Setter

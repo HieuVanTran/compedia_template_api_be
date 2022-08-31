@@ -16,18 +16,18 @@ import java.io.Serializable;
 @Entity
 @Table(name = "account")
 public class News extends BaseEntity implements Serializable {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "news_id")
-	@JsonProperty("news_id")
-	private Long newsId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "news_id")
+    @JsonProperty("news_id")
+    private Long newsId;
 
-	@Column(name = "content")
-	@JsonProperty("content")
-	private String content;
+    @Column(name = "content")
+    @JsonProperty("content")
+    private String content;
 
-	@Column(name = "avatar_path")
-	@JsonProperty("avatar_path")
-	private String avatarPath;
+    @Column(name = "avatar_path")
+    @JsonProperty("avatar_path")
+    private String avatarPath;
 
 }

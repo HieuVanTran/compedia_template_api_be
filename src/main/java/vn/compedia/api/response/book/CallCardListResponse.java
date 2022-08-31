@@ -18,16 +18,16 @@ public class CallCardListResponse {
 
     private String amount;
 
-    @JsonProperty ("card_number")
+    @JsonProperty("card_number")
     private String cardNumber;
 
-    @JsonProperty ("staff_id")
+    @JsonProperty("staff_id")
     private Long staffId;
 
-    @JsonProperty ("start_date")
+    @JsonProperty("start_date")
     private String startDate;
 
-    @JsonProperty ("end_date")
+    @JsonProperty("end_date")
     private String endDate;
 
     private String note;

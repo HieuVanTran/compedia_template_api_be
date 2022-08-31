@@ -44,9 +44,9 @@ public class CollectMoneyRepositoryImpl implements CollectMoneyRepositoryCustom 
         Query query = entityManager.createNativeQuery(sb.toString());
         List<Object[]> result = query.getResultList();
 
-        List<CollectMoneyResponse>  CollectMoneyResponse = new ArrayList<>();
+        List<CollectMoneyResponse> CollectMoneyResponse = new ArrayList<>();
         for (Object[] obj : result) {
-            CollectMoneyResponse dto = new  CollectMoneyResponse();
+            CollectMoneyResponse dto = new CollectMoneyResponse();
             dto.setCollectMoneyId(ValueUtil.getLongByObject(obj[0]));
             dto.setFullName(ValueUtil.getStringByObject(obj[1]));
             dto.setStaffId(ValueUtil.getLongByObject(obj[2]));
@@ -61,7 +61,7 @@ public class CollectMoneyRepositoryImpl implements CollectMoneyRepositoryCustom 
     }
 
     @Override
-    public Page<CollectMoneyResponse> search(String fullName, String nameStaff,String username, String sortField,String sortOrder, Integer page, Integer size, Pageable pageable) {
+    public Page<CollectMoneyResponse> search(String fullName, String nameStaff, String username, String sortField, String sortOrder, Integer page, Integer size, Pageable pageable) {
 
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT c.collect_money_id, a.full_name, s.staff_id, s.name_staff,a.username, a.account_id,c.proceeds, c.fined_amount " +
@@ -70,9 +70,9 @@ public class CollectMoneyRepositoryImpl implements CollectMoneyRepositoryCustom 
                 "INNER JOIN account a ON c.account_id = a.account_id " +
                 "WHERE 1 = 1");
 
-        appendQuery(sb, fullName, nameStaff, username );
+        appendQuery(sb, fullName, nameStaff, username);
         setSortOrder(sortField, sortOrder, sb);
-        Query query = createQuery(sb, fullName,nameStaff,username );
+        Query query = createQuery(sb, fullName, nameStaff, username);
 
         if (pageable.getPageSize() > 0) {
             query.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
@@ -97,7 +97,7 @@ public class CollectMoneyRepositoryImpl implements CollectMoneyRepositoryCustom 
             list.add(dto);
         }
 
-        return new PageImpl<>(list, pageable, countSearch( fullName,nameStaff,username).longValue());
+        return new PageImpl<>(list, pageable, countSearch(fullName, nameStaff, username).longValue());
     }
 
     private BigInteger countSearch(String fullName, String nameStaff, String username) {
@@ -107,10 +107,11 @@ public class CollectMoneyRepositoryImpl implements CollectMoneyRepositoryCustom 
                 "INNER JOIN staff s ON c.staff_id = s.staff_id " +
                 "INNER JOIN account a ON c.account_id = a.account_id " +
                 "WHERE 1 = 1 ");
-        appendQuery(sb, fullName,nameStaff,username);
-        Query query = createQuery(sb, fullName,nameStaff,username);
+        appendQuery(sb, fullName, nameStaff, username);
+        Query query = createQuery(sb, fullName, nameStaff, username);
         return (BigInteger) query.getSingleResult();
     }
+
     private void setSortOrder(String sortField, String sortOrder, StringBuilder sb) {
         if (StringUtils.isNotBlank(sortField)) {
             sb.append(" ORDER BY ");
@@ -127,21 +128,20 @@ public class CollectMoneyRepositoryImpl implements CollectMoneyRepositoryCustom 
     }
 
 
-
     public void appendQuery(StringBuilder sb, String fullName, String nameStaff, String username) {
         if (StringUtils.isNotBlank(fullName)) {
             sb.append(" and a.full_name like :fullName ");
         }
-        if(StringUtils.isNotBlank(nameStaff)){
+        if (StringUtils.isNotBlank(nameStaff)) {
             sb.append(" and s.nameStaff like :nameStaff ");
         }
-        if(StringUtils.isNotBlank(username)){
+        if (StringUtils.isNotBlank(username)) {
             sb.append(" and a.username like :username ");
         }
 
     }
 
-    public Query createQuery(StringBuilder sb, String fullName, String nameStaff, String username ) {
+    public Query createQuery(StringBuilder sb, String fullName, String nameStaff, String username) {
         Query query = entityManager.createNativeQuery(sb.toString());
         if (StringUtils.isNotBlank(fullName)) {
             query.setParameter("fullName", buildFilterLike(fullName));
@@ -155,6 +155,7 @@ public class CollectMoneyRepositoryImpl implements CollectMoneyRepositoryCustom 
 
         return query;
     }
+
     @Override
     public BigDecimal getTotalMoney() {
         StringBuilder sb = new StringBuilder();
@@ -162,6 +163,7 @@ public class CollectMoneyRepositoryImpl implements CollectMoneyRepositoryCustom 
         Query query = entityManager.createNativeQuery(sb.toString());
         return (BigDecimal) query.getSingleResult();
     }
+
     @Override
     public Optional<CollectMoneyResponse> findByIdCollectMoney(Long collectMoneyId) {
         StringBuilder sb = new StringBuilder();
@@ -184,7 +186,7 @@ public class CollectMoneyRepositoryImpl implements CollectMoneyRepositoryCustom 
         List<Object[]> result = query.getResultList();
         if (!CollectionUtils.isEmpty(result)) {
             for (Object[] obj : result) {
-                CollectMoneyResponse dto = new  CollectMoneyResponse();
+                CollectMoneyResponse dto = new CollectMoneyResponse();
                 dto.setCollectMoneyId(ValueUtil.getLongByObject(obj[0]));
                 dto.setFullName(ValueUtil.getStringByObject(obj[1]));
                 dto.setStaffId(ValueUtil.getLongByObject(obj[2]));

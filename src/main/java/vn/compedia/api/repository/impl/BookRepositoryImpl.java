@@ -397,5 +397,56 @@ public class BookRepositoryImpl implements BookRepositoryCustom {
         }
         return Optional.empty();
     }
+    @Override
+    public List<HomeDetailsResponse> findByListDetails(Long idTypeBook) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("select b.book_id, +" +
+                "                       b.book_name, " +
+                "                       b.status, " +
+                "                       b.amount, " +
+                "                       b.image, " +
+                "                       b.page_number, " +
+                "                       b.publishing_year, " +
+                "                       b.price, " +
+                "                       a.id_author, " +
+                "                       a.name_author, " +
+                "                       bc.id_type_book, " +
+                "                       bc.category_name, " +
+                "                       pc.company_id, " +
+                "                       pc.publish_name,  " +
+                "                       b.note  " +
+                "                 " +
+                "                from book b " +
+                "                         inner join author a on b.id_author = a.id_author  " +
+                "                         inner join book_category bc on b.id_type_book = bc.id_type_book  " +
+                "                         inner join publish_company pc on b.company_id = pc.company_id  " +
+                "                where bc.id_type_book = :idTypeBook ");
 
+        Query query = entityManager.createNativeQuery(sb.toString());
+        query.setParameter("idTypeBook", idTypeBook);
+        List<Object[]> result = query.getResultList();
+        List<HomeDetailsResponse> list  = new ArrayList<>();;
+        if (!CollectionUtils.isEmpty(result)) {
+            for (Object[] obj : result) {
+                HomeDetailsResponse dto = new HomeDetailsResponse();
+                dto.setBookId(ValueUtil.getLongByObject(obj[0]));
+                dto.setBookName(ValueUtil.getStringByObject(obj[1]));
+                dto.setStatus(ValueUtil.getIntegerByObject(obj[2]));
+                dto.setAmount(ValueUtil.getIntegerByObject(obj[3]));
+                dto.setImage(ValueUtil.getStringByObject(obj[4]));
+                dto.setPageNumber(ValueUtil.getIntegerByObject(obj[5]));
+                dto.setPublishingYear(ValueUtil.getStringByObject(obj[6]));
+                dto.setPrice(ValueUtil.getIntegerByObject(obj[7]));
+                dto.setIdAuthor(ValueUtil.getLongByObject(obj[8]));
+                dto.setNameAuthor(ValueUtil.getStringByObject(obj[9]));
+                dto.setIdTypeBook(ValueUtil.getLongByObject(obj[10]));
+                dto.setCategoryName(ValueUtil.getStringByObject(obj[11]));
+                dto.setCompanyId(ValueUtil.getLongByObject(obj[12]));
+                dto.setPublishName(ValueUtil.getStringByObject(obj[13]));
+                dto.setNote(ValueUtil.getStringByObject(obj[14]));
+                list.add(dto);
+            }
+        }
+        return list;
+    }
 }

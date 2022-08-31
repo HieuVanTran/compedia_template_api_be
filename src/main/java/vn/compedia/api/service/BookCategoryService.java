@@ -10,7 +10,6 @@ import vn.compedia.api.repository.BookCategoryRepository;
 import vn.compedia.api.request.BookCategoryCreateRequest;
 import vn.compedia.api.response.book.BookCategoryResponse;
 
-
 import java.util.List;
 
 @Log4j2
@@ -35,7 +34,7 @@ public class BookCategoryService {
     }
 
     public void create(BookCategoryCreateRequest request) {
-       BookCategory bookCategory = new BookCategory();
+        BookCategory bookCategory = new BookCategory();
         bookCategory.setCategoryName(request.getCategoryName());
         bookCategoryRepository.save(bookCategory);
     }
@@ -52,7 +51,7 @@ public class BookCategoryService {
         bookCategoryRepository.deleteById(id);
     }
 
-    public Page<BookCategoryResponse> search(String categoryName, String bookName, String sortField, String sortOrder, Integer page, Integer size ) {
-        return bookCategoryRepository.search(categoryName, bookName,sortField,sortOrder,page,size, PageRequest.of(page, size));
+    public Page<BookCategoryResponse> search(String categoryName, String bookName, String sortField, String sortOrder, Integer page, Integer size) {
+        return bookCategoryRepository.search(categoryName, bookName, sortField, sortOrder, page, size, PageRequest.of(page, size));
     }
 }

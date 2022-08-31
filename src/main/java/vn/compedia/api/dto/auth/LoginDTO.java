@@ -12,14 +12,14 @@ import javax.validation.constraints.NotNull;
 @Setter
 public class LoginDTO {
 
-	@NotEmpty
-	@NotNull
-	@Email
-	private String email;
+    @NotEmpty
+    @NotNull
+    @Email
+    private String email;
 
-	@NotNull
-	@NotEmpty
-	@JsonProperty("password")
-	private String password;
+    @NotNull
+    @NotEmpty
+    @JsonProperty("password")
+    private String password;
 
 }

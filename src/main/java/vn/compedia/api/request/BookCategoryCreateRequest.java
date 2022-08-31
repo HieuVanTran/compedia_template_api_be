@@ -15,6 +15,4 @@ public class BookCategoryCreateRequest {
     private String categoryName;
 
 
-
-
 }

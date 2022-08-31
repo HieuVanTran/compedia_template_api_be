@@ -15,20 +15,20 @@ import java.util.Locale;
 @SuppressWarnings({"checkstyle:FinalClass", "checkstyle:HideUtilityClassConstructor"})
 public class BundleJavaApplication extends SpringBootServletInitializer {
 
-	public static void main(String[] args) {
-		Locale.setDefault(Locale.US);
+    public static void main(String[] args) {
+        Locale.setDefault(Locale.US);
 //		TimeZone.setDefault(TimeZone.getTimeZone("Etc/UCT"));
-		SpringApplication.run(BundleJavaApplication.class, args);
-	}
+        SpringApplication.run(BundleJavaApplication.class, args);
+    }
 
-	@Override
-	protected SpringApplicationBuilder configure(SpringApplicationBuilder app) {
-		return app.sources(BundleJavaApplication.class);
-	}
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder app) {
+        return app.sources(BundleJavaApplication.class);
+    }
 
-	@Bean
-	public MethodValidationPostProcessor methodValidationPostProcessor() {
-		return new MethodValidationPostProcessor();
-	}
+    @Bean
+    public MethodValidationPostProcessor methodValidationPostProcessor() {
+        return new MethodValidationPostProcessor();
+    }
 
 }

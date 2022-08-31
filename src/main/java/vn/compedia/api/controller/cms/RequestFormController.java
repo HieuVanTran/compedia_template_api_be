@@ -27,13 +27,15 @@ public class RequestFormController extends GlobalExceptionHandler {
         List<RequestForm> list = requestFormService.getAll();
         return VietTienResponseDto.ok(list, "Get list account success");
     }
+
     @GetMapping(value = "get-one")
     public ResponseEntity<?> getOne(@RequestParam(name = "id") Long idAuthor) {
         RequestForm requestForm = requestFormService.getOne(idAuthor);
         return VietTienResponseDto.ok(requestForm, "Get list account success");
     }
+
     @DeleteMapping()
-    public ResponseEntity<?> delete(@RequestParam Long id ) {
+    public ResponseEntity<?> delete(@RequestParam Long id) {
         requestFormService.delete(id);
         return VietTienResponseDto.ok("", "Save success");
     }

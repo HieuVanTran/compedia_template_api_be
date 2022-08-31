@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 import vn.compedia.api.entity.Author;
 import vn.compedia.api.repository.AuthorRepository;
 import vn.compedia.api.request.AuthorCreateRequest;
-import vn.compedia.api.request.UserCreateRequest;
 import vn.compedia.api.response.book.AuthorResponse;
+
 import javax.transaction.Transactional;
 import java.util.List;
 
@@ -34,6 +34,7 @@ public class AuthorService {
         }
         return author;
     }
+
     public void validateData(AuthorCreateRequest request) throws Exception {
         if (StringUtils.isBlank(request.getNameAuthor().trim())) {
             throw new Exception("Fullname không được để trống");
@@ -54,10 +55,11 @@ public class AuthorService {
         if (request.getTitle().trim().length() > 30) {
             throw new Exception("Độ dài Title không vượt quá 50 ký tự");
         }
-        if (request.getNote().trim().length() > 100) {
-            throw new Exception("Độ dài Title không vượt quá 100 ký tự");
+        if (request.getNote().trim().length() > 16777215) {
+            throw new Exception("Độ dài Note không vượt quá 100 ký tự");
         }
     }
+
     public void create(AuthorCreateRequest request) throws Exception {
         validateData(request);
         Author author = new Author();
@@ -68,7 +70,7 @@ public class AuthorService {
         authorRepository.save(author);
     }
 
-    public void update(AuthorCreateRequest request) throws Exception{
+    public void update(AuthorCreateRequest request) throws Exception {
         validateData(request);
         Author author = authorRepository.findById(request.getId()).get();
         author.setNameAuthor(request.getNameAuthor());
@@ -82,8 +84,8 @@ public class AuthorService {
         authorRepository.deleteById(id);
     }
 
-    public Page<AuthorResponse> search(String nameAuthor, String address, String title,String sortField,String sortOrder, Integer page, Integer size) {
-        return authorRepository.search(nameAuthor,address, title,sortField,sortOrder, page, size, PageRequest.of(page, size));
+    public Page<AuthorResponse> search(String nameAuthor, String address, String title, String sortField, String sortOrder, Integer page, Integer size) {
+        return authorRepository.search(nameAuthor, address, title, sortField, sortOrder, page, size, PageRequest.of(page, size));
     }
 }
 

@@ -22,6 +22,7 @@ import vn.compedia.api.util.user.ChangePasswordRequest;
 import vn.compedia.api.util.user.GridData;
 import vn.compedia.api.util.user.UserContextHolder;
 import vn.compedia.api.util.user.builder.PageableBuilder;
+
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,155 +31,155 @@ import java.util.stream.Collectors;
 @SuppressWarnings({"checkstyle:ParameterNumber"})
 public class ApiUserService {
 
-	private ApiUserRepository apiUserRepository;
-	private PasswordEncoder passwordEncoder;
-	private ModelMapper modelMapper;
-	private RoleService roleService;
-	private AuthenticationTokenService authenticationTokenService;
-	private PageableBuilder pageableBuilder;
+    private ApiUserRepository apiUserRepository;
+    private PasswordEncoder passwordEncoder;
+    private ModelMapper modelMapper;
+    private RoleService roleService;
+    private AuthenticationTokenService authenticationTokenService;
+    private PageableBuilder pageableBuilder;
 
-	@Value("${account.defaultImage}")
-	private String defaultImage;
+    @Value("${account.defaultImage}")
+    private String defaultImage;
 
-	@Autowired
-	public ApiUserService(ApiUserRepository apiUserRepository,
-						  PasswordEncoder passwordEncoder,
-						  ModelMapper modelMapper,
-						  RoleService roleService,
-						  AuthenticationTokenService authenticationTokenService,
-						  PageableBuilder pageableBuilder) {
-		this.apiUserRepository = apiUserRepository;
-		this.passwordEncoder = passwordEncoder;
-		this.modelMapper = modelMapper;
-		this.authenticationTokenService = authenticationTokenService;
-		this.roleService = roleService;
-		this.pageableBuilder = pageableBuilder;
-	}
+    @Autowired
+    public ApiUserService(ApiUserRepository apiUserRepository,
+                          PasswordEncoder passwordEncoder,
+                          ModelMapper modelMapper,
+                          RoleService roleService,
+                          AuthenticationTokenService authenticationTokenService,
+                          PageableBuilder pageableBuilder) {
+        this.apiUserRepository = apiUserRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.modelMapper = modelMapper;
+        this.authenticationTokenService = authenticationTokenService;
+        this.roleService = roleService;
+        this.pageableBuilder = pageableBuilder;
+    }
 
-	public Account findByEmail(String email) throws UserNotFoundException {
-		return apiUserRepository.findByEmail(email)
-				.orElseThrow(() -> new UserNotFoundException("Account with email: " + email + " not found"));
-	}
+    public Account findByEmail(String email) throws UserNotFoundException {
+        return apiUserRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("Account with email: " + email + " not found"));
+    }
 
-	@Transactional
-	public Account register(ApiSignUpDTO apiSignUpDTO) throws UserAlreadyExistsException {
-		if (!apiSignUpDTO.getPassword().equals(apiSignUpDTO.getConfirmPassword())) {
-			throw new PasswordsDontMatchException();
-		}
+    @Transactional
+    public Account register(ApiSignUpDTO apiSignUpDTO) throws UserAlreadyExistsException {
+        if (!apiSignUpDTO.getPassword().equals(apiSignUpDTO.getConfirmPassword())) {
+            throw new PasswordsDontMatchException();
+        }
 
-		String email = apiSignUpDTO.getPhoneNumber();
+        String email = apiSignUpDTO.getPhoneNumber();
 
-		if (apiUserRepository.findByEmailAndRoleId(email, DbConstant.ROLE_ID_USER).isPresent()) {
-			throw new UserAlreadyExistsException(email);
-		}
+        if (apiUserRepository.findByEmailAndRoleId(email, DbConstant.ROLE_ID_USER).isPresent()) {
+            throw new UserAlreadyExistsException(email);
+        }
 
-		Account account = signUpUser(apiSignUpDTO);
+        Account account = signUpUser(apiSignUpDTO);
 
-		return apiUserRepository.save(account);
-	}
+        return apiUserRepository.save(account);
+    }
 
-	@Transactional
-	public void changePassword(ChangePasswordRequest changePasswordRequest) {
-		Account account = changePasswordRequest.getAccount();
+    @Transactional
+    public void changePassword(ChangePasswordRequest changePasswordRequest) {
+        Account account = changePasswordRequest.getAccount();
 
-		String encodedPassword = encodePassword(changePasswordRequest.getPassword());
-		account.setPassword(encodedPassword);
+        String encodedPassword = encodePassword(changePasswordRequest.getPassword());
+        account.setPassword(encodedPassword);
 
-		apiUserRepository.save(account);
-	}
+        apiUserRepository.save(account);
+    }
 
-	public ApiUserDTO getUserById(Long id) {
-		Account existingAccount = apiUserRepository.findById(id).orElseThrow(
-				() -> new UserNotFoundHttpException("Account with id: " + id + " not found", HttpStatus.NOT_FOUND)
-		);
+    public ApiUserDTO getUserById(Long id) {
+        Account existingAccount = apiUserRepository.findById(id).orElseThrow(
+                () -> new UserNotFoundHttpException("Account with id: " + id + " not found", HttpStatus.NOT_FOUND)
+        );
 
-		return modelMapper.map(existingAccount, ApiUserDTO.class);
-	}
+        return modelMapper.map(existingAccount, ApiUserDTO.class);
+    }
 
-	@Transactional
-	public ApiUserDTO updateUserById(Long userId, ApiUserDTO apiUserDTO) {
-		return updateUser(userId, apiUserDTO);
-	}
+    @Transactional
+    public ApiUserDTO updateUserById(Long userId, ApiUserDTO apiUserDTO) {
+        return updateUser(userId, apiUserDTO);
+    }
 
-	@Transactional
-	public boolean deleteUser(Long id) {
-		try {
-			apiUserRepository.deleteById(id);
-			return true;
-		} catch (EmptyResultDataAccessException e) {
-			throw new UserNotFoundHttpException("Account with id: " + id + " not found", HttpStatus.NOT_FOUND);
-		}
-	}
+    @Transactional
+    public boolean deleteUser(Long id) {
+        try {
+            apiUserRepository.deleteById(id);
+            return true;
+        } catch (EmptyResultDataAccessException e) {
+            throw new UserNotFoundHttpException("Account with id: " + id + " not found", HttpStatus.NOT_FOUND);
+        }
+    }
 
-	public ApiUserDTO getCurrentUser() {
-		Account account = UserContextHolder.getUser();
+    public ApiUserDTO getCurrentUser() {
+        Account account = UserContextHolder.getUser();
 
-		return modelMapper.map(account, ApiUserDTO.class);
-	}
+        return modelMapper.map(account, ApiUserDTO.class);
+    }
 
-	public ApiUserDTO updateCurrentUser(ApiUserDTO apiUserDTO) {
-		Account account = UserContextHolder.getUser();
-		Long id = account.getAccountId();
-		return updateUser(id, apiUserDTO);
-	}
+    public ApiUserDTO updateCurrentUser(ApiUserDTO apiUserDTO) {
+        Account account = UserContextHolder.getUser();
+        Long id = account.getAccountId();
+        return updateUser(id, apiUserDTO);
+    }
 
-	@Transactional
-	public ApiUserDTO createUser(ApiUserDTO apiUserDTO) {
-		Account account = modelMapper.map(apiUserDTO, Account.class);
+    @Transactional
+    public ApiUserDTO createUser(ApiUserDTO apiUserDTO) {
+        Account account = modelMapper.map(apiUserDTO, Account.class);
 
-		// In current version password and role are default
-		account.setPassword(encodePassword("testPass"));
-		account.setRoleId(DbConstant.ROLE_ID_USER);
+        // In current version password and role are default
+        account.setPassword(encodePassword("testPass"));
+        account.setRoleId(DbConstant.ROLE_ID_USER);
 
-		apiUserRepository.save(account);
+        apiUserRepository.save(account);
 
-		return modelMapper.map(account, ApiUserDTO.class);
-	}
+        return modelMapper.map(account, ApiUserDTO.class);
+    }
 
-	private ApiUserDTO updateUser(Long id, ApiUserDTO apiUserDTO) {
-		Account existingAccount = apiUserRepository.findById(id).
-				orElseThrow(() -> new UserNotFoundHttpException(
-						"Account with id: " + id + " not found", HttpStatus.NOT_FOUND)
-				);
-		Account updatedAccount = modelMapper.map(apiUserDTO, Account.class);
-		updatedAccount.setAccountId(id);
-		updatedAccount.setPassword(existingAccount.getPassword());
-		// Current version doesn't update roles
-		updatedAccount.setRoleId(existingAccount.getRoleId());
-		apiUserRepository.save(updatedAccount);
+    private ApiUserDTO updateUser(Long id, ApiUserDTO apiUserDTO) {
+        Account existingAccount = apiUserRepository.findById(id).
+                orElseThrow(() -> new UserNotFoundHttpException(
+                        "Account with id: " + id + " not found", HttpStatus.NOT_FOUND)
+                );
+        Account updatedAccount = modelMapper.map(apiUserDTO, Account.class);
+        updatedAccount.setAccountId(id);
+        updatedAccount.setPassword(existingAccount.getPassword());
+        // Current version doesn't update roles
+        updatedAccount.setRoleId(existingAccount.getRoleId());
+        apiUserRepository.save(updatedAccount);
 
-		return modelMapper.map(updatedAccount, ApiUserDTO.class);
-	}
+        return modelMapper.map(updatedAccount, ApiUserDTO.class);
+    }
 
-	private Account signUpUser(ApiSignUpDTO apiSignUpDTO) {
-		Account account = new Account();
-		String encodedPassword = encodePassword(apiSignUpDTO.getPassword());
-		account.setPassword(encodedPassword);
-		account.setRoleId(DbConstant.ROLE_ID_USER);
-		//Set default settings and image
+    private Account signUpUser(ApiSignUpDTO apiSignUpDTO) {
+        Account account = new Account();
+        String encodedPassword = encodePassword(apiSignUpDTO.getPassword());
+        account.setPassword(encodedPassword);
+        account.setRoleId(DbConstant.ROLE_ID_USER);
+        //Set default settings and image
 
-		return account;
-	}
+        return account;
+    }
 
-	private String encodePassword(String password) {
-		return passwordEncoder.encode(password);
-	}
+    private String encodePassword(String password) {
+        return passwordEncoder.encode(password);
+    }
 
-	private List<ApiUserDTO> mapOrdersToOrderDTO(List<Account> orders) {
-		return orders.stream().map(order -> {
-			ApiUserDTO dto = modelMapper.map(order, ApiUserDTO.class);
-			return dto;
-		}).collect(Collectors.toList());
-	}
+    private List<ApiUserDTO> mapOrdersToOrderDTO(List<Account> orders) {
+        return orders.stream().map(order -> {
+            ApiUserDTO dto = modelMapper.map(order, ApiUserDTO.class);
+            return dto;
+        }).collect(Collectors.toList());
+    }
 
-	private GridData<ApiUserDTO> parsePageToGridData(Page<Account> orderPages) {
-		GridData<ApiUserDTO> gridData = new GridData<>();
-		List<Account> orderList = orderPages.getContent();
-		long totalCount = orderPages.getTotalElements();
-		gridData.setItems(mapOrdersToOrderDTO(orderList));
-		gridData.setTotalCount(totalCount);
-		return gridData;
-	}
+    private GridData<ApiUserDTO> parsePageToGridData(Page<Account> orderPages) {
+        GridData<ApiUserDTO> gridData = new GridData<>();
+        List<Account> orderList = orderPages.getContent();
+        long totalCount = orderPages.getTotalElements();
+        gridData.setItems(mapOrdersToOrderDTO(orderList));
+        gridData.setTotalCount(totalCount);
+        return gridData;
+    }
 
 //	public GridData<ApiUserDTO> getDataForGrid(UsersGridFilter filter) {
 //		UserSpecificationBuilder specificationBuilder = new UserSpecificationBuilder();

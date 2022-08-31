@@ -8,7 +8,6 @@ import vn.compedia.api.util.MessageUtil;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
-import java.util.Date;
 
 @Getter
 @Setter
@@ -18,18 +17,18 @@ import java.util.Date;
 
 @Table(name = "author")
 
-public class Author  {
+public class Author {
     @javax.persistence.Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_author")
     private Long idAuthor;
 
     @Column(name = "name_author")
-    @Size(max = 50,message = MessageUtil.FULL_NAME_HAS_MAX_LENGTH)
+    @Size(max = 50, message = MessageUtil.FULL_NAME_HAS_MAX_LENGTH)
     private String nameAuthor;
 
     @Column(name = "address")
-    @Size(max = 100,message = MessageUtil.ADDRESS_HAS_MAX_LENGTH)
+    @Size(max = 100, message = MessageUtil.ADDRESS_HAS_MAX_LENGTH)
     private String address;
 
     @Column(name = "title")

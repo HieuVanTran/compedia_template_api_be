@@ -6,18 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import vn.compedia.api.entity.Author;
 import vn.compedia.api.entity.CallCard;
-import vn.compedia.api.entity.CallCardDetails;
 import vn.compedia.api.repository.CallCardDetailsRepository;
 import vn.compedia.api.repository.CallCardRepository;
 import vn.compedia.api.request.CallCardCreateRequest;
-import vn.compedia.api.request.CallCardDetailsRequest;
-import vn.compedia.api.response.CallCardDetailsResponse;
 import vn.compedia.api.response.book.CallCardResponse;
 import vn.compedia.api.util.DateUtil;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;

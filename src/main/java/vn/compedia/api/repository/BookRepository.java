@@ -12,6 +12,6 @@ import java.util.List;
 public interface BookRepository extends JpaRepository<Book, Long>, BookRepositoryCustom {
 
     @Query("select b from Book b where b.bookName like :bookName")
-    List<Book> findByName(@Param("bookName")String bookName);
+    List<Book> findByName(@Param("bookName") String bookName);
 
 }

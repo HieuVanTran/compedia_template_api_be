@@ -15,7 +15,6 @@ import vn.compedia.api.request.StaffCreateRequest;
 import vn.compedia.api.response.admin.StaffResponse;
 import vn.compedia.api.service.StaffService;
 
-
 import java.util.List;
 
 @Api(tags = "Staff")
@@ -39,17 +38,19 @@ public class StaffController extends GlobalExceptionHandler {
         Staff staff = staffService.getOne(Id);
         return VietTienResponseDto.ok(staff, "Get list account success");
     }
+
     @GetMapping(value = "search")
     public ResponseEntity<?> search(@RequestParam(name = "nameStaff", required = false) String nameStaff,
                                     @RequestParam(name = "page") Integer page,
                                     @RequestParam(name = "size") Integer size,
-                                    @RequestParam(name ="sort_field", required = false) String sortField,
-                                    @RequestParam(name ="sort_order", required = false) String sortOrder,
+                                    @RequestParam(name = "sort_field", required = false) String sortField,
+                                    @RequestParam(name = "sort_order", required = false) String sortOrder,
                                     @RequestParam(name = "phone_number", required = false) String phoneNumber,
                                     @RequestParam(name = "address", required = false) String address) {
         Page<StaffResponse> list = staffService.search(nameStaff, phoneNumber, address, sortField, sortOrder, page, size);
         return VietTienResponseDto.ok(VietTienPageDto.build(list), "Search list book success");
     }
+
     @PostMapping
     public ResponseEntity<?> create(@RequestBody StaffCreateRequest request) {
         try {
@@ -73,7 +74,7 @@ public class StaffController extends GlobalExceptionHandler {
     }
 
     @DeleteMapping()
-    public ResponseEntity<?> delete(@RequestParam Long id){
+    public ResponseEntity<?> delete(@RequestParam Long id) {
         staffService.delete(id);
         return VietTienResponseDto.ok("", "Save success");
     }

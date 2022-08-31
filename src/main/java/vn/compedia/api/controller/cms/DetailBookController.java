@@ -14,7 +14,6 @@ import vn.compedia.api.entity.Book;
 import vn.compedia.api.exception.GlobalExceptionHandler;
 import vn.compedia.api.request.BookCreateRequest;
 import vn.compedia.api.response.book.BookResponse;
-import vn.compedia.api.response.user.UserResponse;
 import vn.compedia.api.service.BookService;
 
 import java.util.List;
@@ -42,9 +41,9 @@ public class DetailBookController extends GlobalExceptionHandler {
                                     @RequestParam(name = "publish_name", required = false) String publishName,
                                     @RequestParam(name = "page") Integer page,
                                     @RequestParam(name = "size") Integer size,
-                                    @RequestParam(name ="sort_field", required = false) String sortField,
-                                    @RequestParam(name ="sort_order", required = false) String sortOrder) {
-        Page<BookResponse> list = bookService.search(bookName, nameAuthor,categoryName,publishName,sortField,sortOrder,page,size);
+                                    @RequestParam(name = "sort_field", required = false) String sortField,
+                                    @RequestParam(name = "sort_order", required = false) String sortOrder) {
+        Page<BookResponse> list = bookService.search(bookName, nameAuthor, categoryName, publishName, sortField, sortOrder, page, size);
         return VietTienResponseDto.ok(VietTienPageDto.build(list), "Search list book success");
     }
 
@@ -55,9 +54,9 @@ public class DetailBookController extends GlobalExceptionHandler {
     }
 
     @PostMapping
-    public ResponseEntity<?> create(  BookCreateRequest request, MultipartFile file) {
+    public ResponseEntity<?> create(BookCreateRequest request, MultipartFile file) {
         try {
-            bookService.create(request,file);
+            bookService.create(request, file);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
@@ -66,9 +65,9 @@ public class DetailBookController extends GlobalExceptionHandler {
     }
 
     @PutMapping()
-    public ResponseEntity<?> update( BookCreateRequest request, MultipartFile file) {
+    public ResponseEntity<?> update(BookCreateRequest request, MultipartFile file) {
         try {
-            bookService.update(request,file);
+            bookService.update(request, file);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
@@ -77,7 +76,7 @@ public class DetailBookController extends GlobalExceptionHandler {
     }
 
     @DeleteMapping()
-    public ResponseEntity<?> delete(@RequestParam Long id){
+    public ResponseEntity<?> delete(@RequestParam Long id) {
         bookService.delete(id);
         return VietTienResponseDto.ok("", "Save success");
     }

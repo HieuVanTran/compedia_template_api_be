@@ -30,63 +30,63 @@ import java.util.Optional;
 @Service
 public class AuthService {
 
-	private ApiUserService apiUserService;
-	private AuthenticationManager authenticationManager;
-	private TokenService tokenService;
+    private ApiUserService apiUserService;
+    private AuthenticationManager authenticationManager;
+    private TokenService tokenService;
 
-	@Autowired
-	private ApiUserRepository apiUserRepository;
+    @Autowired
+    private ApiUserRepository apiUserRepository;
 
-	@Autowired
-	public AuthService(ApiUserService apiUserService,
-					   AuthenticationManager authenticationManager,
-					   TokenService tokenService) {
-		this.apiUserService = apiUserService;
-		this.authenticationManager = authenticationManager;
-		this.tokenService = tokenService;
-	}
+    @Autowired
+    public AuthService(ApiUserService apiUserService,
+                       AuthenticationManager authenticationManager,
+                       TokenService tokenService) {
+        this.apiUserService = apiUserService;
+        this.authenticationManager = authenticationManager;
+        this.tokenService = tokenService;
+    }
 
-	public Tokens register(ApiSignUpDTO apiSignUpDTO) throws UserAlreadyExistsHttpException {
-		try {
-			Account account = apiUserService.register(apiSignUpDTO);
-			return createToken(account);
-		} catch (UserAlreadyExistsException exception) {
-			throw new UserAlreadyExistsHttpException();
-		}
-	}
+    public Tokens register(ApiSignUpDTO apiSignUpDTO) throws UserAlreadyExistsHttpException {
+        try {
+            Account account = apiUserService.register(apiSignUpDTO);
+            return createToken(account);
+        } catch (UserAlreadyExistsException exception) {
+            throw new UserAlreadyExistsHttpException();
+        }
+    }
 
-	public Tokens login(LoginDTO loginDTO) throws UserNotFoundHttpException {
-		try {
-			Authentication authentication = createAuthentication(loginDTO);
-			BundleUserDetailsService.BundleUserDetails userDetails =
-					(BundleUserDetailsService.BundleUserDetails) authenticationManager
-							.authenticate(authentication).getPrincipal();
+    public Tokens login(LoginDTO loginDTO) throws UserNotFoundHttpException {
+        try {
+            Authentication authentication = createAuthentication(loginDTO);
+            BundleUserDetailsService.BundleUserDetails userDetails =
+                    (BundleUserDetailsService.BundleUserDetails) authenticationManager
+                            .authenticate(authentication).getPrincipal();
 
-			Account account = userDetails.getAccount();
-			return createToken(account);
-		} catch (AuthenticationException exception) {
-			log.error(exception);
-			throw new UserNotFoundHttpException(MessageUtil.INCORRECT_PASSWORD, HttpStatus.FORBIDDEN);
-		}
-	}
+            Account account = userDetails.getAccount();
+            return createToken(account);
+        } catch (AuthenticationException exception) {
+            log.error(exception);
+            throw new UserNotFoundHttpException(MessageUtil.INCORRECT_PASSWORD, HttpStatus.FORBIDDEN);
+        }
+    }
 
-	public Tokens refreshToken(RefreshTokenDTO refreshTokenDTO) throws InvalidTokenHttpException {
-		try {
-			String email = tokenService.getEmailFromRefreshToken(refreshTokenDTO.getTokens().getRefreshToken());
-			Account account = apiUserService.findByEmail(email);
-			return createToken(account);
-		} catch (JwtException | UserNotFoundException e) {
-			throw new InvalidTokenHttpException();
-		}
-	}
+    public Tokens refreshToken(RefreshTokenDTO refreshTokenDTO) throws InvalidTokenHttpException {
+        try {
+            String email = tokenService.getEmailFromRefreshToken(refreshTokenDTO.getTokens().getRefreshToken());
+            Account account = apiUserService.findByEmail(email);
+            return createToken(account);
+        } catch (JwtException | UserNotFoundException e) {
+            throw new InvalidTokenHttpException();
+        }
+    }
 
-	private Authentication createAuthentication(LoginDTO loginDTO) {
-		Optional<Account> account = apiUserRepository.findByEmailAndRoleId(loginDTO.getEmail(), DbConstant.ROLE_ID_ADMIN);
-		return new UsernamePasswordAuthenticationToken(loginDTO.getEmail(), loginDTO.getPassword() + account.get().getSalt());
-	}
+    private Authentication createAuthentication(LoginDTO loginDTO) {
+        Optional<Account> account = apiUserRepository.findByEmailAndRoleId(loginDTO.getEmail(), DbConstant.ROLE_ID_ADMIN);
+        return new UsernamePasswordAuthenticationToken(loginDTO.getEmail(), loginDTO.getPassword() + account.get().getSalt());
+    }
 
-	private Tokens createToken(Account account) {
-		return tokenService.createToken(account);
-	}
+    private Tokens createToken(Account account) {
+        return tokenService.createToken(account);
+    }
 
 }

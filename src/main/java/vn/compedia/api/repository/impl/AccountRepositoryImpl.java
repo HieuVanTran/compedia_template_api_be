@@ -4,15 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import vn.compedia.api.entity.Account;
 import vn.compedia.api.repository.AccountRepositoryCustom;
-import vn.compedia.api.response.AccountResponse;
 import vn.compedia.api.response.admin.AccountNeResponse;
-import vn.compedia.api.response.book.CallCardListResponse;
-import vn.compedia.api.response.book.CallCardResponse;
 import vn.compedia.api.util.ValueUtil;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
-import javax.swing.text.html.Option;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -28,12 +24,12 @@ public class AccountRepositoryImpl implements AccountRepositoryCustom {
         sb.append("SELECT * FROM account ac " +
                 " where ac.email = :email and ac.username = :username ");
         Query query = entityManager.createNativeQuery(sb.toString());
-        query.setParameter("email",email);
-        query.setParameter("username",userName);
+        query.setParameter("email", email);
+        query.setParameter("username", userName);
         List<Object[]> result = query.getResultList();
         if (!CollectionUtils.isEmpty(result)) {
             Object obj = result.get(0);
-            Account account  = new Account();
+            Account account = new Account();
             return Optional.of(account);
         }
         return Optional.empty();
@@ -61,9 +57,9 @@ public class AccountRepositoryImpl implements AccountRepositoryCustom {
         Query query = entityManager.createNativeQuery(sb.toString());
         List<Object[]> result = query.getResultList();
 
-        List<AccountNeResponse>  AccountNeResponse = new ArrayList<>();
+        List<AccountNeResponse> AccountNeResponse = new ArrayList<>();
         for (Object[] obj : result) {
-            AccountNeResponse dto = new  AccountNeResponse();
+            AccountNeResponse dto = new AccountNeResponse();
             dto.setAccountId(ValueUtil.getLongByObject(obj[0]));
             dto.setUsername(ValueUtil.getStringByObject(obj[1]));
             dto.setPassword(ValueUtil.getStringByObject(obj[2]));
@@ -79,6 +75,7 @@ public class AccountRepositoryImpl implements AccountRepositoryCustom {
         }
         return AccountNeResponse;
     }
+
     @Override
     public Optional<AccountNeResponse> findByAccountId(Long accountId) {
         StringBuilder sb = new StringBuilder();

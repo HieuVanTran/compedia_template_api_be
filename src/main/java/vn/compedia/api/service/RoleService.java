@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import vn.compedia.api.entity.Role;
 import vn.compedia.api.repository.RoleRepository;
 import vn.compedia.api.request.RoleCreateRequest;
+
 import java.util.List;
 
 @Log4j2
@@ -26,12 +27,14 @@ public class RoleService {
         }
         return role;
     }
+
     public void create(RoleCreateRequest request) {
         Role role = new Role();
         role.setCodeRole(request.getCodeRole());
         role.setName(request.getName());
         roleRepository.save(role);
     }
+
     public void update(RoleCreateRequest request) {
         Role role = new Role();
         role.setRoleId(request.getRoleId());

@@ -5,8 +5,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import vn.compedia.api.repository.UserRepositoryCustom;
-
-import vn.compedia.api.response.admin.AccountNeResponse;
 import vn.compedia.api.response.user.UserResponse;
 import vn.compedia.api.util.ValueUtil;
 
@@ -43,9 +41,9 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
         Query query = entityManager.createNativeQuery(sb.toString());
         List<Object[]> result = query.getResultList();
 
-        List<UserResponse>  UserResponse = new ArrayList<>();
+        List<UserResponse> UserResponse = new ArrayList<>();
         for (Object[] obj : result) {
-            UserResponse dto = new  UserResponse();
+            UserResponse dto = new UserResponse();
             dto.setUserId(ValueUtil.getLongByObject(obj[0]));
             dto.setFullName(ValueUtil.getStringByObject(obj[1]));
             dto.setAddress(ValueUtil.getStringByObject(obj[2]));
@@ -83,7 +81,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
         List<Object[]> result = query.getResultList();
 
         for (Object[] obj : result) {
-         UserResponse dto = new UserResponse();
+            UserResponse dto = new UserResponse();
             dto.setUserId(ValueUtil.getLongByObject(obj[0]));
             dto.setFullName(ValueUtil.getStringByObject(obj[1]));
             dto.setAddress(ValueUtil.getStringByObject(obj[2]));
@@ -91,17 +89,18 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
             list.add(dto);
         }
 
-        return new PageImpl<>(list, pageable, countSearch( fullName,address,phone).longValue());
+        return new PageImpl<>(list, pageable, countSearch(fullName, address, phone).longValue());
     }
 
     private BigInteger countSearch(String fullName, String address, String phone) {
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT count(0) " +
                 " FROM user u WHERE 1 = 1 ");
-        appendQuery(sb, fullName,address,phone);
-        Query query = createQuery(sb, fullName,address,phone);
+        appendQuery(sb, fullName, address, phone);
+        Query query = createQuery(sb, fullName, address, phone);
         return (BigInteger) query.getSingleResult();
     }
+
     private void setSortOrder(String sortField, String sortOrder, StringBuilder sb) {
         if (StringUtils.isNotBlank(sortField)) {
             sb.append(" ORDER BY ");
@@ -118,15 +117,14 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
     }
 
 
-
     public void appendQuery(StringBuilder sb, String fullName, String address, String phone) {
         if (StringUtils.isNotBlank(fullName)) {
             sb.append(" and u.full_name like :fullName ");
         }
-        if(StringUtils.isNotBlank(address)){
+        if (StringUtils.isNotBlank(address)) {
             sb.append(" and u.address like :address ");
         }
-        if(StringUtils.isNotBlank(phone)) {
+        if (StringUtils.isNotBlank(phone)) {
             sb.append(" and u.phone like :phone ");
         }
     }

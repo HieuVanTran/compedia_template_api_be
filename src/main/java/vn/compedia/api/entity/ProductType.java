@@ -16,18 +16,18 @@ import java.io.Serializable;
 @Entity
 @Table(name = "product_type")
 public class ProductType implements Serializable {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "product_type_id")
-	@JsonProperty("product_type_id")
-	private Long productTypeId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "product_type_id")
+    @JsonProperty("product_type_id")
+    private Long productTypeId;
 
-	@Column(name = "product_id")
-	@JsonProperty("product_id")
-	private Long productId;
+    @Column(name = "product_id")
+    @JsonProperty("product_id")
+    private Long productId;
 
-	@Column(name = "type_name")
-	@JsonProperty("type_name")
-	private String typeName;
+    @Column(name = "type_name")
+    @JsonProperty("type_name")
+    private String typeName;
 
 }

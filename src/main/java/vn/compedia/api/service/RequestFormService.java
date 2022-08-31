@@ -3,11 +3,9 @@ package vn.compedia.api.service;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import vn.compedia.api.entity.BookCategory;
 import vn.compedia.api.entity.RequestForm;
-import vn.compedia.api.repository.BookCategoryRepository;
 import vn.compedia.api.repository.RequestFormRepository;
-import vn.compedia.api.request.BookCategoryCreateRequest;
+
 import java.util.List;
 
 @Log4j2

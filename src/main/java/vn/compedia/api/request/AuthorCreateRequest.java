@@ -8,7 +8,7 @@ import lombok.Setter;
 @Setter
 public class AuthorCreateRequest {
     private Long Id;
-    @JsonProperty ("name_author")
+    @JsonProperty("name_author")
     private String nameAuthor;
 
     private String address;

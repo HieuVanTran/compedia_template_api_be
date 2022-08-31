@@ -29,4 +29,6 @@ public interface BookRepositoryCustom {
     List<HomeCategoryResponse> findByCategory(Long idTypeBook, Long idAuthor);
 
     Optional<HomeDetailsResponse> findByDetails(Long bookId);
+
+    List<HomeDetailsResponse> findByListDetails(Long idTypeBook);
 }

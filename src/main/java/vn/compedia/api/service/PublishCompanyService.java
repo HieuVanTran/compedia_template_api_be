@@ -8,9 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import vn.compedia.api.entity.PublishCompany;
 import vn.compedia.api.repository.PublishCompanyRepository;
-import vn.compedia.api.request.AdminCreateRequest;
 import vn.compedia.api.request.PublishCompanyCreateRequest;
-import vn.compedia.api.request.UserCreateRequest;
 import vn.compedia.api.response.book.PublishCompanyResponse;
 import vn.compedia.api.util.StringUtil;
 
@@ -35,6 +33,7 @@ public class PublishCompanyService {
         }
         return publishCompany;
     }
+
     public void validateData(PublishCompanyCreateRequest request) throws Exception {
         if (!StringUtil.validateEmail(request.getEmail())) {
             throw new Exception("Địa chỉ email không đúng định dạng");
@@ -42,30 +41,31 @@ public class PublishCompanyService {
         if (StringUtils.isBlank(request.getPublishName().trim())) {
             throw new Exception("Không được để trống!");
         }
-        if(request.getPublishName().trim().length()>50){
+        if (request.getPublishName().trim().length() > 50) {
             throw new Exception("Nhập lại PublishName có độ dài < 50 ký tự");
         }
 
         if (StringUtils.isBlank(request.getAddress().trim())) {
-            throw  new Exception("Không được để trống");
-        }
-        if(request.getAddress().trim().length() > 50){
-            throw new Exception("Yêu cầu nhập lại Address không quá 50 ký tự");
-        }
-        if(StringUtils.isBlank(request.getEmail().trim())){
             throw new Exception("Không được để trống");
         }
-        if(request.getEmail().trim().length() > 100){
+        if (request.getAddress().trim().length() > 50) {
+            throw new Exception("Yêu cầu nhập lại Address không quá 50 ký tự");
+        }
+        if (StringUtils.isBlank(request.getEmail().trim())) {
+            throw new Exception("Không được để trống");
+        }
+        if (request.getEmail().trim().length() > 100) {
             throw new Exception("Yêu cầu nhập lại Email có độ dài không quá 100 ký tự");
         }
         if (StringUtils.isBlank(request.getAgentPeople().trim())) {
-            throw new Exception ("AgentPeople không được để trống");
+            throw new Exception("AgentPeople không được để trống");
         }
-        if(request.getAgentPeople().trim().length() > 100){
+        if (request.getAgentPeople().trim().length() > 100) {
             throw new Exception("Yêu cầu nhập lại AgentPeople có độ dài không quá 100 ký tự");
 
         }
     }
+
     public void create(PublishCompanyCreateRequest request) throws Exception {
         validateData(request);
         PublishCompany publishCompany = new PublishCompany();
@@ -98,9 +98,9 @@ public class PublishCompanyService {
         publishCompanyRepository.deleteById(id);
     }
 
-    public Page<PublishCompanyResponse> search (String publishName, String email, String agentPeople,
-                                               String sortField, String sortOrder, Integer page, Integer size)  {
-        return publishCompanyRepository.search(publishName, email, agentPeople,sortField,sortOrder,page,size, PageRequest.of(page, size));
+    public Page<PublishCompanyResponse> search(String publishName, String email, String agentPeople,
+                                               String sortField, String sortOrder, Integer page, Integer size) {
+        return publishCompanyRepository.search(publishName, email, agentPeople, sortField, sortOrder, page, size, PageRequest.of(page, size));
 
     }
 }

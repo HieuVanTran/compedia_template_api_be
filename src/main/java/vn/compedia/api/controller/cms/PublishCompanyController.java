@@ -12,12 +12,10 @@ import vn.compedia.api.dto.VietTienResponseDto;
 import vn.compedia.api.entity.PublishCompany;
 import vn.compedia.api.exception.GlobalExceptionHandler;
 import vn.compedia.api.request.PublishCompanyCreateRequest;
-import vn.compedia.api.request.UserCreateRequest;
 import vn.compedia.api.response.book.PublishCompanyResponse;
 import vn.compedia.api.service.PublishCompanyService;
 
 import java.util.List;
-
 
 
 @Api(tags = "PublishCompany")
@@ -27,7 +25,7 @@ import java.util.List;
 public class PublishCompanyController extends GlobalExceptionHandler {
 
     @Autowired
-    private PublishCompanyService  publishCompanyService;
+    private PublishCompanyService publishCompanyService;
 
     @GetMapping(value = "publish-company")
     public ResponseEntity<?> getAll() {
@@ -43,13 +41,13 @@ public class PublishCompanyController extends GlobalExceptionHandler {
 
     @GetMapping(value = "search")
     public ResponseEntity<?> search(@RequestParam(name = "publishName", required = false) String publishName,
-                                    @RequestParam(name = "email", required = false)String email,
+                                    @RequestParam(name = "email", required = false) String email,
                                     @RequestParam(name = "page") Integer page,
                                     @RequestParam(name = "size") Integer size,
-                                    @RequestParam(name ="sort_field", required = false) String sortField,
-                                    @RequestParam(name ="sort_order", required = false) String sortOrder,
-                                    @RequestParam(name = "agentPeople", required = false)String agentPeople) {
-        Page<PublishCompanyResponse> list = publishCompanyService.search(publishName, email, agentPeople,sortField,sortOrder,page,size);
+                                    @RequestParam(name = "sort_field", required = false) String sortField,
+                                    @RequestParam(name = "sort_order", required = false) String sortOrder,
+                                    @RequestParam(name = "agentPeople", required = false) String agentPeople) {
+        Page<PublishCompanyResponse> list = publishCompanyService.search(publishName, email, agentPeople, sortField, sortOrder, page, size);
         return VietTienResponseDto.ok(VietTienPageDto.build(list), "Search list book success");
     }
 
@@ -75,6 +73,7 @@ public class PublishCompanyController extends GlobalExceptionHandler {
         }
         return VietTienResponseDto.ok("", "Save success");
     }
+
     @DeleteMapping()
     public ResponseEntity<?> delete(@RequestParam Long id) {
         publishCompanyService.delete(id);

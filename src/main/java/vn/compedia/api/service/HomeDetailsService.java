@@ -10,6 +10,7 @@ import vn.compedia.api.repository.BookRepository;
 import vn.compedia.api.response.book.BookResponse;
 import vn.compedia.api.response.index.HomeDetailsResponse;
 
+import java.util.List;
 import java.util.Optional;
 
 @Log4j2
@@ -20,16 +21,24 @@ public class HomeDetailsService {
     @Autowired
     private BookRepository bookRepository;
 
-    public HomeDetailsResponse getOne(Long bookId  ) throws Exception {
+    public HomeDetailsResponse getOne(Long bookId) throws Exception {
         Optional<HomeDetailsResponse> details = bookRepository.findByDetails(bookId);
         if (!details.isPresent()) {
             throw new Exception(" EMPTY ");
         }
         return details.get();
     }
+    public List<HomeDetailsResponse> getByPopular(Long idTypeBook) throws Exception{
+        List<HomeDetailsResponse> popular = bookRepository.findByListDetails(idTypeBook);
+        if (popular.isEmpty()) {
+            throw new Exception(" List is EMPTY ");
+        }
+        return popular;
+    }
+    
     public Page<BookResponse> search(String bookName, String nameAuthor, String categoryName, String publishName,
                                      String sortField, String sortOrder, Integer page, Integer size) {
-        return bookRepository.search(bookName, nameAuthor,categoryName,publishName,sortField,sortOrder,page,size, PageRequest.of(page, size));
+        return bookRepository.search(bookName, nameAuthor, categoryName, publishName, sortField, sortOrder, page, size, PageRequest.of(page, size));
     }
 }
 

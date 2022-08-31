@@ -5,12 +5,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import vn.compedia.api.response.admin.StaffResponse;
 
-
 import java.util.List;
 
 public interface StaffRepositoryCustom {
-    Page<StaffResponse> search(String nameStaff,String phoneNumber, String address,
-                               String sortField,String sortOrder, Integer page, Integer size, Pageable pageable);
+    Page<StaffResponse> search(String nameStaff, String phoneNumber, String address,
+                               String sortField, String sortOrder, Integer page, Integer size, Pageable pageable);
 
     List<StaffResponse> getAllStaff();
 }

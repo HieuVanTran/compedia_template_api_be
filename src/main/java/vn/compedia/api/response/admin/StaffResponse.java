@@ -17,10 +17,10 @@ public class StaffResponse {
     @JsonProperty("phone_number")
     private String phoneNumber;
 
-    @JsonProperty ("address")
+    @JsonProperty("address")
     private String address;
 
-    @JsonProperty ("date_of_birth")
+    @JsonProperty("date_of_birth")
     private String dateOfBirth;
 }
 

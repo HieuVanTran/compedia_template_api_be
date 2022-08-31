@@ -1,9 +1,11 @@
 package vn.compedia.api.repository.impl;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import vn.compedia.api.repository.CallCardDetailsRepositoryCustom;
 import vn.compedia.api.response.CallCardDetailsResponse;
 import vn.compedia.api.util.ValueUtil;
+
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import java.util.ArrayList;
@@ -43,6 +45,7 @@ public class CallCardDetailsRepositoryImpl implements CallCardDetailsRepositoryC
         }
         return CallCardDetailsResponse;
     }
+
     @Override
     public Optional<CallCardDetailsResponse> findByIdCallCardDetails(Long callCardDetailsId) {
         StringBuilder sb = new StringBuilder();
@@ -57,7 +60,7 @@ public class CallCardDetailsRepositoryImpl implements CallCardDetailsRepositoryC
                 "where cd.call_card_details_id = :callCardDetailsId");
 
         Query query = entityManager.createNativeQuery(sb.toString());
-        query.setParameter("callCardDetailsId",callCardDetailsId);
+        query.setParameter("callCardDetailsId", callCardDetailsId);
         List<Object[]> result = query.getResultList();
         if (!CollectionUtils.isEmpty(result)) {
             for (Object[] obj : result) {

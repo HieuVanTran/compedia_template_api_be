@@ -30,19 +30,21 @@ public class BookCategoryController extends GlobalExceptionHandler {
         List<BookCategory> list = bookCategoryService.getAll();
         return VietTienResponseDto.ok(list, "Get list account success");
     }
+
     @GetMapping(value = "get-one")
     public ResponseEntity<?> getOne(@RequestParam(name = "id") Long idtypeBook) {
         BookCategory bookCategory = bookCategoryService.getOne(idtypeBook);
         return VietTienResponseDto.ok(bookCategory, "Get list account success");
     }
+
     @GetMapping(value = "search")
     public ResponseEntity<?> search(@RequestParam(name = "categoryName", required = false) String categoryName,
                                     @RequestParam(name = "page") Integer page,
                                     @RequestParam(name = "size") Integer size,
-                                    @RequestParam(name ="sort_field", required = false) String sortField,
-                                    @RequestParam(name ="sort_order", required = false) String sortOrder,
+                                    @RequestParam(name = "sort_field", required = false) String sortField,
+                                    @RequestParam(name = "sort_order", required = false) String sortOrder,
                                     @RequestParam(name = "bookName", required = false) String bookName) {
-        Page<BookCategoryResponse> list = bookCategoryService.search(categoryName,bookName,sortField,sortOrder,page,size);
+        Page<BookCategoryResponse> list = bookCategoryService.search(categoryName, bookName, sortField, sortOrder, page, size);
         return VietTienResponseDto.ok(VietTienPageDto.build(list), "Search list book success");
     }
 
@@ -59,7 +61,7 @@ public class BookCategoryController extends GlobalExceptionHandler {
     }
 
     @DeleteMapping()
-    public ResponseEntity<?> delete(@RequestParam Long id ){
+    public ResponseEntity<?> delete(@RequestParam Long id) {
         bookCategoryService.delete(id);
         return VietTienResponseDto.ok("", "Save success");
     }

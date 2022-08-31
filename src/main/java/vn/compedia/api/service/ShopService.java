@@ -137,7 +137,6 @@ public class ShopService {
     }
 
 
-
     @Transactional
     public void createShop(AccountRequest accountRequest, ShopRequest shopRequest) throws VietTienException, VietTienInvalidParamsException {
         validateAddShop(accountRequest, shopRequest);

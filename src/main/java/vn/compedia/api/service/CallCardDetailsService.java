@@ -3,7 +3,6 @@ package vn.compedia.api.service;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import vn.compedia.api.entity.CallCardDetails;
 import vn.compedia.api.repository.CallCardDetailsRepository;
 import vn.compedia.api.response.CallCardDetailsResponse;
 

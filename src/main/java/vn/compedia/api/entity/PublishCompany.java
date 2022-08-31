@@ -1,9 +1,8 @@
 package vn.compedia.api.entity;
 
-import lombok.*;
+import lombok.Data;
 
 import javax.persistence.*;
-import java.util.Date;
 
 @Data
 @Entity
@@ -16,7 +15,7 @@ public class PublishCompany {
     private Long idPub;
 
     @Column(name = "publish_name")
-    private String  publishName;
+    private String publishName;
 
     @Column(name = "address")
     private String address;

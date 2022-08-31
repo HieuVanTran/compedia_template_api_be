@@ -38,17 +38,19 @@ public class UserController extends GlobalExceptionHandler {
         User user = userService.getOne(Id);
         return VietTienResponseDto.ok(user, "Get list account success");
     }
+
     @GetMapping(value = "search")
     public ResponseEntity<?> search(@RequestParam(name = "fullName", required = false) String fullName,
                                     @RequestParam(name = "address", required = false) String address,
                                     @RequestParam(name = "page") Integer page,
                                     @RequestParam(name = "size") Integer size,
-                                    @RequestParam(name ="sort_field", required = false) String sortField,
-                                    @RequestParam(name ="sort_order", required = false) String sortOrder,
-                                    @RequestParam(name = "phone", required = false) String phone){
-        Page<UserResponse> list = userService.search(fullName,address,phone,sortField,sortOrder,page,size);
+                                    @RequestParam(name = "sort_field", required = false) String sortField,
+                                    @RequestParam(name = "sort_order", required = false) String sortOrder,
+                                    @RequestParam(name = "phone", required = false) String phone) {
+        Page<UserResponse> list = userService.search(fullName, address, phone, sortField, sortOrder, page, size);
         return VietTienResponseDto.ok(VietTienPageDto.build(list), "Search list book success");
     }
+
     @PostMapping
     public ResponseEntity<?> create(@RequestBody UserCreateRequest request) {
         try {
@@ -66,13 +68,13 @@ public class UserController extends GlobalExceptionHandler {
             userService.update(request);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
         return VietTienResponseDto.ok("", "Save success");
     }
 
     @DeleteMapping()
-    public ResponseEntity<?> delete(@RequestParam Long id){
+    public ResponseEntity<?> delete(@RequestParam Long id) {
         userService.delete(id);
         return VietTienResponseDto.ok("", "Save success");
     }
