@@ -46,13 +46,13 @@ public class AccountController extends GlobalExceptionHandler {
     @GetMapping(value = "search")
     public ResponseEntity<?> search(@RequestParam(name = "username", required = false) String username,
                                     @RequestParam(name = "email", required = false) String email,
-                                    @RequestParam(name = "role_id", required = false) Integer roleId,
+                                    @RequestParam(name = "roleId", required = false) Integer roleId,
                                     @RequestParam(name = "page") Integer page,
                                     @RequestParam(name = "size") Integer size,
-                                    @RequestParam(name = "code_role", required = false) String codeRole,
-                                    @RequestParam(name = "full_name", required = false) String fullName,
-                                    @RequestParam(name = "sort_field", required = false) String sortField,
-                                    @RequestParam(name = "sort_order", required = false) String sortOrder) {
+                                    @RequestParam(name = "codeRole", required = false) String codeRole,
+                                    @RequestParam(name = "fullName", required = false) String fullName,
+                                    @RequestParam(name = "sortField", required = false) String sortField,
+                                    @RequestParam(name = "sortOrder", required = false) String sortOrder) {
         Page<AdminResponse> list = accountService.search(username, email, roleId, codeRole, fullName, sortField, sortOrder, page, size);
         return VietTienResponseDto.ok(VietTienPageDto.build(list), "Search list book success");
 

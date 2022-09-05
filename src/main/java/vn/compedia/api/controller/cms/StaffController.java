@@ -43,9 +43,9 @@ public class StaffController extends GlobalExceptionHandler {
     public ResponseEntity<?> search(@RequestParam(name = "nameStaff", required = false) String nameStaff,
                                     @RequestParam(name = "page") Integer page,
                                     @RequestParam(name = "size") Integer size,
-                                    @RequestParam(name = "sort_field", required = false) String sortField,
-                                    @RequestParam(name = "sort_order", required = false) String sortOrder,
-                                    @RequestParam(name = "phone_number", required = false) String phoneNumber,
+                                    @RequestParam(name = "sortField", required = false) String sortField,
+                                    @RequestParam(name = "sortOrder", required = false) String sortOrder,
+                                    @RequestParam(name = "phoneNumber", required = false) String phoneNumber,
                                     @RequestParam(name = "address", required = false) String address) {
         Page<StaffResponse> list = staffService.search(nameStaff, phoneNumber, address, sortField, sortOrder, page, size);
         return VietTienResponseDto.ok(VietTienPageDto.build(list), "Search list book success");

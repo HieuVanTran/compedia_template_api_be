@@ -14,7 +14,7 @@ import java.util.Optional;
 
 public interface BookRepositoryCustom {
 
-    Page<BookResponse> search(String bookName, String nameAuthor, String categoryName, String publishName,
+    Page<BookResponse> search(String bookName, Long authorId, Long categoryId, Long publishId,
                               String sortField, String sortOrder, Integer page, Integer size, Pageable pageable);
 
     List<BookResponse> getAllBook();

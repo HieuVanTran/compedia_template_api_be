@@ -24,7 +24,7 @@ public class AdminRepositoryImpl implements AdminRepositoryCustom {
     public Page<AdminResponse> search(String username, String email, Integer roleId, String codeRole, String fullName,
                                       String sortField, String sortOrder, Integer page, Integer size, Pageable pageable) {
         StringBuilder sb = new StringBuilder();
-        sb.append("SELECT a.account_id, a.username, a.email, a.role_id, r.code_role, a.full_name " +
+        sb.append("SELECT a.account_id, a.username, a.email, a.role_id, r.code_role, a.full_name, a.phone, a.date_of_birth " +
                 "FROM account a" +
                 "         INNER JOIN role r ON a.role_id = r.role_id " +
                 "WHERE 1 = 1  ");
@@ -53,6 +53,8 @@ public class AdminRepositoryImpl implements AdminRepositoryCustom {
             dto.setRoleId(ValueUtil.getLongByObject(obj[3]));
             dto.setCodeRole(ValueUtil.getStringByObject(obj[4]));
             dto.setFullName(ValueUtil.getStringByObject(obj[5]));
+            dto.setPhone(ValueUtil.getStringByObject(obj[6]));
+            dto.setDateOfBirth(ValueUtil.getStringByObject(obj[7]));
 
             list.add(dto);
         }

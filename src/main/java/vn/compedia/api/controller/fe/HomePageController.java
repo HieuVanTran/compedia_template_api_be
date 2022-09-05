@@ -49,16 +49,15 @@ public class HomePageController extends GlobalExceptionHandler {
 //        return VietTienResponseDto.ok(home, "Get list account success");
     }
 
-    @GetMapping(value = "search")
     public ResponseEntity<?> search(@RequestParam(name = "bookName", required = false) String bookName,
-                                    @RequestParam(name = "category_name", required = false) String categoryName,
-                                    @RequestParam(name = "name_author", required = false) String nameAuthor,
-                                    @RequestParam(name = "publish_name", required = false) String publishName,
+                                    @RequestParam(name = "categoryId", required = false) Long categoryId,
+                                    @RequestParam(name = "authorId", required = false) Long authorId,
+                                    @RequestParam(name = "publishId", required = false) Long publishId,
                                     @RequestParam(name = "page") Integer page,
                                     @RequestParam(name = "size") Integer size,
-                                    @RequestParam(name = "sort_field", required = false) String sortField,
-                                    @RequestParam(name = "sort_order", required = false) String sortOrder) {
-        Page<BookResponse> list = homePageService.search(bookName, nameAuthor, categoryName, publishName, sortField, sortOrder, page, size);
+                                    @RequestParam(name = "sortField", required = false) String sortField,
+                                    @RequestParam(name = "sortOrder", required = false) String sortOrder) {
+        Page<BookResponse> list = homePageService.search(bookName, categoryId, authorId, publishId, sortField, sortOrder, page, size);
         return VietTienResponseDto.ok(VietTienPageDto.build(list), "Search list book success");
     }
 }

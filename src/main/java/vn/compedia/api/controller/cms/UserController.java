@@ -44,8 +44,8 @@ public class UserController extends GlobalExceptionHandler {
                                     @RequestParam(name = "address", required = false) String address,
                                     @RequestParam(name = "page") Integer page,
                                     @RequestParam(name = "size") Integer size,
-                                    @RequestParam(name = "sort_field", required = false) String sortField,
-                                    @RequestParam(name = "sort_order", required = false) String sortOrder,
+                                    @RequestParam(name = "sortField", required = false) String sortField,
+                                    @RequestParam(name = "sortOrder", required = false) String sortOrder,
                                     @RequestParam(name = "phone", required = false) String phone) {
         Page<UserResponse> list = userService.search(fullName, address, phone, sortField, sortOrder, page, size);
         return VietTienResponseDto.ok(VietTienPageDto.build(list), "Search list book success");

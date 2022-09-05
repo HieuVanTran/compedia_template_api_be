@@ -41,8 +41,8 @@ public class BookCategoryController extends GlobalExceptionHandler {
     public ResponseEntity<?> search(@RequestParam(name = "categoryName", required = false) String categoryName,
                                     @RequestParam(name = "page") Integer page,
                                     @RequestParam(name = "size") Integer size,
-                                    @RequestParam(name = "sort_field", required = false) String sortField,
-                                    @RequestParam(name = "sort_order", required = false) String sortOrder,
+                                    @RequestParam(name = "sortField", required = false) String sortField,
+                                    @RequestParam(name = "sortOrder", required = false) String sortOrder,
                                     @RequestParam(name = "bookName", required = false) String bookName) {
         Page<BookCategoryResponse> list = bookCategoryService.search(categoryName, bookName, sortField, sortOrder, page, size);
         return VietTienResponseDto.ok(VietTienPageDto.build(list), "Search list book success");

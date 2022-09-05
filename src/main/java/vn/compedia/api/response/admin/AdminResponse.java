@@ -25,5 +25,11 @@ public class AdminResponse {
     @JsonProperty("code_role")
     private String codeRole;
 
+    @JsonProperty("phone")
+    private String phone;
+
+    @JsonProperty("date_of_birth")
+    private String dateOfBirth;
+
 
 }

@@ -21,6 +21,7 @@ import vn.compedia.api.util.MessageUtil;
 public class LanguageController extends GlobalExceptionHandler {
 
     @GetMapping("/{language}")
+
     @ApiOperation("Set language")
     public ResponseEntity<?> getLanguage(@PathVariable Integer id) throws VietTienException, VietTienInvalidParamsException {
 

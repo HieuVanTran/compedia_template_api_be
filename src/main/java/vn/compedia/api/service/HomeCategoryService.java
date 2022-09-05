@@ -36,8 +36,8 @@ public class HomeCategoryService {
     }
 
 
-    public Page<BookResponse> search(String bookName, String nameAuthor, String categoryName, String publishName,
+    public Page<BookResponse> search(String bookName, Long categoryId, Long authorId, Long publishId,
                                      String sortField, String sortOrder, Integer page, Integer size) {
-        return bookRepository.search(bookName, nameAuthor, categoryName, publishName, sortField, sortOrder, page, size, PageRequest.of(page, size));
+        return bookRepository.search(bookName, categoryId, authorId, publishId, sortField, sortOrder, page, size, PageRequest.of(page, size));
     }
 }

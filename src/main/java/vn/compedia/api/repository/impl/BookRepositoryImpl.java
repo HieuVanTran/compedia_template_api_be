@@ -79,7 +79,7 @@ public class BookRepositoryImpl implements BookRepositoryCustom {
     }
 
     @Override
-    public Page<BookResponse> search(String bookName, String nameAuthor, String categoryName, String publishName,
+    public Page<BookResponse> search(String bookName, Long categoryId, Long authorId, Long publishId,
                                      String sortField, String sortOrder, Integer page, Integer size, Pageable pageable) {
 
         StringBuilder sb = new StringBuilder();
@@ -105,9 +105,9 @@ public class BookRepositoryImpl implements BookRepositoryCustom {
                 "         inner join publish_company pc on b.company_id = pc.company_id " +
                 "where 1 = 1");
 
-        appendQuery(sb, bookName, nameAuthor, categoryName, publishName);
+        appendQuery(sb, bookName, categoryId, authorId, publishId);
         setSortOrder(sortField, sortOrder, sb);
-        Query query = createQuery(sb, bookName, nameAuthor, categoryName, publishName);
+        Query query = createQuery(sb, bookName, categoryId, authorId, publishId);
 
         if (pageable.getPageSize() > 0) {
             query.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
@@ -139,10 +139,10 @@ public class BookRepositoryImpl implements BookRepositoryCustom {
             list.add(dto);
         }
 
-        return new PageImpl<>(list, pageable, countSearch(bookName, nameAuthor, categoryName, publishName).longValue());
+        return new PageImpl<>(list, pageable, countSearch(bookName, categoryId, authorId, publishId).longValue());
     }
 
-    private BigInteger countSearch(String bookName, String nameAuthor, String categoryName, String publishName) {
+    private BigInteger countSearch(String bookName, Long categoryId, Long authorId, Long publishId) {
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT count(0) " +
                 " FROM book b" +
@@ -150,8 +150,8 @@ public class BookRepositoryImpl implements BookRepositoryCustom {
                 " inner join book_category bc on b.id_type_book = bc.id_type_book  " +
                 " inner join publish_company pc on b.company_id = pc.company_id  " +
                 " WHERE 1 = 1 ");
-        appendQuery(sb, bookName, nameAuthor, categoryName, publishName);
-        Query query = createQuery(sb, bookName, nameAuthor, categoryName, publishName);
+        appendQuery(sb, bookName, categoryId, authorId, publishId);
+        Query query = createQuery(sb, bookName, categoryId, authorId, publishId);
         return (BigInteger) query.getSingleResult();
     }
 
@@ -173,34 +173,36 @@ public class BookRepositoryImpl implements BookRepositoryCustom {
         }
     }
 
-    public void appendQuery(StringBuilder sb, String bookName, String nameAuthor, String categoryName, String publishName) {
+    public void appendQuery(StringBuilder sb, String bookName, Long categoryId, Long authorId, Long publishId) {
         if (StringUtils.isNotBlank(bookName)) {
             sb.append(" and b.book_name like :bookName ");
         }
-        if (StringUtils.isNotBlank(nameAuthor)) {
-            sb.append(" and a.name_author like :nameAuthor ");
+        if (categoryId != null) {
+            sb.append(" and bc.id_type_book like :categoryId ");
         }
-        if (StringUtils.isNotBlank(categoryName)) {
-            sb.append(" and bc.category_name like :categoryName ");
+        if (authorId != null) {
+            sb.append(" and a.id_author like :authorId ");
         }
-        if (StringUtils.isNotBlank(publishName)) {
-            sb.append(" and pc.publish_name like :publishName ");
+
+        if (publishId != null) {
+            sb.append(" and pc.company_id like :publishId ");
         }
     }
 
-    public Query createQuery(StringBuilder sb, String bookName, String nameAuthor, String categoryName, String publishName) {
+    public Query createQuery(StringBuilder sb, String bookName, Long categoryId, Long authorId, Long publishId) {
         Query query = entityManager.createNativeQuery(sb.toString());
         if (StringUtils.isNotBlank(bookName)) {
             query.setParameter("bookName", buildFilterLike(bookName));
         }
-        if (StringUtils.isNotBlank(nameAuthor)) {
-            query.setParameter("nameAuthor", buildFilterLike(nameAuthor));
+        if (categoryId != null) {
+            query.setParameter("categoryId", categoryId);
         }
-        if (StringUtils.isNotBlank(categoryName)) {
-            query.setParameter("categoryName", buildFilterLike(categoryName));
+        if (authorId != null) {
+            query.setParameter("authorId", authorId);
         }
-        if (StringUtils.isNotBlank(publishName)) {
-            query.setParameter("publishName", buildFilterLike(publishName));
+
+        if (publishId != null) {
+            query.setParameter("publishId", publishId);
         }
         return query;
     }
