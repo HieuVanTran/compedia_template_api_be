@@ -14,6 +14,7 @@ import vn.compedia.api.dto.VietTienPageDto;
 import vn.compedia.api.dto.VietTienResponseDto;
 import vn.compedia.api.exception.GlobalExceptionHandler;
 import vn.compedia.api.response.book.BookResponse;
+import vn.compedia.api.response.index.HomeAuthorResponse;
 import vn.compedia.api.response.index.HomeCategoryResponse;
 import vn.compedia.api.response.index.HomePageResponse;
 import vn.compedia.api.service.HomeCategoryService;
@@ -30,19 +31,25 @@ public class HomeCategoryController extends GlobalExceptionHandler {
     @Autowired
     private HomeCategoryService homeCategoryService;
 
+
+
     @GetMapping()
     public ResponseEntity<?> getAll() {
         List<HomePageResponse> list = homeCategoryService.getAll();
         return VietTienResponseDto.ok(list, "Get list account success");
     }
 
-    @GetMapping(value = "get-one")
-    public ResponseEntity<?> getOne(@RequestParam(name = "idTypeBook", required = false) Long idTypeBook,
-                                    @RequestParam(name = "idAuthor", required = false) Long idAuthor) {
-        List<HomeCategoryResponse> home = homeCategoryService.getOne(idTypeBook, idAuthor);
-        return VietTienResponseDto.ok(home, "Get list account success");
+    @GetMapping(value = "get-category")
+    public ResponseEntity<?> getAllCategory() {
+        List<HomeCategoryResponse> category = homeCategoryService.getAllCategory();
+        return VietTienResponseDto.ok(category, "Get list account success");
     }
-
+    @GetMapping(value = "get-author")
+    public ResponseEntity<?> getAllAuthor() {
+        List<HomeAuthorResponse> author = homeCategoryService. getAllAuthor();
+        return VietTienResponseDto.ok(author, "Get list account success");
+    }
+    @GetMapping(value = "search")
     public ResponseEntity<?> search(@RequestParam(name = "bookName", required = false) String bookName,
                                     @RequestParam(name = "categoryId", required = false) Long categoryId,
                                     @RequestParam(name = "authorId", required = false) Long authorId,

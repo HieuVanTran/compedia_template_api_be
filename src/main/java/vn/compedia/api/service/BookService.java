@@ -67,14 +67,7 @@ public class BookService {
         book.setPageNumber(request.getPageNumber());
         book.setPrice(request.getPrice());
         book.setNote(request.getNote());
-//        book.setImage(FileUtil.saveImage(MultipartFile (uploadedFile.getInputStream()));
-//        Date pby = DateUtil.formatDatePattern(request.getPublishingYear(), DateUtil.DATE_FORMAT_YEAR);
-//        book.setPublishingYear(pby);
-//        book.setImage(FileUtil.saveImage(file.getOriginalFilename());
         book.setImage(FileUtil.saveImage(file));
-//        book.setPublishName(FileUtil.saveFiles(request.getImage()));
-//        Image img = FileUtil.saveImage(file.getOriginalFilename(), FileUtil.);
-//        book.setImage(img);
         book.setPublishingYear(request.getPublishingYear());
         book.setStatus(1);
         bookRepository.save(book);

@@ -17,8 +17,8 @@ public class HomePageResponse {
     @JsonProperty("id_author")
     private Long idAuthor;
 
-    @JsonProperty("author_name")
-    private String authorName;
+    @JsonProperty("name_author")
+    private String nameAuthor;
 
     @JsonProperty("id_type_book")
     private Long idTypeBook;

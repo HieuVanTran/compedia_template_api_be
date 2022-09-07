@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.util.CollectionUtils;
 import vn.compedia.api.repository.BookRepositoryCustom;
 import vn.compedia.api.response.book.BookResponse;
+import vn.compedia.api.response.index.HomeAuthorResponse;
 import vn.compedia.api.response.index.HomeCategoryResponse;
 import vn.compedia.api.response.index.HomeDetailsResponse;
 import vn.compedia.api.response.index.HomePageResponse;
@@ -252,7 +253,7 @@ public class BookRepositoryImpl implements BookRepositoryCustom {
             dto.setBookName(ValueUtil.getStringByObject(obj[1]));
             dto.setImage(ValueUtil.getStringByObject(obj[2]));
             dto.setIdAuthor(ValueUtil.getLongByObject(obj[3]));
-            dto.setAuthorName(ValueUtil.getStringByObject(obj[4]));
+            dto.setNameAuthor(ValueUtil.getStringByObject(obj[4]));
             dto.setIdTypeBook(ValueUtil.getLongByObject(obj[5]));
             dto.setCategoryName(ValueUtil.getStringByObject(obj[6]));
             dto.setCompanyId(ValueUtil.getLongByObject(obj[7]));
@@ -293,7 +294,7 @@ public class BookRepositoryImpl implements BookRepositoryCustom {
                 dto.setBookName(ValueUtil.getStringByObject(obj[1]));
                 dto.setImage(ValueUtil.getStringByObject(obj[2]));
                 dto.setIdAuthor(ValueUtil.getLongByObject(obj[3]));
-                dto.setAuthorName(ValueUtil.getStringByObject(obj[4]));
+                dto.setNameAuthor(ValueUtil.getStringByObject(obj[4]));
                 dto.setIdTypeBook(ValueUtil.getLongByObject(obj[5]));
                 dto.setCategoryName(ValueUtil.getStringByObject(obj[6]));
                 dto.setCompanyId(ValueUtil.getLongByObject(obj[7]));
@@ -306,42 +307,45 @@ public class BookRepositoryImpl implements BookRepositoryCustom {
     }
 
     @Override
-    public List<HomeCategoryResponse> findByCategory(Long idTypeBook, Long idAuthor) {
+    public List<HomeCategoryResponse> findByCategory(Long idTypeBook) {
         StringBuilder sb = new StringBuilder();
-        sb.append("select b.book_id," +
-                "       b.book_name," +
-                "       b.image," +
-                "       a.id_author," +
-                "       a.name_author," +
-                "       bc.id_type_book," +
-                "       bc.category_name," +
-                "       pc.company_id," +
-                "       pc.publish_name, " +
-                "       b.note " +
-                "from book b " +
-                "         inner join author a on b.id_author = a.id_author " +
-                "         inner join book_category bc on b.id_type_book = bc.id_type_book " +
-                "         inner join publish_company pc  on b.company_id = pc.company_id " +
-                "where bc.id_type_book = :idTypeBook or a.id_author = :idAuthor");
+        sb.append("select bc.id_type_book," +
+                "       bc.category_name " +
+                "from book_category bc " +
+                " where bc.id_type_book = :idTypeBook ");
 
         Query query = entityManager.createNativeQuery(sb.toString());
         query.setParameter("idTypeBook", idTypeBook);
-        query.setParameter("idAuthor", idAuthor);
         List<HomeCategoryResponse> list = new ArrayList<>();
         List<Object[]> result = query.getResultList();
         if (!CollectionUtils.isEmpty(result)) {
             for (Object[] obj : result) {
                 HomeCategoryResponse dto = new HomeCategoryResponse();
-                dto.setBookId(ValueUtil.getLongByObject(obj[0]));
-                dto.setBookName(ValueUtil.getStringByObject(obj[1]));
-                dto.setImage(ValueUtil.getStringByObject(obj[2]));
-                dto.setIdAuthor(ValueUtil.getLongByObject(obj[3]));
-                dto.setNameAuthor(ValueUtil.getStringByObject(obj[4]));
-                dto.setIdTypeBook(ValueUtil.getLongByObject(obj[5]));
-                dto.setCategoryName(ValueUtil.getStringByObject(obj[6]));
-                dto.setCompanyId(ValueUtil.getLongByObject(obj[7]));
-                dto.setPublishName(ValueUtil.getStringByObject(obj[8]));
-                dto.setNote(ValueUtil.getStringByObject(obj[9]));
+                dto.setIdTypeBook(ValueUtil.getLongByObject(obj[0]));
+                dto.setCategoryName(ValueUtil.getStringByObject(obj[1]));
+                list.add(dto);
+            }
+        }
+        return list;
+    }
+
+    @Override
+    public List<HomeAuthorResponse> findByAuthor(Long idAuthor) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("select a.id_author," +
+                "       a.name_author " +
+                "from author a " +
+                " where a.id_author = :idAuthor");
+
+        Query query = entityManager.createNativeQuery(sb.toString());
+        query.setParameter("idAuthor", idAuthor);
+        List<HomeAuthorResponse> list = new ArrayList<>();
+        List<Object[]> result = query.getResultList();
+        if (!CollectionUtils.isEmpty(result)) {
+            for (Object[] obj : result) {
+                HomeAuthorResponse dto = new HomeAuthorResponse();
+                dto.setIdAuthor(ValueUtil.getLongByObject(obj[0]));
+                dto.setNameAuthor(ValueUtil.getStringByObject(obj[1]));
                 list.add(dto);
             }
         }
@@ -399,35 +403,36 @@ public class BookRepositoryImpl implements BookRepositoryCustom {
         }
         return Optional.empty();
     }
+
     @Override
-    public List<HomeDetailsResponse> findByListDetails(Long idTypeBook) {
+    public List<HomeDetailsResponse> findByListDetails(Long bookId) {
         StringBuilder sb = new StringBuilder();
-        sb.append("select b.book_id, +" +
-                "                       b.book_name, " +
-                "                       b.status, " +
-                "                       b.amount, " +
-                "                       b.image, " +
-                "                       b.page_number, " +
-                "                       b.publishing_year, " +
-                "                       b.price, " +
-                "                       a.id_author, " +
-                "                       a.name_author, " +
-                "                       bc.id_type_book, " +
-                "                       bc.category_name, " +
-                "                       pc.company_id, " +
-                "                       pc.publish_name,  " +
-                "                       b.note  " +
-                "                 " +
-                "                from book b " +
-                "                         inner join author a on b.id_author = a.id_author  " +
-                "                         inner join book_category bc on b.id_type_book = bc.id_type_book  " +
-                "                         inner join publish_company pc on b.company_id = pc.company_id  " +
-                "                where bc.id_type_book = :idTypeBook ");
+        sb.append("select b.book_id," +
+                "       b.book_name," +
+                "       b.status," +
+                "       b.amount," +
+                "       b.image," +
+                "       b.page_number," +
+                "       b.publishing_year," +
+                "       b.price," +
+                "       a.id_author," +
+                "       a.name_author," +
+                "       bc.id_type_book," +
+                "       bc.category_name," +
+                "       pc.company_id," +
+                "       pc.publish_name," +
+                "       b.note " +
+                "from book b " +
+                "         inner join author a on b.id_author = a.id_author " +
+                "         inner join book_category bc on b.id_type_book = bc.id_type_book " +
+                "         inner join publish_company pc on b.company_id = pc.company_id " +
+                "where b.book_id <> :bookId " +
+                "  and b.id_type_book = (select b1.id_type_book from book b1 where b1.book_id = :bookId) ");
 
         Query query = entityManager.createNativeQuery(sb.toString());
-        query.setParameter("idTypeBook", idTypeBook);
+        query.setParameter("bookId", bookId);
         List<Object[]> result = query.getResultList();
-        List<HomeDetailsResponse> list  = new ArrayList<>();;
+        List<HomeDetailsResponse> list = new ArrayList<>();
         if (!CollectionUtils.isEmpty(result)) {
             for (Object[] obj : result) {
                 HomeDetailsResponse dto = new HomeDetailsResponse();

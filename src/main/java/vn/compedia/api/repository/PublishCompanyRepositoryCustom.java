@@ -10,7 +10,7 @@ import java.util.List;
 public interface PublishCompanyRepositoryCustom {
     List<PublishCompanyResponse> getAllPublishCompany();
 
-    Page<PublishCompanyResponse> search(String publishName, String email, String agentPeople,
+    Page<PublishCompanyResponse> search(Long companyId, String email, String agentPeople,
                                         String sortField, String sortOrder, Integer page, Integer size, Pageable pageable);
 
     BigInteger getTotalPublisher();

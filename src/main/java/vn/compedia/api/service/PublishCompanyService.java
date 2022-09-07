@@ -98,9 +98,9 @@ public class PublishCompanyService {
         publishCompanyRepository.deleteById(id);
     }
 
-    public Page<PublishCompanyResponse> search(String publishName, String email, String agentPeople,
+    public Page<PublishCompanyResponse> search(Long companyId, String email, String agentPeople,
                                                String sortField, String sortOrder, Integer page, Integer size) {
-        return publishCompanyRepository.search(publishName, email, agentPeople, sortField, sortOrder, page, size, PageRequest.of(page, size));
+        return publishCompanyRepository.search(companyId, email, agentPeople, sortField, sortOrder, page, size, PageRequest.of(page, size));
 
     }
 }

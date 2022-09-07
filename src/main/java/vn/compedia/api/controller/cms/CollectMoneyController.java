@@ -51,8 +51,8 @@ public class CollectMoneyController extends GlobalExceptionHandler {
                                     @RequestParam(name = "sortField", required = false) String sortField,
                                     @RequestParam(name = "sortOrder", required = false) String sortOrder,
                                     @RequestParam(name = "username", required = false) String username,
-                                    @RequestParam(name = "nameStaff", required = false) String nameStaff) {
-        Page<CollectMoneyResponse> list = collectMoneyService.search(fullName, nameStaff, username, sortField, sortOrder, page, size);
+                                    @RequestParam(name = "staffId", required = false) Long staffId) {
+        Page<CollectMoneyResponse> list = collectMoneyService.search(fullName, staffId, username, sortField, sortOrder, page, size);
         return VietTienResponseDto.ok(VietTienPageDto.build(list), "Search list book success");
     }
 

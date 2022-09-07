@@ -58,8 +58,8 @@ public class CollectMoneyService {
         collectMoneyRepository.deleteById(id);
     }
 
-    public Page<CollectMoneyResponse> search(String fullName, String nameStaff, String username, String sortField, String sortOrder, Integer page, Integer size) {
-        return collectMoneyRepository.search(fullName, nameStaff, username, sortField, sortOrder, page, size, PageRequest.of(page, size));
+    public Page<CollectMoneyResponse> search(String fullName, Long staffId, String username, String sortField, String sortOrder, Integer page, Integer size) {
+        return collectMoneyRepository.search(fullName,  staffId, username, sortField, sortOrder, page, size, PageRequest.of(page, size));
     }
 }
 

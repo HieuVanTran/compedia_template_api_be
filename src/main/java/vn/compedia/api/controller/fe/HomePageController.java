@@ -15,7 +15,9 @@ import vn.compedia.api.dto.VietTienPageDto;
 import vn.compedia.api.dto.VietTienResponseDto;
 import vn.compedia.api.exception.GlobalExceptionHandler;
 import vn.compedia.api.response.book.BookResponse;
+import vn.compedia.api.response.index.HomeCategoryResponse;
 import vn.compedia.api.response.index.HomePageResponse;
+import vn.compedia.api.service.HomeCategoryService;
 import vn.compedia.api.service.HomePageService;
 
 import java.util.List;
@@ -29,6 +31,9 @@ public class HomePageController extends GlobalExceptionHandler {
 
     @Autowired
     private HomePageService homePageService;
+
+    @Autowired
+    private HomeCategoryService homeCategoryService;
 
     @GetMapping()
     public ResponseEntity<?> getAll() {
@@ -45,10 +50,13 @@ public class HomePageController extends GlobalExceptionHandler {
             e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-//        List<HomePageResponse> home = homePageService.getOne(idTypeBook);
-//        return VietTienResponseDto.ok(home, "Get list account success");
     }
-
+    @GetMapping(value = "get-category")
+    public ResponseEntity<?> getAllCategory() {
+        List<HomeCategoryResponse> category = homeCategoryService.getAllCategory();
+        return VietTienResponseDto.ok(category, "Get list account success");
+    }
+    @GetMapping(value = "search")
     public ResponseEntity<?> search(@RequestParam(name = "bookName", required = false) String bookName,
                                     @RequestParam(name = "categoryId", required = false) Long categoryId,
                                     @RequestParam(name = "authorId", required = false) Long authorId,

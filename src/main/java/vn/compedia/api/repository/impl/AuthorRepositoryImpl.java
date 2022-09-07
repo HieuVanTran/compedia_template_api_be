@@ -6,6 +6,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import vn.compedia.api.repository.AuthorRepositoryCustom;
 import vn.compedia.api.response.book.AuthorResponse;
+import vn.compedia.api.response.index.HomeAuthorResponse;
 import vn.compedia.api.util.ValueUtil;
 
 import javax.persistence.EntityManager;
@@ -143,6 +144,28 @@ public class AuthorRepositoryImpl implements AuthorRepositoryCustom {
         sb.append("SELECT COUNT(a.id_author) as totalAuthor FROM author a where 1 = 1");
         Query query = entityManager.createNativeQuery(sb.toString());
         return (BigInteger) query.getSingleResult();
+    }
+
+    @Override
+    public List<HomeAuthorResponse> findByAuthor() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("SELECT au.id_author," +
+                "       au.name_author " +
+                "FROM author au " +
+                "WHERE 1 = 1  ");
+        sb.append(" ORDER BY au.id_author DESC");
+        Query query = entityManager.createNativeQuery(sb.toString());
+        List<Object[]> result = query.getResultList();
+
+        List<HomeAuthorResponse> HomeAuthorResponse = new ArrayList<>();
+        for (Object[] obj : result) {
+            HomeAuthorResponse dto = new HomeAuthorResponse();
+            dto.setIdAuthor(ValueUtil.getLongByObject(obj[0]));
+            dto.setNameAuthor(ValueUtil.getStringByObject(obj[1]));
+
+            HomeAuthorResponse.add(dto);
+        }
+        return HomeAuthorResponse;
     }
 
 

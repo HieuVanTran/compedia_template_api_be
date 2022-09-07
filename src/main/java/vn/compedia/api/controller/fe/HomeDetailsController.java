@@ -41,9 +41,9 @@ public class HomeDetailsController extends GlobalExceptionHandler {
     }
 
     @GetMapping(value = "get-popular")
-    public ResponseEntity<?> getByPopular(@RequestParam(name = "id_type_book") Long idTypeBook) {
+    public ResponseEntity<?> getByPopular(@RequestParam(name = "bookId") Long bookId) {
         try {
-            List<HomeDetailsResponse> popular = homeDetailsService.getByPopular(idTypeBook);
+            List<HomeDetailsResponse> popular = homeDetailsService.getByPopular(bookId);
             return VietTienResponseDto.ok(popular, "Get list account success");
         } catch (Exception e) {
             e.printStackTrace();
@@ -51,6 +51,7 @@ public class HomeDetailsController extends GlobalExceptionHandler {
         }
     }
 
+    @GetMapping(value = "search")
     public ResponseEntity<?> search(@RequestParam(name = "bookName", required = false) String bookName,
                                     @RequestParam(name = "categoryId", required = false) Long categoryId,
                                     @RequestParam(name = "authorId", required = false) Long authorId,

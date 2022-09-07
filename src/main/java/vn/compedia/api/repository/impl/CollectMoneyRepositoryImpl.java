@@ -61,7 +61,7 @@ public class CollectMoneyRepositoryImpl implements CollectMoneyRepositoryCustom 
     }
 
     @Override
-    public Page<CollectMoneyResponse> search(String fullName, String nameStaff, String username, String sortField, String sortOrder, Integer page, Integer size, Pageable pageable) {
+    public Page<CollectMoneyResponse> search(String fullName,  Long staffId, String username, String sortField, String sortOrder, Integer page, Integer size, Pageable pageable) {
 
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT c.collect_money_id, a.full_name, s.staff_id, s.name_staff,a.username, a.account_id,c.proceeds, c.fined_amount " +
@@ -70,9 +70,9 @@ public class CollectMoneyRepositoryImpl implements CollectMoneyRepositoryCustom 
                 "INNER JOIN account a ON c.account_id = a.account_id " +
                 "WHERE 1 = 1");
 
-        appendQuery(sb, fullName, nameStaff, username);
+        appendQuery(sb, fullName, staffId, username);
         setSortOrder(sortField, sortOrder, sb);
-        Query query = createQuery(sb, fullName, nameStaff, username);
+        Query query = createQuery(sb, fullName, staffId, username);
 
         if (pageable.getPageSize() > 0) {
             query.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
@@ -97,18 +97,18 @@ public class CollectMoneyRepositoryImpl implements CollectMoneyRepositoryCustom 
             list.add(dto);
         }
 
-        return new PageImpl<>(list, pageable, countSearch(fullName, nameStaff, username).longValue());
+        return new PageImpl<>(list, pageable, countSearch(fullName, staffId, username).longValue());
     }
 
-    private BigInteger countSearch(String fullName, String nameStaff, String username) {
+    private BigInteger countSearch(String fullName, Long staffId, String username) {
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT count(0) " +
                 " FROM collect_money c " +
                 "INNER JOIN staff s ON c.staff_id = s.staff_id " +
                 "INNER JOIN account a ON c.account_id = a.account_id " +
                 "WHERE 1 = 1 ");
-        appendQuery(sb, fullName, nameStaff, username);
-        Query query = createQuery(sb, fullName, nameStaff, username);
+        appendQuery(sb, fullName, staffId, username);
+        Query query = createQuery(sb, fullName, staffId, username);
         return (BigInteger) query.getSingleResult();
     }
 
@@ -117,10 +117,10 @@ public class CollectMoneyRepositoryImpl implements CollectMoneyRepositoryCustom 
             sb.append(" ORDER BY ");
             if (sortField.toLowerCase().equals("fullName")) {
                 sb.append(" a.fullName ");
-            } else if (sortField.toLowerCase().equals("nameStaff")) {
-                sb.append(" s.nameStaff ");
             }
-
+           else if(sortField.toLowerCase().equals("nameStaff")){
+                sb.append("s.nameStaff");
+            }
             sb.append(sortOrder);
         } else {
             sb.append(" ORDER BY collect_money_id DESC");
@@ -128,12 +128,12 @@ public class CollectMoneyRepositoryImpl implements CollectMoneyRepositoryCustom 
     }
 
 
-    public void appendQuery(StringBuilder sb, String fullName, String nameStaff, String username) {
+    public void appendQuery(StringBuilder sb, String fullName, Long staffId, String username) {
         if (StringUtils.isNotBlank(fullName)) {
             sb.append(" and a.full_name like :fullName ");
         }
-        if (StringUtils.isNotBlank(nameStaff)) {
-            sb.append(" and s.nameStaff like :nameStaff ");
+        if (staffId !=  null) {
+            sb.append(" and s.staff_id like :staffId ");
         }
         if (StringUtils.isNotBlank(username)) {
             sb.append(" and a.username like :username ");
@@ -141,13 +141,13 @@ public class CollectMoneyRepositoryImpl implements CollectMoneyRepositoryCustom 
 
     }
 
-    public Query createQuery(StringBuilder sb, String fullName, String nameStaff, String username) {
+    public Query createQuery(StringBuilder sb, String fullName, Long staffId, String username) {
         Query query = entityManager.createNativeQuery(sb.toString());
         if (StringUtils.isNotBlank(fullName)) {
             query.setParameter("fullName", buildFilterLike(fullName));
         }
-        if (StringUtils.isNotBlank(nameStaff)) {
-            query.setParameter("nameStaff", buildFilterLike(nameStaff));
+        if (staffId != null) {
+            query.setParameter("staffId", staffId);
         }
         if (StringUtils.isNotBlank(username)) {
             query.setParameter("username", buildFilterLike(username));

@@ -51,7 +51,7 @@ public class BookCategoryService {
         bookCategoryRepository.deleteById(id);
     }
 
-    public Page<BookCategoryResponse> search(String categoryName, String bookName, String sortField, String sortOrder, Integer page, Integer size) {
-        return bookCategoryRepository.search(categoryName, bookName, sortField, sortOrder, page, size, PageRequest.of(page, size));
+    public Page<BookCategoryResponse> search(String categoryName , String sortField, String sortOrder, Integer page, Integer size) {
+        return bookCategoryRepository.search(categoryName, sortField, sortOrder, page, size, PageRequest.of(page, size));
     }
 }

@@ -4,6 +4,7 @@ package vn.compedia.api.repository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import vn.compedia.api.response.book.BookResponse;
+import vn.compedia.api.response.index.HomeAuthorResponse;
 import vn.compedia.api.response.index.HomeCategoryResponse;
 import vn.compedia.api.response.index.HomeDetailsResponse;
 import vn.compedia.api.response.index.HomePageResponse;
@@ -25,10 +26,11 @@ public interface BookRepositoryCustom {
 
     List<HomePageResponse> findByHome(Long idTypeBook);
 
+    List<HomeCategoryResponse> findByCategory(Long idTypeBook);
 
-    List<HomeCategoryResponse> findByCategory(Long idTypeBook, Long idAuthor);
+    List<HomeAuthorResponse> findByAuthor(Long idAuthor);
 
     Optional<HomeDetailsResponse> findByDetails(Long bookId);
 
-    List<HomeDetailsResponse> findByListDetails(Long idTypeBook);
+    List<HomeDetailsResponse> findByListDetails(Long bookId);
 }

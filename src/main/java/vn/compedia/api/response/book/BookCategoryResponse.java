@@ -8,14 +8,9 @@ import lombok.Setter;
 @Setter
 public class BookCategoryResponse {
 
-    @JsonProperty("id_type_book")
     private Long idTypeBook;
 
-    @JsonProperty("category_name")
     private String categoryName;
-
-    @JsonProperty("book_name")
-    private String bookName;
 
 
 }

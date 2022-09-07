@@ -40,14 +40,14 @@ public class PublishCompanyController extends GlobalExceptionHandler {
     }
 
     @GetMapping(value = "search")
-    public ResponseEntity<?> search(@RequestParam(name = "publishName", required = false) String publishName,
+    public ResponseEntity<?> search(@RequestParam(name = "companyId", required = false) Long companyId,
                                     @RequestParam(name = "email", required = false) String email,
                                     @RequestParam(name = "page") Integer page,
                                     @RequestParam(name = "size") Integer size,
                                     @RequestParam(name = "sortField", required = false) String sortField,
                                     @RequestParam(name = "sortOrder", required = false) String sortOrder,
                                     @RequestParam(name = "agentPeople", required = false) String agentPeople) {
-        Page<PublishCompanyResponse> list = publishCompanyService.search(publishName, email, agentPeople, sortField, sortOrder, page, size);
+        Page<PublishCompanyResponse> list = publishCompanyService.search(companyId, email, agentPeople, sortField, sortOrder, page, size);
         return VietTienResponseDto.ok(VietTienPageDto.build(list), "Search list book success");
     }
 

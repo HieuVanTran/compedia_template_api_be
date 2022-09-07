@@ -28,8 +28,8 @@ public class HomeDetailsService {
         }
         return details.get();
     }
-    public List<HomeDetailsResponse> getByPopular(Long idTypeBook) throws Exception{
-        List<HomeDetailsResponse> popular = bookRepository.findByListDetails(idTypeBook);
+    public List<HomeDetailsResponse> getByPopular(Long bookId) throws Exception{
+        List<HomeDetailsResponse> popular = bookRepository.findByListDetails(bookId);
         if (popular.isEmpty()) {
             throw new Exception(" List is EMPTY ");
         }

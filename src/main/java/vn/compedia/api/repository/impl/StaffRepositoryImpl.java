@@ -43,15 +43,15 @@ public class StaffRepositoryImpl implements StaffRepositoryCustom {
     }
 
     @Override
-    public Page<StaffResponse> search(String nameStaff, String phoneNumber, String address,
+    public Page<StaffResponse> search(Long staffId, String phoneNumber, String address,
                                       String sortField, String sortOrder, Integer page, Integer size, Pageable pageable) {
 
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT s.staff_id, s.name_staff, s.phone_number, s.address, s.date_of_birth " +
                 "FROM staff s WHERE 1 = 1");
-        appendQuery(sb, nameStaff, phoneNumber, address);
+        appendQuery(sb, staffId, phoneNumber, address);
         setSortOrder(sortField, sortOrder, sb);
-        Query query = createQuery(sb, nameStaff, phoneNumber, address);
+        Query query = createQuery(sb, staffId, phoneNumber, address);
         if (pageable.getPageSize() > 0) {
             query.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
             query.setMaxResults(pageable.getPageSize());
@@ -73,15 +73,15 @@ public class StaffRepositoryImpl implements StaffRepositoryCustom {
             list.add(dto);
         }
 
-        return new PageImpl<>(list, pageable, countSearch(nameStaff, phoneNumber, address).longValue());
+        return new PageImpl<>(list, pageable, countSearch(staffId, phoneNumber, address).longValue());
     }
 
-    private BigInteger countSearch(String nameStaff, String phoneNumber, String address) {
+    private BigInteger countSearch(Long staffId, String phoneNumber, String address) {
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT count(0) " +
                 " FROM staff s WHERE 1 = 1 ");
-        appendQuery(sb, nameStaff, phoneNumber, address);
-        Query query = createQuery(sb, nameStaff, phoneNumber, address);
+        appendQuery(sb, staffId, phoneNumber, address);
+        Query query = createQuery(sb, staffId, phoneNumber, address);
         return (BigInteger) query.getSingleResult();
     }
 
@@ -99,14 +99,14 @@ public class StaffRepositoryImpl implements StaffRepositoryCustom {
 
                 sb.append(sortOrder);
             } else {
-                sb.append(" ORDER BY user_id DESC");
+                sb.append(" ORDER BY staff_id DESC");
             }
         }
     }
 
-    private void appendQuery(StringBuilder sb, String nameStaff, String phoneNumber, String address) {
-        if (StringUtils.isNotBlank(nameStaff)) {
-            sb.append(" and s.name_staff like :nameStaff");
+    private void appendQuery(StringBuilder sb, Long staffId, String phoneNumber, String address) {
+        if (staffId != null) {
+            sb.append(" and s.staff_id like :staffId");
         }
         if (StringUtils.isNotBlank(phoneNumber)) {
             sb.append(" and s.phone_number like :phoneNumber");
@@ -117,10 +117,10 @@ public class StaffRepositoryImpl implements StaffRepositoryCustom {
     }
 
 
-    public Query createQuery(StringBuilder sb, String nameStaff, String phoneNumber, String address) {
+    public Query createQuery(StringBuilder sb, Long staffId, String phoneNumber, String address) {
         Query query = entityManager.createNativeQuery(sb.toString());
-        if (StringUtils.isNotBlank(nameStaff)) {
-            query.setParameter("nameStaff", buildFilterLike(nameStaff));
+        if (staffId != null) {
+            query.setParameter("staffId", staffId);
         }
         if (StringUtils.isNotBlank(phoneNumber)) {
             query.setParameter("phoneNumber", buildFilterLike(phoneNumber));

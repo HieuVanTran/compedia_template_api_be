@@ -5,8 +5,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import vn.compedia.api.repository.AuthorRepository;
+import vn.compedia.api.repository.BookCategoryRepository;
 import vn.compedia.api.repository.BookRepository;
 import vn.compedia.api.response.book.BookResponse;
+import vn.compedia.api.response.index.HomeAuthorResponse;
 import vn.compedia.api.response.index.HomeCategoryResponse;
 import vn.compedia.api.response.index.HomePageResponse;
 
@@ -19,20 +22,24 @@ public class HomeCategoryService {
     @Autowired
     private BookRepository bookRepository;
 
+    @Autowired
+    private BookCategoryRepository bookCategoryRepository;
+
+    @Autowired
+    private AuthorRepository authorRepository;
+
     public List<HomePageResponse> getAll() {
         return bookRepository.findAllHome();
+
     }
 
-//
-//    public HomePageResponse getOne(Long idTypeBook, Long idAuthor  ) throws Exception {
-//        Optional<HomePageResponse> category = bookRepository.findByCategory(idTypeBook, idAuthor);
-//        if (!category.isPresent()) {
-//            throw new Exception(" EMPTY ");
-//        }
-//        return category.get();
+    public List<HomeCategoryResponse> getAllCategory( ) {
 
-    public List<HomeCategoryResponse> getOne(Long idTypeBook, Long idAuthor) {
-        return bookRepository.findByCategory(idTypeBook, idAuthor);
+        return bookCategoryRepository.findByCategory();
+    }
+    public List<HomeAuthorResponse> getAllAuthor(  ) {
+
+        return authorRepository.findByAuthor();
     }
 
 
