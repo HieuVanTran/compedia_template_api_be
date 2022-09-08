@@ -14,7 +14,7 @@ public interface CallCardRepositoryCustom {
     Page<CallCardResponse> search(String username, Integer status, String nameStaff,
                                   String sortField, String sortOrder, Integer page, Integer size, Pageable pageable);
 
-    List<MonthDataResponse> getAmountBorrow();
+    List<MonthDataResponse> getAmountBorrow(String year);
 
     Optional<CallCardResponse> findByIdCallCard(Long callCardId);
 }

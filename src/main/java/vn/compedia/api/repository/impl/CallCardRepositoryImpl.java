@@ -39,7 +39,7 @@ public class CallCardRepositoryImpl implements CallCardRepositoryCustom {
                 "       ca.amount " +
                 "FROM call_card ca " +
                 "         INNER JOIN book b on ca.book_id = b.book_id " +
-                "         INNER JOIN staff s on ca.staff_id = s.staff_id " +
+                "         LEFT JOIN staff s on ca.staff_id = s.staff_id " +
                 "        INNER JOIN account a on ca.account_id = a.account_id " +
                 "WHERE 1 = 1 ");
         sb.append(" ORDER BY ca.call_card_id DESC");
@@ -180,26 +180,36 @@ public class CallCardRepositoryImpl implements CallCardRepositoryCustom {
     }
 
     @Override
-    public List<MonthDataResponse> getAmountBorrow() {
+    public List<MonthDataResponse> getAmountBorrow(String year) {
         StringBuilder sb = new StringBuilder();
-        sb.append("select month_idex as month, sum(brrow) as totalBrrow, sum(pay) as totalPay from (select month_idex, case when totalAmountBorrow is null then 0 else totalAmountBorrow end as brrow, 0 as pay" +
-                "               from times" +
-                "                        left join (select count(cc.call_card_id) as totalAmountBorrow, MONTH(cc.start_date) as month" +
-                "                                   from call_card cc" +
-                "                                   where cc.start_date is not null" +
-                "                                     and YEAR(cc.start_date) = 2022" +
-                "                                   group by month) result on result.month = times.month_idex" +
-                "               union all" +
-                "               select month_idex, 0 as brrow, case when 0 is null then totalAmountPay else totalAmountPay end as pay" +
-                "               from times" +
-                "                        left join (select count(cc.call_card_id) as totalAmountPay, MONTH(cc.end_date) as month" +
-                "                                   from call_card cc" +
-                "                                   where cc.note is not null" +
-                "                                     and YEAR(cc.end_date) = 2022" +
-                "                                   group by month) result on result.month = times.month_idex) result group by month_idex");
+        sb.append("select month_idex as month, sum(brrow) as totalBrrow, sum(pay) as totalPay " +
+                "from (select month_idex, " +
+                "             case when totalAmountBorrow is null then 0 else totalAmountBorrow end as brrow, " +
+                "             0                                                                     as pay " +
+                "      from times " +
+                "" +
+                "               left join (select count(cc.call_card_id) as totalAmountBorrow, " +
+                "                                 MONTH(cc.start_date)   as month"  +
+                "" +
+                "                          from call_card cc " +
+                "                          where cc.start_date is not null " +
+                "                            and YEAR(cc.start_date) = :year " +
+                "                          group by month) result on result.month = times.month_idex " +
+                "      union all " +
+                "" +
+                "      select month_idex, 0 as brrow, case when 0 is null then totalAmountPay else totalAmountPay end as pay " +
+                "      from times " +
+                "               left join (select count(cc.call_card_id) as totalAmountPay, MONTH(cc.end_date) as month " +
+                "                          from call_card cc " +
+                "                          where cc.note is not null " +
+                "                            and YEAR(cc.end_date) = :year " +
+                "                          group by month) result " +
+                "                         on result.month = times.month_idex) result " +
+                "group by month_idex ");
 
         Query query = entityManager.createNativeQuery(sb.toString());
 //        query.setParameter("year", buildFilterLike(year));
+        query.setParameter("year", year);
         List<MonthDataResponse> list = new ArrayList<>();
         List<Object[]> result = query.getResultList();
 

@@ -12,6 +12,7 @@ import vn.compedia.api.repository.CallCardRepository;
 import vn.compedia.api.request.CallCardCreateRequest;
 import vn.compedia.api.response.book.CallCardResponse;
 import vn.compedia.api.util.DateUtil;
+import vn.compedia.api.util.user.UserContextHolder;
 
 import java.util.Date;
 import java.util.List;
@@ -55,7 +56,7 @@ public class CallCardService {
         if (StringUtils.isBlank(request.getEndDate().trim())) {
             throw new Exception("Không được để trống");
         }
-        if (request.getNote().trim().length() > 65.535) {
+        if (request.getNote().trim().length() > 65535) {
             throw new Exception("Vượt quá  ký tự cho phép");
         }
 
@@ -65,7 +66,7 @@ public class CallCardService {
     public void createCallCard(CallCardCreateRequest request) throws Exception {
         validateData(request);
         CallCard callCard = new CallCard();
-        callCard.setAccountId(request.getAccountId());
+        callCard.setAccountId(UserContextHolder.getUser().getAccountId());
         callCard.setStartDate(new Date());
         callCard.setEndDate(DateUtil.formatDatePattern(request.getEndDate(), DateUtil.DATE_FORMAT_YEAR));
         callCard.setStatus(1);
@@ -81,10 +82,10 @@ public class CallCardService {
         // Validate data
         validateData(request);
         CallCard callCard = callCardRepository.findById(request.getCallCardId()).get();
-        callCard.setAccountId(request.getAccountId());
+        callCard.setAccountId(UserContextHolder.getUser().getAccountId());
         callCard.setStartDate(new Date());
         callCard.setEndDate(DateUtil.formatDatePattern(request.getEndDate(), DateUtil.DATE_FORMAT_YEAR));
-        callCard.setStatus(1);
+        callCard.setStatus(request.getStatus());
         callCard.setStaffId(request.getStaffId());
         callCard.setBookId(request.getBookId());
         callCard.setAmount(request.getAmount());

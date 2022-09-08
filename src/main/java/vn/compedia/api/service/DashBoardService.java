@@ -24,17 +24,21 @@ public class DashBoardService {
     @Autowired
     private CallCardRepository callCardRepository;
 
+
     public DashBoardResponse getDate() {
         DashBoardResponse response = new DashBoardResponse();
         response.setTotalPublisher(publishCompanyRepository.getTotalPublisher().longValue());
         response.setTotalAuthor(authorRepository.getTotalAuthor().longValue());
         response.setTotalBook(bookRepository.getTotalBook().longValue());
         response.setTotalMoney(collectMoneyRepository.getTotalMoney().longValue());
-
-        List<MonthDataResponse> listData = callCardRepository.getAmountBorrow();
-//
-        response.setListData(listData);
         return response;
     }
 
+    public List<MonthDataResponse> getMonth(String year) throws Exception {
+        List<MonthDataResponse> month = callCardRepository.getAmountBorrow(year);
+        if (month == null) {
+            throw new Exception(" EMPTY ");
+        }
+        return month ;
+    }
 }

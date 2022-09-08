@@ -17,7 +17,7 @@ import javax.persistence.*;
 public class RequestForm {
     @javax.persistence.Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "card_id")
+    @Column(name = "account_id")
     private Long cardId;
 
     @Column(name = "book_name")

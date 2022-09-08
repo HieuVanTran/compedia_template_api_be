@@ -32,5 +32,8 @@ public class CallCardCreateRequest {
     @JsonProperty("amount")
     private Integer amount;
 
+    @JsonProperty("status")
+    private Integer status;
+
 
 }
