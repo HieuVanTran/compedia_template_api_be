@@ -53,7 +53,7 @@ public class PublishCompanyRepositoryImpl implements PublishCompanyRepositoryCus
 
 
     @Override
-    public Page<PublishCompanyResponse> search(Long companyId, String email, String agentPeople,
+    public Page<PublishCompanyResponse> search(Long companyId,String publishName, String email, String agentPeople,
                                                String sortField, String sortOrder, Integer page, Integer size, Pageable pageable) {
 
         StringBuilder sb = new StringBuilder();
@@ -66,9 +66,9 @@ public class PublishCompanyRepositoryImpl implements PublishCompanyRepositoryCus
                 "" +
                 "FROM publish_company p " +
                 "WHERE 1 = 1  ");
-        appendQuery(sb, companyId, email, agentPeople);
+        appendQuery(sb, companyId,publishName, email, agentPeople);
         setSortOrder(sortField, sortOrder, sb);
-        Query query = createQuery(sb, companyId, email, agentPeople);
+        Query query = createQuery(sb, companyId,publishName, email, agentPeople);
 
         if (pageable.getPageSize() > 0) {
             query.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
@@ -92,15 +92,15 @@ public class PublishCompanyRepositoryImpl implements PublishCompanyRepositoryCus
             list.add(dto);
         }
 
-        return new PageImpl<>(list, pageable, countSearch(companyId, email, agentPeople).longValue());
+        return new PageImpl<>(list, pageable, countSearch(companyId,publishName, email, agentPeople).longValue());
     }
 
-    private BigInteger countSearch(Long companyId, String email, String agentPeople) {
+    private BigInteger countSearch(Long companyId, String publishName, String email, String agentPeople) {
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT count(0) " +
                 " FROM publish_company p WHERE 1 = 1 ");
-        appendQuery(sb, companyId, email, agentPeople);
-        Query query = createQuery(sb, companyId, email, agentPeople);
+        appendQuery(sb, companyId, publishName, email, agentPeople);
+        Query query = createQuery(sb, companyId,publishName, email, agentPeople);
         return (BigInteger) query.getSingleResult();
     }
 
@@ -121,9 +121,12 @@ public class PublishCompanyRepositoryImpl implements PublishCompanyRepositoryCus
     }
 
 
-    public void appendQuery(StringBuilder sb, Long companyId, String email, String agentPeople) {
+    public void appendQuery(StringBuilder sb, Long companyId,String publishName, String email, String agentPeople) {
         if (companyId != null) {
             sb.append(" and p.company_id like :companyId ");
+        }
+        if(StringUtils.isNotBlank(publishName)){
+            sb.append(" and p.publish_name like :publishName ");
         }
         if (StringUtils.isNotBlank(email)) {
             sb.append(" and p.email like :email ");
@@ -135,10 +138,13 @@ public class PublishCompanyRepositoryImpl implements PublishCompanyRepositoryCus
     }
 
 
-    public Query createQuery(StringBuilder sb, Long companyId, String email, String agentPeople) {
+    public Query createQuery(StringBuilder sb, Long companyId,String publishName,  String email, String agentPeople) {
         Query query = entityManager.createNativeQuery(sb.toString());
         if (companyId != null) {
             query.setParameter("companyId", companyId);
+        }
+        if (StringUtils.isNotBlank(publishName)){
+            query.setParameter("publishName",buildFilterLike(publishName));
         }
         if (StringUtils.isNotBlank(email)) {
             query.setParameter("email", buildFilterLike(email));

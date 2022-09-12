@@ -8,10 +8,12 @@ import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import sun.security.validator.ValidatorException;
 import vn.compedia.api.entity.Staff;
 import vn.compedia.api.repository.StaffRepository;
 import vn.compedia.api.request.StaffCreateRequest;
 import vn.compedia.api.response.admin.StaffResponse;
+import vn.compedia.api.util.DateUtil;
 
 import java.util.List;
 
@@ -66,7 +68,11 @@ public class StaffService {
         if (request.getAddress().trim().length() > 50) {
             throw new Exception("Độ dài Address không vượt quá 50 ký tự");
         }
-    }
+        if (StringUtils.isNotBlank(request.getDateOfBirth().trim())) {
+            if (!DateUtil.isValid(request.getDateOfBirth())) {
+                throw new ValidatorException("birthday is not in the correct format (yyyy-MM-dd)");
+            }
+    }}
 
     public void create(StaffCreateRequest request) throws Exception {
         validateData(request);
@@ -75,8 +81,6 @@ public class StaffService {
         staff.setNameStaff(request.getNameStaff());
         staff.setPhoneNumber(request.getPhoneNumber());
         staff.setDateOfBirth(request.getDateOfBirth());
-//        Date dob = DateUtil.formatDatePattern(request.getDateOfBirth(), DateUtil.DATE_FORMAT_YEAR);
-//        staff.setDateOfBirth(dob);
         staffRepository.save(staff);
     }
 
@@ -88,8 +92,6 @@ public class StaffService {
         staff.setNameStaff(request.getNameStaff());
         staff.setPhoneNumber(request.getPhoneNumber());
         staff.setDateOfBirth(request.getDateOfBirth());
-//        Date dob = DateUtil.formatDatePattern(request.getDateOfBirth(), DateUtil.DATE_FORMAT_YEAR);
-//        staff.setDateOfBirth(dob);
         staffRepository.save(staff);
 
     }

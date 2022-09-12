@@ -73,8 +73,6 @@ public class PublishCompanyService {
         publishCompany.setAddress(request.getAddress());
         publishCompany.setEmail(request.getEmail());
         publishCompany.setAgentPeople(request.getAgentPeople());
-//        Date df = DateUtil.formatDatePattern(request.getDateFounding(), DateUtil.DATE_FORMAT_YEAR);
-//        publishCompany.setDateFounding(df);
         publishCompany.setDateFounding(request.getDateFounding());
         publishCompanyRepository.save(publishCompany);
     }
@@ -87,8 +85,6 @@ public class PublishCompanyService {
         publishCompany.setAddress(request.getAddress());
         publishCompany.setEmail(request.getEmail());
         publishCompany.setAgentPeople(request.getAgentPeople());
-//        Date df = DateUtil.formatDatePattern(request.getDateFounding(), DateUtil.DATE_FORMAT_YEAR);
-//        publishCompany.setDateFounding(df);
         publishCompany.setDateFounding(request.getDateFounding());
         publishCompanyRepository.save(publishCompany);
     }
@@ -98,9 +94,9 @@ public class PublishCompanyService {
         publishCompanyRepository.deleteById(id);
     }
 
-    public Page<PublishCompanyResponse> search(Long companyId, String email, String agentPeople,
+    public Page<PublishCompanyResponse> search(Long companyId,String publishName, String email, String agentPeople,
                                                String sortField, String sortOrder, Integer page, Integer size) {
-        return publishCompanyRepository.search(companyId, email, agentPeople, sortField, sortOrder, page, size, PageRequest.of(page, size));
+        return publishCompanyRepository.search(companyId, publishName, email, agentPeople, sortField, sortOrder, page, size, PageRequest.of(page, size));
 
     }
 }

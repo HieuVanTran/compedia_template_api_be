@@ -11,6 +11,7 @@ import vn.compedia.api.response.book.BookResponse;
 import vn.compedia.api.response.index.HomePageResponse;
 
 import java.util.List;
+import java.util.Optional;
 
 @Log4j2
 @Service
@@ -31,10 +32,6 @@ public class HomePageService {
         }
         return home;
     }
-//    public List<HomePageResponse> getOne(Long idTypeBook) {
-//        return bookRepository.findByHome(idTypeBook);
-//    }
-
     public Page<BookResponse> search(String bookName, Long categoryId, Long authorId, Long publishId,
                                      String sortField, String sortOrder, Integer page, Integer size) {
         return bookRepository.search(bookName, categoryId, authorId, publishId, sortField, sortOrder, page, size, PageRequest.of(page, size));

@@ -6,9 +6,11 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.util.CollectionUtils;
 import vn.compedia.api.repository.CallCardRepositoryCustom;
+import vn.compedia.api.response.HomeHistoryResponse;
 import vn.compedia.api.response.MonthDataResponse;
 import vn.compedia.api.response.book.CallCardResponse;
 import vn.compedia.api.util.ValueUtil;
+import vn.compedia.api.util.user.UserContextHolder;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -269,6 +271,48 @@ public class CallCardRepositoryImpl implements CallCardRepositoryCustom {
         }
         return Optional.empty();
     }
+
+    @Override
+    public List<HomeHistoryResponse> findAllHistory() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("SELECT ca.call_card_id," +
+                "       a.username," +
+                "       ca.note," +
+                "       ca.start_date," +
+                "       ca.end_date," +
+                "       a.account_id," +
+                "       b.book_id," +
+                "       b.book_name," +
+                "       ca.amount " +
+                "FROM call_card ca " +
+                "         INNER JOIN book b " +
+                "                    on ca.book_id = b.book_id "  +
+                "" +
+                "         INNER JOIN account a on ca.account_id = a.account_id " +
+                "where a.account_id = :accountId");
+
+        Query query = entityManager.createNativeQuery(sb.toString());
+        query.setParameter("accountId", UserContextHolder.getUser().getAccountId());
+        List<Object[]> result = query.getResultList();
+        List<HomeHistoryResponse> list  = new ArrayList<>();;
+        if (!CollectionUtils.isEmpty(result)) {
+            for (Object[] obj : result) {
+                HomeHistoryResponse dto = new HomeHistoryResponse();
+                dto.setCallCardId(ValueUtil.getLongByObject(obj[0]));
+                dto.setUserName(ValueUtil.getStringByObject(obj[1]));
+                dto.setNote(ValueUtil.getStringByObject(obj[2]));
+                dto.setStartDate(ValueUtil.getStringByObject(obj[3]));
+                dto.setEndDate(ValueUtil.getStringByObject(obj[4]));
+                dto.setAccountId(ValueUtil.getLongByObject(obj[5]));
+                dto.setBookId(ValueUtil.getLongByObject(obj[6]));
+                dto.setBookName(ValueUtil.getStringByObject(obj[7]));
+                dto.setAmount(ValueUtil.getIntegerByObject(obj[8]));
+                list.add(dto);
+            }
+        }
+        return list;
+    }
+
 
     private String buildFilterLike(String query) {
         return "%" + query.trim() + "%";

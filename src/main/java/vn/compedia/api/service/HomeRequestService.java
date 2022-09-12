@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import vn.compedia.api.entity.CallCard;
 import vn.compedia.api.repository.CallCardRepository;
 import vn.compedia.api.request.CallCardCreateRequest;
+import vn.compedia.api.request.HomeRequestFromRequest;
 import vn.compedia.api.util.DateUtil;
 import vn.compedia.api.util.user.UserContextHolder;
 
@@ -21,20 +22,28 @@ public class HomeRequestService {
     private CallCardRepository callCardRepository;
 
 
-    public void validateData(CallCardCreateRequest request) throws Exception {
 
-        if (StringUtils.isBlank(request.getAmount().toString())) {
+
+    public void validateData(HomeRequestFromRequest request) throws Exception {
+
+        if (null == request.getAmount()) {
             throw new Exception("Không được để trống");
         }
-        if (StringUtils.isBlank(request.getEndDate().trim())) {
-            throw new Exception("Không được để trống");
+        if (null == request.getBookId()) {
+            throw new Exception("Không được để trống BookId");
         }
         if (request.getNote().trim().length() > 65535) {
             throw new Exception("Vượt quá  ký tự cho phép");
         }
+        if (null == request.getAccountId()) {
+            throw new Exception("Không được để trống AccountId");
+        }
+        if (null == request.getStaffId()) {
+            throw new Exception("Không được để trống StaffId");
+        }
     }
 
-    public void create (CallCardCreateRequest request) throws Exception {
+    public void create (HomeRequestFromRequest request) throws Exception {
         validateData(request);
         CallCard callCard = new CallCard();
         callCard.setAccountId(UserContextHolder.getUser().getAccountId());

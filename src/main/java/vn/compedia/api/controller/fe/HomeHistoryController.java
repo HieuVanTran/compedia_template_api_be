@@ -1,38 +1,39 @@
 package vn.compedia.api.controller.fe;
 
+
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import vn.compedia.api.dto.VietTienResponseDto;
-import vn.compedia.api.request.CallCardCreateRequest;
-import vn.compedia.api.request.HomeRequestFromRequest;
-import vn.compedia.api.service.HomeRequestService;
+import vn.compedia.api.response.HomeHistoryResponse;
+import vn.compedia.api.service.HomeHistoryService;
 
-@Api(tags = "Fe-HomeRequestController")
+import java.util.List;
+
+@Api(tags = "Fe-HomeHistoryController")
+@RequestMapping("/api/v1/home-history")
 @RestController
-@RequestMapping("/api/v1/home-request")
 @Validated
-
-public class HomeRequestController {
+public class HomeHistoryController {
 
     @Autowired
-    private HomeRequestService homeRequestService;
+    private HomeHistoryService homeHistoryService;
 
-    @PostMapping()
-    public ResponseEntity<?> create(@RequestBody HomeRequestFromRequest request) {
+    @GetMapping(value = "get-list-book")
+    public ResponseEntity<?> getAllHistory() {
         try {
-            homeRequestService.create(request);
+            List<HomeHistoryResponse> history = homeHistoryService.getAllHistory();
+            return VietTienResponseDto.ok(history, "Get list account success");
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-        return VietTienResponseDto.ok("", "Save success");
+
     }
 
 }

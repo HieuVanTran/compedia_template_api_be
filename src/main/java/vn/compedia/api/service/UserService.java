@@ -73,8 +73,6 @@ public class UserService {
         user.setAccountId(request.getAccountId());
         user.setFullName(request.getFullName());
         user.setCreateDate(request.getCreateDate());
-//        Date ed = DateUtil.formatDatePattern(request.getExpirationDate(), DateUtil.DATE_FORMAT_YEAR);
-//        user.setExpirationDate(ed);
         user.setExpirationDate(request.getExpirationDate());
         userRepository.save(user);
     }
@@ -89,8 +87,6 @@ public class UserService {
         user.setAccountId(request.getAccountId());
         user.setFullName(request.getFullName());
         user.setCreateDate(request.getCreateDate());
-//        Date ed = DateUtil.formatDatePattern(request.getExpirationDate(), DateUtil.DATE_FORMAT_YEAR);
-//        user.setExpirationDate(ed);
         user.setExpirationDate(request.getExpirationDate());
         userRepository.save(user);
     }

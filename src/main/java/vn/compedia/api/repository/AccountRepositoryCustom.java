@@ -12,5 +12,7 @@ public interface AccountRepositoryCustom {
 
     List<AccountNeResponse> getAllAccount();
 
-    Optional<AccountNeResponse> findByAccountId(Long accountId);
+    Optional<AccountNeResponse> findByAccountId();
+
+
 }

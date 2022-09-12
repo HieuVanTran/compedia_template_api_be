@@ -2,6 +2,7 @@ package vn.compedia.api.repository;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import vn.compedia.api.response.HomeHistoryResponse;
 import vn.compedia.api.response.MonthDataResponse;
 import vn.compedia.api.response.book.CallCardResponse;
 
@@ -17,4 +18,6 @@ public interface CallCardRepositoryCustom {
     List<MonthDataResponse> getAmountBorrow(String year);
 
     Optional<CallCardResponse> findByIdCallCard(Long callCardId);
+
+    List<HomeHistoryResponse> findAllHistory();
 }

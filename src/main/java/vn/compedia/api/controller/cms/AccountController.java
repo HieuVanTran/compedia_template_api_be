@@ -33,9 +33,9 @@ public class AccountController extends GlobalExceptionHandler {
     }
 
     @GetMapping(value = "get-one")
-    public ResponseEntity<?> getOne(@RequestParam(name = "id") Long accountId) {
+    public ResponseEntity<?> getOne() {
         try {
-            AccountNeResponse admin = accountService.getOne(accountId);
+            AccountNeResponse admin = accountService.getOne();
             return VietTienResponseDto.ok(admin, "Get list account success");
         } catch (Exception e) {
             e.printStackTrace();

@@ -6,6 +6,7 @@ import vn.compedia.api.entity.Account;
 import vn.compedia.api.repository.AccountRepositoryCustom;
 import vn.compedia.api.response.admin.AccountNeResponse;
 import vn.compedia.api.util.ValueUtil;
+import vn.compedia.api.util.user.UserContextHolder;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -77,7 +78,7 @@ public class AccountRepositoryImpl implements AccountRepositoryCustom {
     }
 
     @Override
-    public Optional<AccountNeResponse> findByAccountId(Long accountId) {
+    public Optional<AccountNeResponse> findByAccountId() {
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT a.account_id," +
                 "       a.username," +
@@ -96,7 +97,7 @@ public class AccountRepositoryImpl implements AccountRepositoryCustom {
                 "WHERE a.account_id = :accountId ");
 
         Query query = entityManager.createNativeQuery(sb.toString());
-        query.setParameter("accountId", accountId);
+        query.setParameter("accountId", UserContextHolder.getUser().getAccountId());
         List<Object[]> result = query.getResultList();
         if (!CollectionUtils.isEmpty(result)) {
             for (Object[] obj : result) {

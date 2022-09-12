@@ -33,6 +33,8 @@ public class CollectMoneyService {
         return money.get();
     }
 
+
+
     public void create(CollectMoneyCreateRequest request) {
 
         CollectMoney collectMoney = new CollectMoney();

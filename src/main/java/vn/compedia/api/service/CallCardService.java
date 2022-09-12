@@ -50,7 +50,7 @@ public class CallCardService {
 
     public void validateData(CallCardCreateRequest request) throws Exception {
 
-        if (StringUtils.isBlank(request.getAmount().toString())) {
+        if (StringUtils.isBlank(request.getAmount().toString().trim())) {
             throw new Exception("Không được để trống");
         }
         if (StringUtils.isBlank(request.getEndDate().trim())) {
@@ -59,8 +59,12 @@ public class CallCardService {
         if (request.getNote().trim().length() > 65535) {
             throw new Exception("Vượt quá  ký tự cho phép");
         }
-
-
+        if (request.getBookId() == null) {
+            throw new Exception("Không để trống BookId");
+        }
+        if (request.getStaffId() == null) {
+            throw new Exception("Không để trống StaffId");
+        }
     }
 
     public void createCallCard(CallCardCreateRequest request) throws Exception {
@@ -79,7 +83,6 @@ public class CallCardService {
     }
 
     public void update(CallCardCreateRequest request) throws Exception {
-        // Validate data
         validateData(request);
         CallCard callCard = callCardRepository.findById(request.getCallCardId()).get();
         callCard.setAccountId(UserContextHolder.getUser().getAccountId());

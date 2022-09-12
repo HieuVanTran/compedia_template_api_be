@@ -1,5 +1,6 @@
 package vn.compedia.api.util;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
@@ -65,7 +66,16 @@ public class DateUtil {
         }
         return null;
     }
-
+    public static boolean isValid(String dateStr) {
+        DateFormat sdf = new SimpleDateFormat(DATE_FORMAT_YEAR);
+        sdf.setLenient(false);
+        try {
+            sdf.parse(dateStr);
+        } catch (ParseException e) {
+            return false;
+        }
+        return true;
+    }
     public static Date formatDatePattern(String date, String format) {
         try {
             SimpleDateFormat sdf = new SimpleDateFormat(format);
