@@ -8,11 +8,16 @@ import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import sun.security.validator.ValidatorException;
 import vn.compedia.api.entity.Account;
+import vn.compedia.api.exception.authentication.PasswordsDontMatchException;
+import vn.compedia.api.exception.changepassword.*;
+
 import vn.compedia.api.repository.AccountRepository;
 import vn.compedia.api.repository.AdminRepository;
 import vn.compedia.api.request.AdminCreateRequest;
+import vn.compedia.api.request.ChangePassRequest;
 import vn.compedia.api.response.admin.AccountNeResponse;
 import vn.compedia.api.response.admin.AdminResponse;
 import vn.compedia.api.util.DateUtil;
@@ -114,6 +119,7 @@ public class AccountService {
         account.setFullName(request.getFullName());
         account.setDOB(request.getDOB());
         account.setPhone(request.getPhone());
+        account.setStatus(1);
         accountRepository.save(account);
     }
 
@@ -127,6 +133,7 @@ public class AccountService {
         account.setCreateBy(UserContextHolder.getUser().getAccountId());
         account.setFullName(request.getFullName());
         account.setDOB(request.getDOB());
+        account.setStatus(1);
         account.setPhone(request.getPhone());
         accountRepository.save(account);
     }
@@ -176,6 +183,34 @@ public class AccountService {
 
     private Optional<Account> findAccountByEmailAndUserName(String email, String userName) {
         return accountRepository.findAccountByEmailAndUserName(email, userName);
+    }
+
+    @Transactional
+    public void changePassword(ChangePassRequest request) throws PasswordOldNotValid, PasswordNewNotMathRegex, PasswordOldNotFoundException, PasswordNewNotFoundException, NewPasswordMatchOldPassword {
+        Optional<Account> account = accountRepository.findByUsername(UserContextHolder.getUser().getAccountId());
+        if (!account.get().getPassword().equals(StringUtil.encryptPassword(request.getOldPassword(), account.get().getSalt()))) {
+            throw new PasswordOldNotValid();
+        }
+        if (!request.getNewPassword().matches(StringUtil.PATTERN_PASSWORD)) {
+            throw new PasswordNewNotMathRegex();
+        }
+        if (!request.getNewPassword().equals(request.getRePassword())) {
+            throw new PasswordsDontMatchException();
+        }
+        if (StringUtils.isBlank(request.getOldPassword())) {
+            throw new PasswordOldNotFoundException();
+        }
+        if (StringUtils.isBlank(request.getNewPassword())) {
+            throw new PasswordNewNotFoundException();
+        }
+
+        if (request.getNewPassword().equals(request.getOldPassword())) {
+            throw new NewPasswordMatchOldPassword();
+        }
+
+        account.get().setSalt(StringUtil.generateSalt());
+        account.get().setPassword(StringUtil.encryptPassword(request.getNewPassword(), account.get().getSalt()));
+        accountRepository.save(account.get());
     }
 }
 

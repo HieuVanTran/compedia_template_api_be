@@ -7,14 +7,19 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import vn.compedia.api.ApiResponseDto;
 import vn.compedia.api.dto.VietTienPageDto;
 import vn.compedia.api.dto.VietTienResponseDto;
 import vn.compedia.api.exception.GlobalExceptionHandler;
+import vn.compedia.api.exception.authentication.PasswordsDontMatchException;
+import vn.compedia.api.exception.changepassword.*;
 import vn.compedia.api.request.AdminCreateRequest;
+import vn.compedia.api.request.ChangePassRequest;
 import vn.compedia.api.response.admin.AccountNeResponse;
 import vn.compedia.api.response.admin.AdminResponse;
 import vn.compedia.api.service.AccountService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Api(tags = "Account")
@@ -85,5 +90,24 @@ public class AccountController extends GlobalExceptionHandler {
     public ResponseEntity<?> delete(@RequestParam Long id) {
         accountService.delete(id);
         return VietTienResponseDto.ok("", "Save success");
+    }
+    @PutMapping("change-password")
+    public ResponseEntity<?> changePassword(@Valid @RequestBody ChangePassRequest request) {
+        try {
+            accountService.changePassword(request);
+            return ApiResponseDto.createdWithMessage("Đổi mật khẩu thành công!", HttpStatus.OK);
+        } catch (PasswordOldNotValid e) {
+            return ApiResponseDto.createdWithMessage("Mật khẩu cũ không đúng", HttpStatus.BAD_REQUEST);
+        } catch (PasswordsDontMatchException e) {
+            return ApiResponseDto.createdWithMessage("Mật khẩu không khớp", HttpStatus.BAD_REQUEST);
+        } catch (PasswordNewNotMathRegex passwordNewNotMathRegex) {
+            return ApiResponseDto.createdWithMessage("Mật khẩu mới phải có ít nhất 6 ký tự, bao gồm ký tự số, chữ in hoa, chữ in thường", HttpStatus.BAD_REQUEST);
+        } catch (PasswordOldNotFoundException e) {
+            return ApiResponseDto.createdWithMessage("Mật khẩu cũ không được để trống", HttpStatus.BAD_REQUEST);
+        } catch (PasswordNewNotFoundException e) {
+            return ApiResponseDto.createdWithMessage("Mật khẩu mới không được để trống", HttpStatus.BAD_REQUEST);
+        } catch (NewPasswordMatchOldPassword e) {
+            return ApiResponseDto.createdWithMessage("Mật khẩu mới không được trùng với mật khẩu cũ", HttpStatus.BAD_REQUEST);
+        }
     }
 }

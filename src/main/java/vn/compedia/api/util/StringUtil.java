@@ -28,6 +28,7 @@ public class StringUtil {
     private static final String PATTERN_FULLNAME = "^[a-z]*[A-Z]$";
 
 
+
     public static String buildURI(String staticContext, String filePath) {
         if (StringUtils.isBlank(filePath)) {
             return filePath;
