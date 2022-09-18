@@ -27,9 +27,8 @@ public class BookCategoryRepositoryImpl implements BookCategoryRepositoryCustom 
                                              Integer page, Integer size, Pageable pageable) {
 
         StringBuilder sb = new StringBuilder();
-        sb.append("select bc.id_type_book, bc.category_name, b.book_name " +
+        sb.append("select bc.id_type_book, bc.category_name " +
                 "from book_category bc " +
-                "inner join book b on bc.id_type_book = b.id_type_book " +
                 "where 1 = 1");
         appendQuery(sb, categoryName);
         setSortOrder(sortField, sortOrder, sb);
@@ -60,7 +59,6 @@ public class BookCategoryRepositoryImpl implements BookCategoryRepositoryCustom 
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT count(0) " +
                 " FROM book_category bc " +
-                "inner join book b on bc.id_type_book = b.id_type_book " +
                 "WHERE 1 = 1 ");
         appendQuery(sb, categoryName);
         Query query = createQuery(sb, categoryName);

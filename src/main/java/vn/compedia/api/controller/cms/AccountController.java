@@ -1,6 +1,7 @@
 package vn.compedia.api.controller.cms;
 
 import io.swagger.annotations.Api;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -13,6 +14,8 @@ import vn.compedia.api.dto.VietTienResponseDto;
 import vn.compedia.api.exception.GlobalExceptionHandler;
 import vn.compedia.api.exception.authentication.PasswordsDontMatchException;
 import vn.compedia.api.exception.changepassword.*;
+import vn.compedia.api.exception.user.EmailNotFoundException;
+import vn.compedia.api.request.AccountUpdateRequest;
 import vn.compedia.api.request.AdminCreateRequest;
 import vn.compedia.api.request.ChangePassRequest;
 import vn.compedia.api.response.admin.AccountNeResponse;
@@ -26,6 +29,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/account")
 @Validated
+@Log4j2
 public class AccountController extends GlobalExceptionHandler {
 
     @Autowired
@@ -75,6 +79,17 @@ public class AccountController extends GlobalExceptionHandler {
         return VietTienResponseDto.ok("", "Save success");
     }
 
+    @PostMapping(value = "register")
+    public ResponseEntity<?> register (@RequestBody AdminCreateRequest request) {
+        try {
+            accountService.register(request);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        return VietTienResponseDto.ok("", "Đăng ký thành công ");
+    }
+
     @PutMapping()
     public ResponseEntity<?> update(@RequestBody AdminCreateRequest request) {
         try {
@@ -86,11 +101,18 @@ public class AccountController extends GlobalExceptionHandler {
         return VietTienResponseDto.ok("", "Save success");
     }
 
+    @PutMapping(value = "updatePass")
+    public ResponseEntity<?> updatePass(@RequestBody AccountUpdateRequest request) {
+        accountService.updatePass(request);
+        return VietTienResponseDto.ok("", "Save success");
+    }
+
     @DeleteMapping()
     public ResponseEntity<?> delete(@RequestParam Long id) {
         accountService.delete(id);
         return VietTienResponseDto.ok("", "Save success");
     }
+
     @PutMapping("change-password")
     public ResponseEntity<?> changePassword(@Valid @RequestBody ChangePassRequest request) {
         try {
@@ -108,6 +130,19 @@ public class AccountController extends GlobalExceptionHandler {
             return ApiResponseDto.createdWithMessage("Mật khẩu mới không được để trống", HttpStatus.BAD_REQUEST);
         } catch (NewPasswordMatchOldPassword e) {
             return ApiResponseDto.createdWithMessage("Mật khẩu mới không được trùng với mật khẩu cũ", HttpStatus.BAD_REQUEST);
+        }
+    }
+    @GetMapping("forget-password")
+    public ResponseEntity<?> forgetPassword(@RequestParam String email) {
+        try {
+            accountService.forgetPassword(email);
+            return ApiResponseDto.createdWithMessage("Thành công", HttpStatus.OK);
+        } catch (EmailNotFoundException e) {
+            log.error(e.getMessage());
+            return ApiResponseDto.createdWithMessage("Không tìm thấy email!", HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return ApiResponseDto.createdWithMessage("Email không tồn tại!", HttpStatus.NOT_FOUND);
         }
     }
 }

@@ -1,6 +1,7 @@
 package vn.compedia.api.repository;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import vn.compedia.api.response.HomeHistoryResponse;
 import vn.compedia.api.response.MonthDataResponse;
@@ -20,4 +21,6 @@ public interface CallCardRepositoryCustom {
     Optional<CallCardResponse> findByIdCallCard(Long callCardId);
 
     List<HomeHistoryResponse> findAllHistory();
+
+    PageImpl<Object> searchHistory(String username, String sortField, String sortOrder, Integer page, Integer size, Pageable pageable);
 }

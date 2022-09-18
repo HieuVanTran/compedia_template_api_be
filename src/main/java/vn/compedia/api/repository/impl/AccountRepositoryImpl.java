@@ -20,13 +20,12 @@ public class AccountRepositoryImpl implements AccountRepositoryCustom {
     EntityManager entityManager;
 
     @Override
-    public Optional<Account> findAccountByEmailAndUserName(String email, String userName) {
+    public Optional<Account> findAccountByEmailAndUserName(String email) {
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT * FROM account ac " +
-                " where ac.email = :email and ac.username = :username ");
+                " where ac.email = :email ");
         Query query = entityManager.createNativeQuery(sb.toString());
         query.setParameter("email", email);
-        query.setParameter("username", userName);
         List<Object[]> result = query.getResultList();
         if (!CollectionUtils.isEmpty(result)) {
             Object obj = result.get(0);

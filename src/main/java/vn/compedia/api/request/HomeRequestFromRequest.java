@@ -20,7 +20,7 @@ public class HomeRequestFromRequest {
     @JsonIgnore
     private Long staffId;
 
-    @JsonIgnore
+    @JsonProperty("end_date")
     private String endDate;
 
     @JsonProperty("note")

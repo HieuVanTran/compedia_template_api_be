@@ -12,6 +12,7 @@ import vn.compedia.api.entity.Book;
 import vn.compedia.api.repository.BookRepository;
 import vn.compedia.api.request.BookCreateRequest;
 import vn.compedia.api.response.book.BookResponse;
+import vn.compedia.api.util.DbConstant;
 import vn.compedia.api.utility.FileUtil;
 
 import java.util.List;
@@ -77,7 +78,7 @@ public class BookService {
         book.setNote(request.getNote());
         book.setImage(FileUtil.saveImage(file));
         book.setPublishingYear(request.getPublishingYear());
-        book.setStatus(1);
+        book.setStatus(DbConstant.STATUS_ACTIVE);
         bookRepository.save(book);
     }
 
@@ -95,7 +96,7 @@ public class BookService {
         book.setPublishingYear(request.getPublishingYear());
         book.setNote(request.getNote());
         book.setPageNumber(request.getPageNumber());
-        book.setStatus(1);
+        book.setStatus(request.getStatus());
         bookRepository.save(book);
     }
 

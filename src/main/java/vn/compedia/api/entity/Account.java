@@ -30,13 +30,13 @@ public class Account extends BaseEntity implements Serializable {
     @Column(name = "password")
     private String password;
 
-    @Column(name = "salt")
+    @Column(name = "salt", length = 10)
     private String salt;
 
     @Column(name = "phone")
     private String phone;
 
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
     private String email;
 
     @Column(name = "full_name")

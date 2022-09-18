@@ -35,12 +35,6 @@ public class HomeRequestService {
         if (request.getNote().trim().length() > 65535) {
             throw new Exception("Vượt quá  ký tự cho phép");
         }
-        if (null == request.getAccountId()) {
-            throw new Exception("Không được để trống AccountId");
-        }
-        if (null == request.getStaffId()) {
-            throw new Exception("Không được để trống StaffId");
-        }
     }
 
     public void create (HomeRequestFromRequest request) throws Exception {

@@ -11,22 +11,27 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sun.security.validator.ValidatorException;
 import vn.compedia.api.entity.Account;
+import vn.compedia.api.entity.User;
 import vn.compedia.api.exception.authentication.PasswordsDontMatchException;
 import vn.compedia.api.exception.changepassword.*;
-
+import vn.compedia.api.exception.user.EmailNotFoundException;
 import vn.compedia.api.repository.AccountRepository;
 import vn.compedia.api.repository.AdminRepository;
+import vn.compedia.api.request.AccountUpdateRequest;
 import vn.compedia.api.request.AdminCreateRequest;
 import vn.compedia.api.request.ChangePassRequest;
 import vn.compedia.api.response.admin.AccountNeResponse;
 import vn.compedia.api.response.admin.AdminResponse;
 import vn.compedia.api.util.DateUtil;
+import vn.compedia.api.util.DbConstant;
+import vn.compedia.api.util.EmailUtil;
 import vn.compedia.api.util.StringUtil;
 import vn.compedia.api.util.user.UserContextHolder;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @Log4j2
 @Service
@@ -61,10 +66,9 @@ public class AccountService {
         if (!StringUtil.validateEmail(request.getEmail())) {
             throw new Exception("Địa chỉ email không đúng định dạng");
         }
-
-        Optional<Account> optionalAccount = findAccountByEmailAndUserName(request.getEmail(), request.getUsername());
+        Optional<Account> optionalAccount = findAccountByEmailAndUserName(request.getEmail());
         if (optionalAccount.isPresent()) {
-            throw new Exception("Tài khoản đã tồn tại");
+            throw new Exception("Địa chỉ email này đã tồn tại");
         }
         if (!StringUtil.validatePassword(request.getPassword())) {
             throw new Exception("Password không đúng định dạng, mật khẩu phải có tám ký tự bao gồm một ký tự hoa, một ký tự đặc biệt và các ký tự chữ và số");
@@ -96,15 +100,12 @@ public class AccountService {
         if (request.getEmail().trim().length() > 100) {
             throw new Exception("Yêu cầu nhập lại Email có độ dài không quá 100 ký tự");
         }
-        if (request.getRoleId() == null) {
-            throw new Exception("Error 01010101");
-        }
         if (StringUtils.isNotBlank(request.getDOB().trim())) {
             if (!DateUtil.isValid(request.getDOB())) {
                 throw new ValidatorException("birthday is not in the correct format (yyyy-MM-dd)");
             }
         }
-        }
+    }
 
 
     public void create(AdminCreateRequest request) throws Exception {
@@ -126,7 +127,10 @@ public class AccountService {
     public void update(AdminCreateRequest request) throws Exception {
         validateData2(request);
         Account account = accountRepository.findById(request.getId()).get();
-        account.setPassword(StringUtil.encryptPassword(request.getPassword(), account.getSalt()));
+
+//        if (StringUtils.isNotBlank(request.getPassword())) {
+//            account.setPassword(StringUtil.encryptPassword(request.getPassword(), account.getSalt()));
+//        }
         account.setUsername(request.getUsername());
         account.setRoleId(request.getRoleId());
         account.setUpdateDate(new Date());
@@ -138,14 +142,21 @@ public class AccountService {
         accountRepository.save(account);
     }
 
+    public void updatePass(AccountUpdateRequest request)  {
+//        Random r = new Random();
+        Account account = accountRepository.findById(request.getId()).get();
+        account.setPassword(StringUtil.encryptPassword(DbConstant.PASSWORD, account.getSalt()));
+        accountRepository.save(account);
+    }
+
     public void validateData2(AdminCreateRequest request) throws Exception {
         if (!StringUtil.validateEmail(request.getEmail())) {
             throw new Exception("Địa chỉ email không đúng định dạng");
         }
-
-        if (!StringUtil.validatePassword(request.getPassword())) {
-            throw new Exception("Password không đúng định dạng, mật khẩu phải có tám ký tự bao gồm một ký tự hoa, một ký tự đặc biệt và các ký tự chữ và số");
-        }
+//
+//        if (!StringUtil.validatePassword(request.getPassword())) {
+//            throw new Exception("Password không đúng định dạng, mật khẩu phải có tám ký tự bao gồm một ký tự hoa, một ký tự đặc biệt và các ký tự chữ và số");
+//        }
         if (!StringUtil.validateUser(request.getUsername())) {
             throw new Exception("User không đúng định dạng");
         }
@@ -161,8 +172,8 @@ public class AccountService {
         if (StringUtils.isBlank(request.getPhone().trim())) {
             throw new Exception("Không được để trống");
         }
-        if (request.getPhone().trim().length() > 11) {
-            throw new Exception("Yêu cầu nhập lại phoneNumber không quá 11 ký tự");
+        if (request.getPhone().trim().length() > 20) {
+            throw new Exception("Yêu cầu nhập lại phoneNumber không quá 20 ký tự");
         }
         if (StringUtils.isBlank(request.getEmail().trim())) {
             throw new Exception("Không được để trống");
@@ -181,8 +192,8 @@ public class AccountService {
         return adminRepository.search(username, email, roleId, codeRole, fullName, sortField, sortOrder, page, size, PageRequest.of(page, size));
     }
 
-    private Optional<Account> findAccountByEmailAndUserName(String email, String userName) {
-        return accountRepository.findAccountByEmailAndUserName(email, userName);
+    private Optional<Account> findAccountByEmailAndUserName(String email) {
+        return accountRepository.findAccountByEmailAndUserName(email);
     }
 
     @Transactional
@@ -203,14 +214,33 @@ public class AccountService {
         if (StringUtils.isBlank(request.getNewPassword())) {
             throw new PasswordNewNotFoundException();
         }
-
         if (request.getNewPassword().equals(request.getOldPassword())) {
             throw new NewPasswordMatchOldPassword();
         }
-
         account.get().setSalt(StringUtil.generateSalt());
         account.get().setPassword(StringUtil.encryptPassword(request.getNewPassword(), account.get().getSalt()));
         accountRepository.save(account.get());
+    }
+    public void forgetPassword(String email) throws EmailNotFoundException {
+        Account account = adminRepository.findByEmail(email).orElseThrow(EmailNotFoundException::new);
+        account.setSalt(StringUtil.generateSalt());
+        account.setPassword(StringUtil.encryptPassword(account.getSalt(), account.getSalt()));
+        adminRepository.save(account);
+        EmailUtil.getInstance().sendForgetPassword(email, account.getSalt());
+    }
+    public void register (AdminCreateRequest request) throws Exception {
+        validateData(request);
+        Account account = new Account();
+        account.setPassword(StringUtil.encryptPassword(request.getPassword(), account.getSalt()));
+        account.setUsername(request.getUsername());
+        account.setRoleId(DbConstant.ROLE_ID_USER);
+        account.setCreateDate(new Date());
+        account.setEmail(request.getEmail());
+        account.setFullName(request.getFullName());
+        account.setDOB(request.getDOB());
+        account.setPhone(request.getPhone());
+        account.setStatus(DbConstant.STATUS_ACTIVE);
+        accountRepository.save(account);
     }
 }
 

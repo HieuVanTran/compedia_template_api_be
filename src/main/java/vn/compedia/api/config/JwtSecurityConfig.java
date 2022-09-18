@@ -77,6 +77,8 @@ public class JwtSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/api/v1/home-details/get-one").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/v1/home-details/search").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/v1/home-details/get-popular").permitAll()
+                .antMatchers(HttpMethod.GET,"/api/v1/account/forget-password").permitAll()
+                .antMatchers(HttpMethod.POST,"/api/v1/account/register").permitAll()
                 .antMatchers(AUTH_WHITELIST).permitAll()
                 .anyRequest().authenticated();
 

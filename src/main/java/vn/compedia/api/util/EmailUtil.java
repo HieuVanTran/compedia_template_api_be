@@ -1,5 +1,6 @@
 package vn.compedia.api.util;
 
+import lombok.Synchronized;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
@@ -40,7 +41,12 @@ public class EmailUtil implements Runnable {
         }
         return INSTANCE;
     }
-
+    @Synchronized
+    public void sendForgetPassword(String emailTo, String newPassword) {
+        String subject = PropertiesUtil.getProperty("email.subject.forgetPassword");
+        String content = PropertiesUtil.getProperty("email.content.forgetPassword").replace("{NEW_PASSWORD}", newPassword);
+        mailDtoQueue.add(new MailDto(emailTo, subject, content));
+    }
     public static void main(String args[]) {
 //        EmailUtil.getInstance().sendLostPasswordEmail( "vi", "thuannguyenduy1606@gmail.com", "https://google.com.vn", "Luong Tuan Anh");
     }

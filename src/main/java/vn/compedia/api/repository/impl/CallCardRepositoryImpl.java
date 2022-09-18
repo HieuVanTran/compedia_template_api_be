@@ -17,6 +17,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -191,7 +192,7 @@ public class CallCardRepositoryImpl implements CallCardRepositoryCustom {
                 "      from times " +
                 "" +
                 "               left join (select count(cc.call_card_id) as totalAmountBorrow, " +
-                "                                 MONTH(cc.start_date)   as month"  +
+                "                                 MONTH(cc.start_date)   as month" +
                 "" +
                 "                          from call_card cc " +
                 "                          where cc.start_date is not null " +
@@ -286,15 +287,17 @@ public class CallCardRepositoryImpl implements CallCardRepositoryCustom {
                 "       ca.amount " +
                 "FROM call_card ca " +
                 "         INNER JOIN book b " +
-                "                    on ca.book_id = b.book_id "  +
+                "                    on ca.book_id = b.book_id " +
                 "" +
                 "         INNER JOIN account a on ca.account_id = a.account_id " +
                 "where a.account_id = :accountId");
 
         Query query = entityManager.createNativeQuery(sb.toString());
+        sb.append(" ORDER BY ca.call_card_id DESC");
         query.setParameter("accountId", UserContextHolder.getUser().getAccountId());
         List<Object[]> result = query.getResultList();
-        List<HomeHistoryResponse> list  = new ArrayList<>();;
+        List<HomeHistoryResponse> list = new ArrayList<>();
+        ;
         if (!CollectionUtils.isEmpty(result)) {
             for (Object[] obj : result) {
                 HomeHistoryResponse dto = new HomeHistoryResponse();
@@ -311,6 +314,82 @@ public class CallCardRepositoryImpl implements CallCardRepositoryCustom {
             }
         }
         return list;
+    }
+
+    @Override
+    public PageImpl<Object> searchHistory(String username, String sortOrder, String sortField, Integer page, Integer size, Pageable pageable) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(" SELECT ca.call_card_id," +
+                "       a.username," +
+                "       ca.note," +
+                "       ca.start_date," +
+                "       ca.end_date,  " +
+                "       a.account_id, " +
+                "       b.book_id, " +
+                "       b.book_name, " +
+                "       ca.amount " +
+                "FROM call_card ca " +
+                "         INNER JOIN book b on ca.book_id = b.book_id " +
+                "        INNER JOIN account a on ca.account_id = a.account_id " +
+                "WHERE 1 = 1 ");
+        appendQuery(sb, username);
+        setSortOrder(sortOrder, sortField, sb);
+        Query query = createQuery(sb, username);
+
+        if (pageable.getPageSize() > 0) {
+            query.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
+            query.setMaxResults(pageable.getPageSize());
+        } else {
+            query.setFirstResult(0);
+            query.setMaxResults(Integer.MAX_VALUE);
+        }
+        List<HomeHistoryResponse> list = new ArrayList<>();
+        List<Object[]> result = query.getResultList();
+
+        for (Object[] obj : result) {
+            HomeHistoryResponse dto = new HomeHistoryResponse();
+            dto.setCallCardId(ValueUtil.getLongByObject(obj[0]));
+            dto.setUserName(ValueUtil.getStringByObject(obj[1]));
+            dto.setNote(ValueUtil.getStringByObject(obj[2]));
+            dto.setStartDate(ValueUtil.getStringByObject(obj[3]));
+            dto.setEndDate(ValueUtil.getStringByObject(obj[4]));
+            dto.setAccountId(ValueUtil.getLongByObject(obj[5]));
+            dto.setBookId(ValueUtil.getLongByObject(obj[6]));
+            dto.setBookName(ValueUtil.getStringByObject(obj[7]));
+            dto.setAmount(ValueUtil.getIntegerByObject(obj[8]));
+
+            list.add(dto);
+        }
+
+        return new PageImpl<Object>(Collections.singletonList(list), pageable, countSearch(username).longValue());
+    }
+
+    private BigInteger countSearch(String username) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("SELECT count(0) " +
+                " FROM call_card ca " +
+                "        INNER JOIN account a on ca.account_id = a.account_id " +
+                "WHERE 1 = 1 ");
+        appendQuery(sb, username);
+        Query query = createQuery(sb, username);
+        return (BigInteger) query.getSingleResult();
+    }
+
+    public void appendQuery(StringBuilder sb, String username) {
+        if (StringUtils.isNotBlank(username)) {
+            sb.append(" and a.username like :username ");
+        }
+
+    }
+
+    public Query createQuery(StringBuilder sb, String username) {
+        Query query = entityManager.createNativeQuery(sb.toString());
+        if (StringUtils.isNotBlank(username)) {
+            query.setParameter("username", buildFilterLike(username));
+        }
+
+
+        return query;
     }
 
 

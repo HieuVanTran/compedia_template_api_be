@@ -20,7 +20,6 @@ import vn.compedia.api.exception.user.UserAlreadyExistsException;
 import vn.compedia.api.exception.user.UserNotFoundException;
 import vn.compedia.api.repository.auth.ApiUserRepository;
 import vn.compedia.api.service.ApiUserService;
-import vn.compedia.api.util.DbConstant;
 import vn.compedia.api.util.MessageUtil;
 import vn.compedia.api.util.authentication.Tokens;
 
@@ -30,8 +29,12 @@ import java.util.Optional;
 @Service
 public class AuthService {
 
+
+    @Autowired
     private ApiUserService apiUserService;
+    @Autowired
     private AuthenticationManager authenticationManager;
+    @Autowired
     private TokenService tokenService;
 
     @Autowired
@@ -81,7 +84,7 @@ public class AuthService {
     }
 
     private Authentication createAuthentication(LoginDTO loginDTO) {
-        Optional<Account> account = apiUserRepository.findByEmailAndRoleId(loginDTO.getEmail(), DbConstant.ROLE_ID_ADMIN);
+        Optional<Account> account = apiUserRepository.findByEmail(loginDTO.getEmail());
         return new UsernamePasswordAuthenticationToken(loginDTO.getEmail(), loginDTO.getPassword() + account.get().getSalt());
     }
 

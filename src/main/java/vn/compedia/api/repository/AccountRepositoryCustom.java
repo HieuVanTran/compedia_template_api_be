@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface AccountRepositoryCustom {
 
-    Optional<Account> findAccountByEmailAndUserName(String email, String userName);
+    Optional<Account> findAccountByEmailAndUserName(String email);
 
     List<AccountNeResponse> getAllAccount();
 
