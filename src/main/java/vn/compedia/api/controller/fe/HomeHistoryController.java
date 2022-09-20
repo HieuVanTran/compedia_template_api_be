@@ -37,7 +37,7 @@ public class HomeHistoryController {
     public ResponseEntity<?> getAllHistory() {
         try {
             List<HomeHistoryResponse> history = homeHistoryService.getAllHistory();
-            return VietTienResponseDto.ok(history, "Get list account success");
+            return VietTienResponseDto.ok(history, "Get list history success");
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
@@ -45,13 +45,13 @@ public class HomeHistoryController {
 
     }
     @GetMapping(value = "search")
-    public ResponseEntity<?> search(@RequestParam(name = "username", required = false) String username,
+    public ResponseEntity<?> search(@RequestParam(name = "bookName", required = false) String bookName,
                                     @RequestParam(name = "page") Integer page,
                                     @RequestParam(name = "size") Integer size,
                                     @RequestParam(name = "sortField", required = false) String sortField,
                                     @RequestParam(name = "sortOrder", required = false) String sortOrder
                                   ) {
-        PageImpl<Object> list = homeHistoryService.search(username, sortField, sortOrder, page, size);
+        PageImpl<Object> list = homeHistoryService.search(bookName, sortField, sortOrder, page, size);
         return VietTienResponseDto.ok(VietTienPageDto.build(list), "Search list book success");
     }
 

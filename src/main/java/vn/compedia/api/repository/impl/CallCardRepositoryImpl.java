@@ -297,7 +297,6 @@ public class CallCardRepositoryImpl implements CallCardRepositoryCustom {
         query.setParameter("accountId", UserContextHolder.getUser().getAccountId());
         List<Object[]> result = query.getResultList();
         List<HomeHistoryResponse> list = new ArrayList<>();
-        ;
         if (!CollectionUtils.isEmpty(result)) {
             for (Object[] obj : result) {
                 HomeHistoryResponse dto = new HomeHistoryResponse();
@@ -317,7 +316,7 @@ public class CallCardRepositoryImpl implements CallCardRepositoryCustom {
     }
 
     @Override
-    public PageImpl<Object> searchHistory(String username, String sortOrder, String sortField, Integer page, Integer size, Pageable pageable) {
+    public PageImpl<Object> searchHistory(String bookName, String sortOrder, String sortField, Integer page, Integer size, Pageable pageable) {
         StringBuilder sb = new StringBuilder();
         sb.append(" SELECT ca.call_card_id," +
                 "       a.username," +
@@ -331,10 +330,11 @@ public class CallCardRepositoryImpl implements CallCardRepositoryCustom {
                 "FROM call_card ca " +
                 "         INNER JOIN book b on ca.book_id = b.book_id " +
                 "        INNER JOIN account a on ca.account_id = a.account_id " +
-                "WHERE 1 = 1 ");
-        appendQuery(sb, username);
+                "where a.account_id = :accountId");
+        appendQuery(sb, bookName);
         setSortOrder(sortOrder, sortField, sb);
-        Query query = createQuery(sb, username);
+        Query query = createQuery(sb, bookName);
+        query.setParameter("accountId", UserContextHolder.getUser().getAccountId());
 
         if (pageable.getPageSize() > 0) {
             query.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
@@ -361,34 +361,34 @@ public class CallCardRepositoryImpl implements CallCardRepositoryCustom {
             list.add(dto);
         }
 
-        return new PageImpl<Object>(Collections.singletonList(list), pageable, countSearch(username).longValue());
+        return new PageImpl<Object>(Collections.singletonList(list), pageable, countSearch(bookName).longValue());
     }
 
-    private BigInteger countSearch(String username) {
+    private BigInteger countSearch(String bookName) {
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT count(0) " +
                 " FROM call_card ca " +
+                "         INNER JOIN book b on ca.book_id = b.book_id " +
                 "        INNER JOIN account a on ca.account_id = a.account_id " +
-                "WHERE 1 = 1 ");
-        appendQuery(sb, username);
-        Query query = createQuery(sb, username);
+                "WHERE a.account_id = :accountId ");
+        appendQuery(sb, bookName);
+        Query query = createQuery(sb, bookName);
+        query.setParameter("accountId", UserContextHolder.getUser().getAccountId());
         return (BigInteger) query.getSingleResult();
     }
 
-    public void appendQuery(StringBuilder sb, String username) {
-        if (StringUtils.isNotBlank(username)) {
-            sb.append(" and a.username like :username ");
+    public void appendQuery(StringBuilder sb, String bookName) {
+        if (StringUtils.isNotBlank(bookName)) {
+            sb.append(" and b.book_name like :bookName ");
         }
 
     }
 
-    public Query createQuery(StringBuilder sb, String username) {
+    public Query createQuery(StringBuilder sb, String bookName) {
         Query query = entityManager.createNativeQuery(sb.toString());
-        if (StringUtils.isNotBlank(username)) {
-            query.setParameter("username", buildFilterLike(username));
+        if (StringUtils.isNotBlank(bookName)) {
+            query.setParameter("bookName", buildFilterLike(bookName));
         }
-
-
         return query;
     }
 

@@ -28,7 +28,7 @@ public class HomeHistoryService {
         return history;
     }
 
-    public PageImpl<Object> search(String username, String sortField, String sortOrder, Integer page, Integer size) {
-        return callCardRepository.searchHistory(username, sortField, sortOrder, page, size, PageRequest.of(page, size));
+    public PageImpl<Object> search(String bookName, String sortField, String sortOrder, Integer page, Integer size) {
+        return callCardRepository.searchHistory(bookName, sortField, sortOrder, page, size, PageRequest.of(page, size));
     }
 }

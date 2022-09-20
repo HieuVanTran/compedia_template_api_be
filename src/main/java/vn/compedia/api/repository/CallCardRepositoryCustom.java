@@ -22,5 +22,5 @@ public interface CallCardRepositoryCustom {
 
     List<HomeHistoryResponse> findAllHistory();
 
-    PageImpl<Object> searchHistory(String username, String sortField, String sortOrder, Integer page, Integer size, Pageable pageable);
+    PageImpl<Object> searchHistory(String bookName, String sortField, String sortOrder, Integer page, Integer size, Pageable pageable);
 }
