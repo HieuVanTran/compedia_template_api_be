@@ -132,6 +132,7 @@ public class CallCardRepositoryImpl implements CallCardRepositoryCustom {
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT count(0) " +
                 " FROM call_card ca " +
+                "         INNER JOIN book b on ca.book_id = b.book_id " +
                 "         INNER JOIN staff s on ca.staff_id = s.staff_id " +
                 "        INNER JOIN account a on ca.account_id = a.account_id " +
                 "WHERE 1 = 1 ");
@@ -297,6 +298,7 @@ public class CallCardRepositoryImpl implements CallCardRepositoryCustom {
         query.setParameter("accountId", UserContextHolder.getUser().getAccountId());
         List<Object[]> result = query.getResultList();
         List<HomeHistoryResponse> list = new ArrayList<>();
+        ;
         if (!CollectionUtils.isEmpty(result)) {
             for (Object[] obj : result) {
                 HomeHistoryResponse dto = new HomeHistoryResponse();
@@ -360,8 +362,7 @@ public class CallCardRepositoryImpl implements CallCardRepositoryCustom {
 
             list.add(dto);
         }
-
-        return new PageImpl<Object>(Collections.singletonList(list), pageable, countSearch(bookName).longValue());
+        return new PageImpl(list, pageable, countSearch(bookName).longValue());
     }
 
     private BigInteger countSearch(String bookName) {

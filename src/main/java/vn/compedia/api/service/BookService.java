@@ -54,15 +54,15 @@ public class BookService {
         }
         if (request.getNote().trim().length() > 16777215) {
             throw new Exception("Vượt quá  ký tự cho phép");
-        }
-        if (request.getCompanyId() == null){
-            throw new Exception("Không để trống CompanyId");
-        }
-        if (request.getIdAuthor() == null) {
-            throw new Exception("Không để trống IdAuthor");
-        }
-        if (request.getIdTypeBook() == null){
-            throw new Exception("Không để trống IdTypeBook");
+//        }
+//        if (request.getCompanyId() == null){
+//            throw new Exception("Không để trống CompanyId");
+//        }
+//        if (request.getIdAuthor() == null) {
+//            throw new Exception("Không để trống IdAuthor");
+//        }
+//        if (request.getIdTypeBook() == null){
+//            throw new Exception("Không để trống IdTypeBook");
     }}
 
     public void create(BookCreateRequest request, MultipartFile file) throws Exception {
