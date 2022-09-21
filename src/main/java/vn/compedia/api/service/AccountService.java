@@ -137,6 +137,7 @@ public class AccountService {
         account.setCreateBy(UserContextHolder.getUser().getAccountId());
         account.setFullName(request.getFullName());
         account.setDOB(request.getDOB());
+        account.setEmail(request.getEmail());
         account.setStatus(1);
         account.setPhone(request.getPhone());
         accountRepository.save(account);
