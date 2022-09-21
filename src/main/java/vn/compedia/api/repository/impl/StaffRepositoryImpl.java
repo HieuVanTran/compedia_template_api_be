@@ -6,6 +6,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import vn.compedia.api.repository.StaffRepositoryCustom;
 import vn.compedia.api.response.admin.StaffResponse;
+import vn.compedia.api.util.StringUtil;
 import vn.compedia.api.util.ValueUtil;
 
 import javax.persistence.EntityManager;
@@ -43,15 +44,15 @@ public class StaffRepositoryImpl implements StaffRepositoryCustom {
     }
 
     @Override
-    public Page<StaffResponse> search(Long staffId, String phoneNumber, String address,
+    public Page<StaffResponse> search(String nameStaff, String phoneNumber, String address,
                                       String sortField, String sortOrder, Integer page, Integer size, Pageable pageable) {
 
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT s.staff_id, s.name_staff, s.phone_number, s.address, s.date_of_birth " +
                 "FROM staff s WHERE 1 = 1");
-        appendQuery(sb, staffId, phoneNumber, address);
+        appendQuery(sb, nameStaff, phoneNumber, address);
         setSortOrder(sortField, sortOrder, sb);
-        Query query = createQuery(sb, staffId, phoneNumber, address);
+        Query query = createQuery(sb, nameStaff, phoneNumber, address);
         if (pageable.getPageSize() > 0) {
             query.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
             query.setMaxResults(pageable.getPageSize());
@@ -73,15 +74,15 @@ public class StaffRepositoryImpl implements StaffRepositoryCustom {
             list.add(dto);
         }
 
-        return new PageImpl<>(list, pageable, countSearch(staffId, phoneNumber, address).longValue());
+        return new PageImpl<>(list, pageable, countSearch(nameStaff, phoneNumber, address).longValue());
     }
 
-    private BigInteger countSearch(Long staffId, String phoneNumber, String address) {
+    private BigInteger countSearch(String nameStaff, String phoneNumber, String address) {
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT count(0) " +
                 " FROM staff s WHERE 1 = 1 ");
-        appendQuery(sb, staffId, phoneNumber, address);
-        Query query = createQuery(sb, staffId, phoneNumber, address);
+        appendQuery(sb, nameStaff, phoneNumber, address);
+        Query query = createQuery(sb, nameStaff, phoneNumber, address);
         return (BigInteger) query.getSingleResult();
     }
 
@@ -104,9 +105,9 @@ public class StaffRepositoryImpl implements StaffRepositoryCustom {
         }
     }
 
-    private void appendQuery(StringBuilder sb, Long staffId, String phoneNumber, String address) {
-        if (staffId != null) {
-            sb.append(" and s.staff_id like :staffId");
+    private void appendQuery(StringBuilder sb, String nameStaff, String phoneNumber, String address) {
+        if (StringUtils.isNotBlank(nameStaff)) {
+            sb.append(" and s.name_staff like :nameStaff");
         }
         if (StringUtils.isNotBlank(phoneNumber)) {
             sb.append(" and s.phone_number like :phoneNumber");
@@ -117,10 +118,10 @@ public class StaffRepositoryImpl implements StaffRepositoryCustom {
     }
 
 
-    public Query createQuery(StringBuilder sb, Long staffId, String phoneNumber, String address) {
+    public Query createQuery(StringBuilder sb, String nameStaff, String phoneNumber, String address) {
         Query query = entityManager.createNativeQuery(sb.toString());
-        if (staffId != null) {
-            query.setParameter("staffId", staffId);
+        if (StringUtils.isNotBlank(nameStaff)) {
+            query.setParameter("nameStaff", nameStaff);
         }
         if (StringUtils.isNotBlank(phoneNumber)) {
             query.setParameter("phoneNumber", buildFilterLike(phoneNumber));

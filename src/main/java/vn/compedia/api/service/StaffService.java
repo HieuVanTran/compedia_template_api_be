@@ -101,9 +101,9 @@ public class StaffService {
         staffRepository.deleteById(id);
     }
 
-    public Page<StaffResponse> search(Long staffId, String phoneNumber, String address,
+    public Page<StaffResponse> search(String nameStaff, String phoneNumber, String address,
                                       String sortField, String sortOrder, Integer page, Integer size) {
-        return staffRepository.search(staffId, phoneNumber, address, sortField, sortOrder, page, size, PageRequest.of(page, size));
+        return staffRepository.search(nameStaff, phoneNumber, address, sortField, sortOrder, page, size, PageRequest.of(page, size));
     }
 }
 

@@ -96,7 +96,7 @@ public class BookService {
         book.setPublishingYear(request.getPublishingYear());
         book.setNote(request.getNote());
         book.setPageNumber(request.getPageNumber());
-        book.setStatus(request.getStatus());
+        book.setStatus(1);
         bookRepository.save(book);
     }
 
