@@ -90,7 +90,7 @@ public class CallCardRepositoryImpl implements CallCardRepositoryCustom {
                 "       ca.amount " +
                 "FROM call_card ca " +
                 "         INNER JOIN book b on ca.book_id = b.book_id " +
-                "         INNER JOIN staff s on ca.staff_id = s.staff_id " +
+                "         LEFT JOIN staff s on ca.staff_id = s.staff_id " +
                 "        INNER JOIN account a on ca.account_id = a.account_id " +
                 "WHERE 1 = 1 ");
         appendQuery(sb, username, status, nameStaff);
@@ -133,7 +133,7 @@ public class CallCardRepositoryImpl implements CallCardRepositoryCustom {
         sb.append("SELECT count(0) " +
                 " FROM call_card ca " +
                 "         INNER JOIN book b on ca.book_id = b.book_id " +
-                "         INNER JOIN staff s on ca.staff_id = s.staff_id " +
+                "         LEFT JOIN staff s on ca.staff_id = s.staff_id " +
                 "        INNER JOIN account a on ca.account_id = a.account_id " +
                 "WHERE 1 = 1 ");
         appendQuery(sb, username, status, nameStaff);
