@@ -121,7 +121,7 @@ public class StaffRepositoryImpl implements StaffRepositoryCustom {
     public Query createQuery(StringBuilder sb, String nameStaff, String phoneNumber, String address) {
         Query query = entityManager.createNativeQuery(sb.toString());
         if (StringUtils.isNotBlank(nameStaff)) {
-            query.setParameter("nameStaff", nameStaff);
+            query.setParameter("nameStaff",buildFilterLike(nameStaff));
         }
         if (StringUtils.isNotBlank(phoneNumber)) {
             query.setParameter("phoneNumber", buildFilterLike(phoneNumber));
