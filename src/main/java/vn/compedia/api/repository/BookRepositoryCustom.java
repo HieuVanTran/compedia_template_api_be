@@ -3,6 +3,8 @@ package vn.compedia.api.repository;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import vn.compedia.api.request.BookAmountCreateRequest;
+import vn.compedia.api.response.BookAmountCallCardResponse;
 import vn.compedia.api.response.book.BookResponse;
 import vn.compedia.api.response.index.HomeAuthorResponse;
 import vn.compedia.api.response.index.HomeCategoryResponse;
@@ -33,4 +35,5 @@ public interface BookRepositoryCustom {
     Optional<HomeDetailsResponse> findByDetails(Long bookId);
 
     List<HomeDetailsResponse> findByListDetails(Long bookId);
+
 }

@@ -49,5 +49,9 @@ public class CallCard {
     @Column(name = "amount")
     private Integer amount;
 
+    @Column(name = "is_action")
+    private Integer isAction;
+
+
 
 }

@@ -49,7 +49,7 @@ public class StaffRepositoryImpl implements StaffRepositoryCustom {
 
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT s.staff_id, s.name_staff, s.phone_number, s.address, s.date_of_birth " +
-                "FROM staff s WHERE 1 = 1");
+                "FROM staff s WHERE 1 = 1 ");
         appendQuery(sb, nameStaff, phoneNumber, address);
         setSortOrder(sortField, sortOrder, sb);
         Query query = createQuery(sb, nameStaff, phoneNumber, address);
@@ -90,30 +90,30 @@ public class StaffRepositoryImpl implements StaffRepositoryCustom {
     private void setSortOrder(String sortField, String sortOrder, StringBuilder sb) {
         if (StringUtils.isNotBlank(sortField)) {
             sb.append(" ORDER BY ");
-            if (sortField.toLowerCase().equals("nameStaff")) {
-                sb.append(" s.nameStaff ");
+            if (sortField.equalsIgnoreCase("nameStaff")) {
+                sb.append(" s.name_staff ");
             }
-            if (sortField.toLowerCase().equals("phoneNumber")) {
-                sb.append(" s.phoneNumber ");
-            } else if (sortField.toLowerCase().equals("address")) {
+            else if (sortField.equalsIgnoreCase("phoneNumber")) {
+                sb.append(" s.phone_number ");
+            } else if (sortField.equalsIgnoreCase("address")) {
                 sb.append(" s.address ");
-
+            }
                 sb.append(sortOrder);
             } else {
                 sb.append(" ORDER BY staff_id DESC");
             }
         }
-    }
+
 
     private void appendQuery(StringBuilder sb, String nameStaff, String phoneNumber, String address) {
         if (StringUtils.isNotBlank(nameStaff)) {
-            sb.append(" and s.name_staff like :nameStaff");
+            sb.append(" and s.name_staff like :nameStaff ");
         }
         if (StringUtils.isNotBlank(phoneNumber)) {
-            sb.append(" and s.phone_number like :phoneNumber");
+            sb.append(" and s.phone_number like :phoneNumber ");
         }
         if (StringUtils.isNotBlank(address)) {
-            sb.append(" and s.address like :address");
+            sb.append(" and s.address like :address ");
         }
     }
 

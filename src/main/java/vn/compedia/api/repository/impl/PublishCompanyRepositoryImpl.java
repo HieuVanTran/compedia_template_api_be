@@ -107,11 +107,11 @@ public class PublishCompanyRepositoryImpl implements PublishCompanyRepositoryCus
     private void setSortOrder(String sortField, String sortOrder, StringBuilder sb) {
         if (StringUtils.isNotBlank(sortField)) {
             sb.append(" ORDER BY ");
-            if (sortField.toLowerCase().equals("publishName")) {
+            if (sortField.equalsIgnoreCase("publishName")) {
                 sb.append(" p.publishName ");
-            } else if (sortField.toLowerCase().equals("email")) {
+            } else if (sortField.equalsIgnoreCase("email")) {
                 sb.append(" p.email ");
-            } else if (sortField.toLowerCase().equals("agentPeople")) {
+            } else if (sortField.equalsIgnoreCase("agentPeople")) {
                 sb.append(" p.agentPeople ");
             }
             sb.append(sortOrder);

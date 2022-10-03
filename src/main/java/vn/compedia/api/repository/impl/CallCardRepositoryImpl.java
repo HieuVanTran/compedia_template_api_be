@@ -17,7 +17,6 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,6 +38,7 @@ public class CallCardRepositoryImpl implements CallCardRepositoryCustom {
                 "       a.account_id, " +
                 "       b.book_id, " +
                 "       b.book_name, " +
+                "       ca.is_action, " +
                 "       ca.amount " +
                 "FROM call_card ca " +
                 "         INNER JOIN book b on ca.book_id = b.book_id " +
@@ -63,16 +63,15 @@ public class CallCardRepositoryImpl implements CallCardRepositoryCustom {
             dto.setAccountId(ValueUtil.getLongByObject(obj[8]));
             dto.setBookId(ValueUtil.getLongByObject(obj[9]));
             dto.setBookName(ValueUtil.getStringByObject(obj[10]));
-            dto.setAmount(ValueUtil.getIntegerByObject(obj[11]));
-
-
+            dto.setIsAction(ValueUtil.getIntegerByObject(obj[11]));
+            dto.setAmount(ValueUtil.getIntegerByObject(obj[12]));
             CallCardResponses.add(dto);
         }
         return CallCardResponses;
     }
 
     @Override
-    public Page<CallCardResponse> search(String username, Integer status, String nameStaff,
+    public Page<CallCardResponse> search(String username, Integer status, Integer isAction, String nameStaff,
                                          String sortField, String sortOrder, Integer page, Integer size, Pageable pageable) {
 
         StringBuilder sb = new StringBuilder();
@@ -87,15 +86,16 @@ public class CallCardRepositoryImpl implements CallCardRepositoryCustom {
                 "       a.account_id, " +
                 "       b.book_id, " +
                 "       b.book_name, " +
+                "       ca.is_action, " +
                 "       ca.amount " +
                 "FROM call_card ca " +
                 "         INNER JOIN book b on ca.book_id = b.book_id " +
                 "         LEFT JOIN staff s on ca.staff_id = s.staff_id " +
                 "        INNER JOIN account a on ca.account_id = a.account_id " +
                 "WHERE 1 = 1 ");
-        appendQuery(sb, username, status, nameStaff);
+        appendQuery(sb, username, status, isAction, nameStaff);
         setSortOrder(sortField, sortOrder, sb);
-        Query query = createQuery(sb, username, status, nameStaff);
+        Query query = createQuery(sb, username, status, isAction, nameStaff);
 
         if (pageable.getPageSize() > 0) {
             query.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
@@ -120,15 +120,16 @@ public class CallCardRepositoryImpl implements CallCardRepositoryCustom {
             dto.setAccountId(ValueUtil.getLongByObject(obj[8]));
             dto.setBookId(ValueUtil.getLongByObject(obj[9]));
             dto.setBookName(ValueUtil.getStringByObject(obj[10]));
-            dto.setAmount(ValueUtil.getIntegerByObject(obj[11]));
+            dto.setIsAction(ValueUtil.getIntegerByObject(obj[11]));
+            dto.setAmount(ValueUtil.getIntegerByObject(obj[12]));
 
             list.add(dto);
         }
 
-        return new PageImpl<>(list, pageable, countSearch(username, status, nameStaff).longValue());
+        return new PageImpl<>(list, pageable, countSearch(username, status, isAction, nameStaff).longValue());
     }
 
-    private BigInteger countSearch(String username, Integer status, String nameStaff) {
+    private BigInteger countSearch(String username, Integer status, Integer isAction, String nameStaff) {
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT count(0) " +
                 " FROM call_card ca " +
@@ -136,17 +137,17 @@ public class CallCardRepositoryImpl implements CallCardRepositoryCustom {
                 "         LEFT JOIN staff s on ca.staff_id = s.staff_id " +
                 "        INNER JOIN account a on ca.account_id = a.account_id " +
                 "WHERE 1 = 1 ");
-        appendQuery(sb, username, status, nameStaff);
-        Query query = createQuery(sb, username, status, nameStaff);
+        appendQuery(sb, username, status, isAction, nameStaff);
+        Query query = createQuery(sb, username, status, isAction, nameStaff);
         return (BigInteger) query.getSingleResult();
     }
 
     private void setSortOrder(String sortField, String sortOrder, StringBuilder sb) {
         if (StringUtils.isNotBlank(sortField)) {
             sb.append(" ORDER BY ");
-            if (sortField.toLowerCase().equals("username")) {
+            if (sortField.equalsIgnoreCase("username")) {
                 sb.append(" a.username ");
-            } else if (sortField.toLowerCase().equals("nameStaff")) {
+            } else if (sortField.equalsIgnoreCase("nameStaff")) {
                 sb.append(" s.nameStaff ");
             }
             sb.append(sortOrder);
@@ -155,12 +156,15 @@ public class CallCardRepositoryImpl implements CallCardRepositoryCustom {
         }
     }
 
-    public void appendQuery(StringBuilder sb, String username, Integer status, String nameStaff) {
+    public void appendQuery(StringBuilder sb, String username, Integer status, Integer isAction, String nameStaff) {
         if (StringUtils.isNotBlank(username)) {
             sb.append(" and a.username like :username ");
         }
+        if (isAction != null) {
+            sb.append("and ca.is_action = :isAction ");
+        }
         if (status != null) {
-            sb.append("and sh.status = :status ");
+            sb.append("and ca.status = :status ");
         }
         if (StringUtils.isNotBlank(nameStaff)) {
             sb.append(" and s.name_staff like :nameStaff ");
@@ -169,13 +173,16 @@ public class CallCardRepositoryImpl implements CallCardRepositoryCustom {
 
     }
 
-    public Query createQuery(StringBuilder sb, String username, Integer status, String nameStaff) {
+    public Query createQuery(StringBuilder sb, String username, Integer status, Integer isAction, String nameStaff) {
         Query query = entityManager.createNativeQuery(sb.toString());
         if (StringUtils.isNotBlank(username)) {
             query.setParameter("username", buildFilterLike(username));
         }
         if (status != null) {
             query.setParameter("status", status);
+        }
+        if (isAction != null) {
+            query.setParameter("isAction", isAction);
         }
         if (StringUtils.isNotBlank(nameStaff)) {
             query.setParameter("nameStaff", buildFilterLike(nameStaff));
@@ -243,6 +250,7 @@ public class CallCardRepositoryImpl implements CallCardRepositoryCustom {
                 "                       a.account_id,  " +
                 "                       b.book_id,  " +
                 "                       b.book_name,  " +
+                "                       ca.is_action, " +
                 "                       ca.amount  " +
                 "                FROM call_card ca  " +
                 "                         INNER JOIN book b on ca.book_id = b.book_id  " +
@@ -267,7 +275,8 @@ public class CallCardRepositoryImpl implements CallCardRepositoryCustom {
                 dto.setAccountId(ValueUtil.getLongByObject(obj[8]));
                 dto.setBookId(ValueUtil.getLongByObject(obj[9]));
                 dto.setBookName(ValueUtil.getStringByObject(obj[10]));
-                dto.setAmount(ValueUtil.getIntegerByObject(obj[11]));
+                dto.setIsAction(ValueUtil.getIntegerByObject(obj[11]));
+                dto.setAmount(ValueUtil.getIntegerByObject(obj[12]));
                 return Optional.of(dto);
             }
         }
@@ -285,11 +294,11 @@ public class CallCardRepositoryImpl implements CallCardRepositoryCustom {
                 "       a.account_id," +
                 "       b.book_id," +
                 "       b.book_name," +
+                "       ca.status," +
+                "       ca.is_action," +
                 "       ca.amount " +
                 "FROM call_card ca " +
-                "         INNER JOIN book b " +
-                "                    on ca.book_id = b.book_id " +
-                "" +
+                "         INNER JOIN book b on ca.book_id = b.book_id " +
                 "         INNER JOIN account a on ca.account_id = a.account_id " +
                 "where a.account_id = :accountId");
 
@@ -310,7 +319,9 @@ public class CallCardRepositoryImpl implements CallCardRepositoryCustom {
                 dto.setAccountId(ValueUtil.getLongByObject(obj[5]));
                 dto.setBookId(ValueUtil.getLongByObject(obj[6]));
                 dto.setBookName(ValueUtil.getStringByObject(obj[7]));
-                dto.setAmount(ValueUtil.getIntegerByObject(obj[8]));
+                dto.setStatus(ValueUtil.getIntegerByObject(obj[8]));
+                dto.setIsAction(ValueUtil.getIntegerByObject(obj[9]));
+                dto.setAmount(ValueUtil.getIntegerByObject(obj[10]));
                 list.add(dto);
             }
         }

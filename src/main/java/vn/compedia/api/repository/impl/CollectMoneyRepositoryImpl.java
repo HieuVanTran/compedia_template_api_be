@@ -115,10 +115,10 @@ public class CollectMoneyRepositoryImpl implements CollectMoneyRepositoryCustom 
     private void setSortOrder(String sortField, String sortOrder, StringBuilder sb) {
         if (StringUtils.isNotBlank(sortField)) {
             sb.append(" ORDER BY ");
-            if (sortField.toLowerCase().equals("fullName")) {
+            if (sortField.equalsIgnoreCase("fullName")) {
                 sb.append(" a.fullName ");
             }
-           else if(sortField.toLowerCase().equals("nameStaff")){
+           else if(sortField.equalsIgnoreCase("nameStaff")){
                 sb.append("s.nameStaff");
             }
             sb.append(sortOrder);

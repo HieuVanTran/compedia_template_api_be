@@ -48,8 +48,7 @@ public class AuthorController extends GlobalExceptionHandler {
                                     @RequestParam(name = "sortField", required = false) String sortField,
                                     @RequestParam(name = "sortOrder", required = false) String sortOrder,
                                     @RequestParam(name = "title", required = false) String title) {
-        Page<AuthorResponse> list = authorService.search(authorName, address, title, sortField, sortField, page, size);
-//        return VietTienResponseDto.ok(list, "Search list book success");
+        Page<AuthorResponse> list = authorService.search(authorName, address, title, sortField, sortOrder, page, size);
         return VietTienResponseDto.ok(VietTienPageDto.build(list), "Search list book success");
     }
 

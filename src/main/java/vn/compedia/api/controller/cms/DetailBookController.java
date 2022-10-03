@@ -28,13 +28,13 @@ public class DetailBookController extends GlobalExceptionHandler {
     @Autowired
     private BookService bookService;
 
-    @GetMapping(value = "book")
+    @GetMapping(value = "/book")
     public ResponseEntity<?> getAll() {
         List<BookResponse> list = bookService.getAll();
         return VietTienResponseDto.ok(list, "Get list book success");
     }
 
-    @GetMapping(value = "search")
+    @GetMapping(value = "/search")
     public ResponseEntity<?> search(@RequestParam(name = "bookName", required = false) String bookName,
                                     @RequestParam(name = "categoryId", required = false) Long categoryId,
                                     @RequestParam(name = "authorId", required = false) Long authorId,
@@ -47,7 +47,7 @@ public class DetailBookController extends GlobalExceptionHandler {
         return VietTienResponseDto.ok(VietTienPageDto.build(list), "Search list book success");
     }
 
-    @GetMapping(value = "get-one")
+    @GetMapping(value = "/get-one")
     public ResponseEntity<?> getOne(@RequestParam(name = "id") Long bookId) {
         Book book = bookService.getOne(bookId);
         return VietTienResponseDto.ok(book, "Get list book success");

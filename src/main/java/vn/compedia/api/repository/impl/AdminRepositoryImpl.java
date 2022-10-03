@@ -76,9 +76,9 @@ public class AdminRepositoryImpl implements AdminRepositoryCustom {
     private void setSortOrder(String sortField, String sortOrder, StringBuilder sb) {
         if (StringUtils.isNotBlank(sortField)) {
             sb.append(" ORDER BY ");
-            if (sortField.toLowerCase().equals("USERNAME")) {
+            if (sortField.equalsIgnoreCase("USERNAME")) {
                 sb.append(" a.USERNAME ");
-            } else if (sortField.toLowerCase().equals("EMAIL")) {
+            } else if (sortField.equalsIgnoreCase("EMAIL")) {
                 sb.append(" a.EMAIL ");
             }
             sb.append(sortOrder);

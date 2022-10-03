@@ -10,9 +10,10 @@ import vn.compedia.api.entity.CallCard;
 import vn.compedia.api.repository.CallCardDetailsRepository;
 import vn.compedia.api.repository.CallCardRepository;
 import vn.compedia.api.request.CallCardCreateRequest;
+import vn.compedia.api.request.CallCardTypeCreateRequest;
 import vn.compedia.api.response.book.CallCardResponse;
 import vn.compedia.api.util.DateUtil;
-import vn.compedia.api.util.user.UserContextHolder;
+import vn.compedia.api.util.DbConstant;
 
 import java.util.Date;
 import java.util.List;
@@ -67,13 +68,14 @@ public class CallCardService {
         }
     }
 
-    public void createCallCard(CallCardCreateRequest request) throws Exception {
+    public void create(CallCardCreateRequest request) throws Exception {
         validateData(request);
         CallCard callCard = new CallCard();
-        callCard.setAccountId(UserContextHolder.getUser().getAccountId());
+        callCard.setAccountId(request.getAccountId());
         callCard.setStartDate(new Date());
         callCard.setEndDate(DateUtil.formatDatePattern(request.getEndDate(), DateUtil.DATE_FORMAT_YEAR));
-        callCard.setStatus(1);
+        callCard.setStatus(DbConstant.STATUS_APPROVED);
+        callCard.setIsAction(DbConstant.ACTION_ACTIVE);
         callCard.setStaffId(request.getStaffId());
         callCard.setBookId(request.getBookId());
         callCard.setAmount(request.getAmount());
@@ -85,9 +87,15 @@ public class CallCardService {
     public void update(CallCardCreateRequest request) throws Exception {
         validateData(request);
         CallCard callCard = callCardRepository.findById(request.getCallCardId()).get();
-        callCard.setAccountId(UserContextHolder.getUser().getAccountId());
+        callCard.setAccountId(request.getAccountId());
         callCard.setStartDate(new Date());
         callCard.setEndDate(DateUtil.formatDatePattern(request.getEndDate(), DateUtil.DATE_FORMAT_YEAR));
+        if(request.getStatus() == DbConstant.STATUS_APPROVED){
+            callCard.setIsAction(DbConstant.ACTION_ACTIVE);
+        }
+        else  if (request.getStatus() != DbConstant.STATUS_APPROVED ) {
+            callCard.setIsAction(DbConstant.ACTION_EMPTY);
+        }
         callCard.setStatus(request.getStatus());
         callCard.setStaffId(request.getStaffId());
         callCard.setBookId(request.getBookId());
@@ -97,10 +105,23 @@ public class CallCardService {
 
     }
 
-    public Page<CallCardResponse> search(String username, Integer status, String nameStaff,
-                                         String sortField, String sortOrder, Integer page, Integer size) {
-        return callCardRepository.search(username, status, nameStaff, sortField, sortOrder, page, size, PageRequest.of(page, size));
 
+
+    public Page<CallCardResponse> search(String username, Integer status, Integer isTitle, String nameStaff,
+                                         String sortField, String sortOrder, Integer page, Integer size) {
+        return callCardRepository.search(username, status, isTitle, nameStaff, sortField, sortOrder, page, size, PageRequest.of(page, size));
+
+    }
+
+    public void updateIsAction(CallCardTypeCreateRequest request) {
+        CallCard callCard = callCardRepository.findById(request.getCallCardId()).get();
+        if(request.getType() == 1 ) {
+            callCard.setIsAction(DbConstant.ACTION_PAID);
+            callCardRepository.save(callCard);
+        } else if (request.getType() == 2){
+            callCard.setIsAction(DbConstant.ACTION_TRANSGRESSION);
+            callCardRepository.save(callCard);
+        }
     }
 }
 

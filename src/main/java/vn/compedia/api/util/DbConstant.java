@@ -17,8 +17,6 @@ public class DbConstant {
     public static final String PASSWORD = "123456a@A";
 
 
-
-
     // trạng thái shop
     public static final int SHOP_ACTIVE = 1;
     public static final int SHOP_INACTIVE = 2;
@@ -50,5 +48,16 @@ public class DbConstant {
 
     //customer_role
     public static final long ROLE_CONSUMERS = 1;
+
+    // Trạng thái mượn
+    public static final int STATUS_WAITING = 0;
+    public static final int STATUS_APPROVED  = 1;
+    public static final int STATUS_REFUSE  = 2;
+
+    //Trạng thái trả
+    public static final int ACTION_EMPTY = 0;
+    public static final int ACTION_ACTIVE = 1;
+    public static final int ACTION_PAID  = 2;
+    public static final int ACTION_TRANSGRESSION  = 3;
 
 }

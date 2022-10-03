@@ -9,13 +9,17 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import vn.compedia.api.entity.Book;
+import vn.compedia.api.entity.CallCard;
 import vn.compedia.api.repository.BookRepository;
+import vn.compedia.api.repository.CallCardRepository;
 import vn.compedia.api.request.BookCreateRequest;
+import vn.compedia.api.response.BookAmountCallCardResponse;
 import vn.compedia.api.response.book.BookResponse;
 import vn.compedia.api.util.DbConstant;
 import vn.compedia.api.utility.FileUtil;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Log4j2
@@ -24,6 +28,9 @@ public class BookService {
 
     @Autowired
     private BookRepository bookRepository;
+
+    @Autowired
+    private CallCardRepository callCardRepository;
 
     public List<BookResponse> getAll() {
         List<BookResponse> list = bookRepository.getAllBook();
@@ -54,16 +61,8 @@ public class BookService {
         }
         if (request.getNote().trim().length() > 16777215) {
             throw new Exception("Vượt quá  ký tự cho phép");
-//        }
-//        if (request.getCompanyId() == null){
-//            throw new Exception("Không để trống CompanyId");
-//        }
-//        if (request.getIdAuthor() == null) {
-//            throw new Exception("Không để trống IdAuthor");
-//        }
-//        if (request.getIdTypeBook() == null){
-//            throw new Exception("Không để trống IdTypeBook");
-    }}
+        }
+    }
 
     public void create(BookCreateRequest request, MultipartFile file) throws Exception {
         validateData(request);
@@ -84,8 +83,7 @@ public class BookService {
 
     public void update(BookCreateRequest request, MultipartFile file) throws Exception {
         validateData(request);
-        Book book = new Book();
-        book.setBookId(request.getId());
+        Book book = bookRepository.findById(request.getId()).get();
         book.setBookName(request.getBookName());
         book.setAmount(request.getAmount());
         book.setIdAuthor(request.getIdAuthor());
@@ -108,5 +106,37 @@ public class BookService {
                                      String sortField, String sortOrder, Integer page, Integer size) {
         return bookRepository.search(bookName, categoryId, authorId, publishId, sortField, sortOrder, page, size, PageRequest.of(page, size));
     }
+
+    public void updateAmount(BookAmountCallCardResponse response, Long bookId, Integer amount) throws Exception {
+        validateData(response);
+        CallCard callCard = callCardRepository.findById(response.getCallCardID()).get();
+        if (response.getType() == 1) {
+            callCard.setStatus(DbConstant.STATUS_APPROVED);
+            callCardRepository.save(callCard);
+            bookRepository.updateSubtractAmount(bookId,amount);
+        } else if (response.getType() == 2) {
+            callCard.setIsAction(DbConstant.ACTION_PAID);
+            callCardRepository.save(callCard);
+            bookRepository.updateSumAmount(bookId,amount);
+        } else if (response.getType() == 3) {
+            callCard.setIsAction(DbConstant.ACTION_TRANSGRESSION);
+            callCardRepository.save(callCard);
+        }
+    }
+    public void validateData(BookAmountCallCardResponse response) throws Exception {
+
+
+        // Check exit book
+        Optional<Book> bookOptional = bookRepository.findById(response.getBookID());
+        if (!bookOptional.isPresent()) {
+            throw new Exception("Don't exit book with id :" + response.getBookID());
+        }
+        // Check quantity book compare with quantity call card
+        if (bookOptional.get().getAmount() > 0 && bookOptional.get().getAmount() >= response.getAmount()) {
+            throw new Exception("Don't quantity book with quantity call card");
+        }
+    }
 }
+
+
 

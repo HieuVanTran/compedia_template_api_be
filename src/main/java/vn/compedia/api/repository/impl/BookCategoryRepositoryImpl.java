@@ -68,7 +68,7 @@ public class BookCategoryRepositoryImpl implements BookCategoryRepositoryCustom 
     private void setSortOrder(String sortField, String sortOrder, StringBuilder sb) {
         if (StringUtils.isNotBlank(sortField)) {
             sb.append(" ORDER BY ");
-            if (sortField.toLowerCase().equals("categoryName")) {
+            if (sortField.equalsIgnoreCase("categoryName")) {
                 sb.append(" bc.categoryName ");
             }
             sb.append(sortOrder);

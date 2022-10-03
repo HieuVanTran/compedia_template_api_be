@@ -159,13 +159,13 @@ public class BookRepositoryImpl implements BookRepositoryCustom {
     private void setSortOrder(String sortField, String sortOrder, StringBuilder sb) {
         if (StringUtils.isNotBlank(sortField)) {
             sb.append(" ORDER BY ");
-            if (sortField.toLowerCase().equals("bookName")) {
+            if (sortField.equalsIgnoreCase("bookName")) {
                 sb.append(" b.bookName ");
-            } else if (sortField.toLowerCase().equals("authorName")) {
+            } else if (sortField.equalsIgnoreCase("authorName")) {
                 sb.append(" a.authorName ");
-            } else if (sortField.toLowerCase().equals("categoryName")) {
+            } else if (sortField.equalsIgnoreCase("categoryName")) {
                 sb.append("bc.categoryName");
-            } else if (sortField.toLowerCase().equals("publishName")) {
+            } else if (sortField.equalsIgnoreCase("publishName")) {
                 sb.append("pc.publishName");
             }
             sb.append(sortOrder);

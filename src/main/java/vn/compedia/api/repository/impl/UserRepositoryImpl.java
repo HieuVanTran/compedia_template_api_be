@@ -104,10 +104,10 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
     private void setSortOrder(String sortField, String sortOrder, StringBuilder sb) {
         if (StringUtils.isNotBlank(sortField)) {
             sb.append(" ORDER BY ");
-            if (sortField.toLowerCase().equals("FULLNAME")) {
-                sb.append(" u.FULLNAME ");
-            } else if (sortField.toLowerCase().equals("ADDRESS")) {
-                sb.append(" u.ADDRESS ");
+            if (sortField.equalsIgnoreCase("FULLNAME")) {
+                sb.append(" u.full_name ");
+            } else if (sortField.equalsIgnoreCase("ADDRESS")) {
+                sb.append(" u.address ");
             }
 
             sb.append(sortOrder);

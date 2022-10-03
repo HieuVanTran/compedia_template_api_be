@@ -46,6 +46,9 @@ public class CallCardResponse {
     @JsonProperty("book_name")
     private String bookName;
 
+    @JsonProperty("is_action")
+    private Integer isAction;
+
 
 }
 

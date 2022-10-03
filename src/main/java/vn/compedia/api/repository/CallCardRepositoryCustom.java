@@ -13,7 +13,7 @@ import java.util.Optional;
 public interface CallCardRepositoryCustom {
     List<CallCardResponse> findAllCustomCallCardList();
 
-    Page<CallCardResponse> search(String username, Integer status, String nameStaff,
+    Page<CallCardResponse> search(String username, Integer status,Integer isAction, String nameStaff,
                                   String sortField, String sortOrder, Integer page, Integer size, Pageable pageable);
 
     List<MonthDataResponse> getAmountBorrow(String year);

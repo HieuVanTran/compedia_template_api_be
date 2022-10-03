@@ -13,6 +13,7 @@ import vn.compedia.api.exception.GlobalExceptionHandler;
 import vn.compedia.api.request.CallCardCreateRequest;
 import vn.compedia.api.response.book.CallCardResponse;
 import vn.compedia.api.service.CallCardService;
+import vn.compedia.api.request.CallCardTypeCreateRequest;
 
 import java.util.List;
 
@@ -27,9 +28,9 @@ public class CallCardController extends GlobalExceptionHandler {
     private CallCardService callCardService;
 
     @PostMapping()
-    public ResponseEntity<?> createCallCard(@RequestBody CallCardCreateRequest request) {
+    public ResponseEntity<?> create(@RequestBody CallCardCreateRequest request) {
         try {
-            callCardService.createCallCard(request);
+            callCardService.create(request);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
@@ -46,6 +47,11 @@ public class CallCardController extends GlobalExceptionHandler {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
         return VietTienResponseDto.ok("", "Save success");
+    }
+    @PostMapping("/updateIsAction")
+    public ResponseEntity<?> updateIsAction(@RequestBody CallCardTypeCreateRequest request ) {
+        callCardService.updateIsAction(request);
+        return VietTienResponseDto.ok("Thành công", "Save success");
     }
 
     @GetMapping()
@@ -72,8 +78,9 @@ public class CallCardController extends GlobalExceptionHandler {
                                     @RequestParam(name = "sortField", required = false) String sortField,
                                     @RequestParam(name = "sortOrder", required = false) String sortOrder,
                                     @RequestParam(name = "nameStaff", required = false) String nameStaff,
+                                    @RequestParam(name = "isAction", required = false) Integer isAction,
                                     @RequestParam(name = "status", required = false) Integer status) {
-        Page<CallCardResponse> list = callCardService.search(username, status, nameStaff, sortField, sortOrder, page, size);
+        Page<CallCardResponse> list = callCardService.search(username, status, isAction, nameStaff, sortField, sortOrder, page, size);
         return VietTienResponseDto.ok(VietTienPageDto.build(list), "Search list book success");
     }
 

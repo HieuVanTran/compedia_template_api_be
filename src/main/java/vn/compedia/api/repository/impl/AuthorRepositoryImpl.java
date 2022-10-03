@@ -96,13 +96,12 @@ public class AuthorRepositoryImpl implements AuthorRepositoryCustom {
     private void setSortOrder(String sortField, String sortOrder, StringBuilder sb) {
         if (StringUtils.isNotBlank(sortField)) {
             sb.append(" ORDER BY ");
-            if (sortField.toLowerCase().equals("NAMEAUTHOR")) {
-                sb.append(" au.NAMEAUTHOR ");
-            }
-            if (sortField.toLowerCase().equals("ADDRESS")) {
-                sb.append(" au.ADDRESS ");
-            } else if (sortField.toLowerCase().equals("TITLE")) {
-                sb.append("au.TITLE");
+            if (sortField.equalsIgnoreCase("NAMEAUTHOR")) {
+                sb.append(" au.name_author ");
+            } else if (sortField.equalsIgnoreCase("ADDRESS")) {
+                sb.append(" au.address ");
+            } else if (sortField.equalsIgnoreCase("TITLE")) {
+                sb.append(" au.title ");
             }
             sb.append(sortOrder);
         } else {

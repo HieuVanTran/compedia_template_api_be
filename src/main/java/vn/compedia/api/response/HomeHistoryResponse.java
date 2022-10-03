@@ -21,8 +21,8 @@ public class HomeHistoryResponse {
 //    @JsonProperty("name_staff")
 //    private String nameStaff;
 //
-//    @JsonProperty("status")
-//    private Integer status;
+    @JsonProperty("status")
+    private Integer status;
 
     @JsonProperty("amount")
     private Integer amount;
@@ -44,6 +44,9 @@ public class HomeHistoryResponse {
 
     @JsonProperty("book_name")
     private String bookName;
+
+    @JsonProperty("is_action")
+    private Integer isAction;
 
 
 }
