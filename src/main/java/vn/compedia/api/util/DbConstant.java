@@ -58,6 +58,6 @@ public class DbConstant {
     public static final int ACTION_EMPTY = 0;
     public static final int ACTION_ACTIVE = 1;
     public static final int ACTION_PAID  = 2;
-    public static final int ACTION_TRANSGRESSION  = 3;
+    public static final int ACTION_TRANSGRESS  = 3;
 
 }

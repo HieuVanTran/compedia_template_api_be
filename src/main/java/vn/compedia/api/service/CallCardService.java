@@ -119,7 +119,7 @@ public class CallCardService {
             callCard.setIsAction(DbConstant.ACTION_PAID);
             callCardRepository.save(callCard);
         } else if (request.getType() == 2){
-            callCard.setIsAction(DbConstant.ACTION_TRANSGRESSION);
+            callCard.setIsAction(DbConstant.ACTION_TRANSGRESS);
             callCardRepository.save(callCard);
         }
     }
