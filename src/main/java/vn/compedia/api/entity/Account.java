@@ -51,5 +51,6 @@ public class Account extends BaseEntity implements Serializable {
     @Column(name = "role_id")
     private Integer roleId;
 
-
+    @Column(name = "is_allow_approval")
+    private Integer isAllowApproval;
 }

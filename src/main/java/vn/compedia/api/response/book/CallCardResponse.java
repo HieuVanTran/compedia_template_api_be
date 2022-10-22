@@ -8,7 +8,6 @@ import lombok.Setter;
 @Setter
 public class CallCardResponse {
 
-
     @JsonProperty("call_card_id")
     private Long callCardId;
 
@@ -49,7 +48,8 @@ public class CallCardResponse {
     @JsonProperty("is_action")
     private Integer isAction;
 
-
+    @JsonProperty("is_allow_approval")
+    private Integer isAllowApproval;
 }
 
 

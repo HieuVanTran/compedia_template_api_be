@@ -9,20 +9,25 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import vn.compedia.api.dto.auth.LoginDTO;
 import vn.compedia.api.dto.auth.RefreshTokenDTO;
 import vn.compedia.api.dto.auth.api.ApiSignUpDTO;
 import vn.compedia.api.entity.Account;
+import vn.compedia.api.exception.ApiException;
+import vn.compedia.api.exception.VietTienException;
 import vn.compedia.api.exception.authentication.InvalidTokenHttpException;
 import vn.compedia.api.exception.authentication.UserAlreadyExistsHttpException;
 import vn.compedia.api.exception.authentication.UserNotFoundHttpException;
 import vn.compedia.api.exception.user.UserAlreadyExistsException;
+import vn.compedia.api.exception.user.UserCollectMoneyValid;
 import vn.compedia.api.exception.user.UserNotFoundException;
 import vn.compedia.api.repository.auth.ApiUserRepository;
 import vn.compedia.api.service.ApiUserService;
 import vn.compedia.api.util.MessageUtil;
 import vn.compedia.api.util.authentication.Tokens;
 
+import java.util.List;
 import java.util.Optional;
 
 @Log4j2
@@ -58,8 +63,13 @@ public class AuthService {
         }
     }
 
-    public Tokens login(LoginDTO loginDTO) throws UserNotFoundHttpException {
+    public Tokens login(LoginDTO loginDTO) throws UserNotFoundHttpException, UserCollectMoneyValid {
         try {
+            List<Account> list = apiUserRepository.checkCollectMoney(loginDTO.getEmail());
+            if (!CollectionUtils.isEmpty(list)) {
+                throw new UserCollectMoneyValid("Bạn đã vi phạm chính sách mượn sách của nhà trường khi không trả sách đúng hạn. Vui lòng liên hệ quản trị để tiếp tục được phép mượn sách");
+            }
+
             Authentication authentication = createAuthentication(loginDTO);
             BundleUserDetailsService.BundleUserDetails userDetails =
                     (BundleUserDetailsService.BundleUserDetails) authenticationManager

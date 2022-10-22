@@ -1,18 +1,16 @@
 package vn.compedia.api.service;
 
 import lombok.extern.log4j.Log4j2;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import vn.compedia.api.entity.CallCard;
 import vn.compedia.api.repository.CallCardRepository;
-import vn.compedia.api.request.CallCardCreateRequest;
 import vn.compedia.api.request.HomeRequestFromRequest;
 import vn.compedia.api.util.DateUtil;
 import vn.compedia.api.util.DbConstant;
+import vn.compedia.api.util.EmailUtil;
 import vn.compedia.api.util.user.UserContextHolder;
 
-import java.awt.dnd.DnDConstants;
 import java.util.Date;
 
 @Log4j2
@@ -22,8 +20,6 @@ public class HomeRequestService {
 
     @Autowired
     private CallCardRepository callCardRepository;
-
-
 
 
     public void validateData(HomeRequestFromRequest request) throws Exception {
@@ -39,7 +35,7 @@ public class HomeRequestService {
         }
     }
 
-    public void create (HomeRequestFromRequest request) throws Exception {
+    public void create(HomeRequestFromRequest request) throws Exception {
         validateData(request);
         CallCard callCard = new CallCard();
         callCard.setAccountId(UserContextHolder.getUser().getAccountId());
@@ -52,5 +48,6 @@ public class HomeRequestService {
         callCard.setNote(request.getNote());
         callCardRepository.save(callCard);
 
+        EmailUtil.getInstance().sendNotify(UserContextHolder.getUser().getFullName(), UserContextHolder.getUser().getEmail());
     }
 }

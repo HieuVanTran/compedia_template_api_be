@@ -1,11 +1,13 @@
 package vn.compedia.api.repository.impl;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.util.CollectionUtils;
 import vn.compedia.api.repository.CallCardRepositoryCustom;
+import vn.compedia.api.repository.StaffRepository;
 import vn.compedia.api.response.HomeHistoryResponse;
 import vn.compedia.api.response.MonthDataResponse;
 import vn.compedia.api.response.book.CallCardResponse;
@@ -21,6 +23,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class CallCardRepositoryImpl implements CallCardRepositoryCustom {
+
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -75,14 +78,14 @@ public class CallCardRepositoryImpl implements CallCardRepositoryCustom {
                                          String sortField, String sortOrder, Integer page, Integer size, Pageable pageable) {
 
         StringBuilder sb = new StringBuilder();
-        sb.append(" SELECT ca.call_card_id," +
-                "       a.username," +
-                "       s.staff_id," +
-                "       ca.status," +
-                "       s.name_staff," +
-                "       ca.note," +
-                "       ca.start_date," +
-                "       ca.end_date,  " +
+        sb.append(" SELECT ca.call_card_id, " +
+                "       a.username, " +
+                "       '' staff_id, " +
+                "       ca.status, " +
+                "       a.full_name name_staff, " +
+                "       ca.note, " +
+                "       ca.start_date, " +
+                "       ca.end_date, " +
                 "       a.account_id, " +
                 "       b.book_id, " +
                 "       b.book_name, " +
@@ -90,11 +93,10 @@ public class CallCardRepositoryImpl implements CallCardRepositoryCustom {
                 "       ca.amount " +
                 "FROM call_card ca " +
                 "         INNER JOIN book b on ca.book_id = b.book_id " +
-                "         LEFT JOIN staff s on ca.staff_id = s.staff_id " +
-                "        INNER JOIN account a on ca.account_id = a.account_id " +
+                "         INNER JOIN account a on ca.account_id = a.account_id " +
                 "WHERE 1 = 1 ");
-        appendQuery(sb, username, status, isAction, nameStaff);
-        setSortOrder(sortField, sortOrder, sb);
+        appendQueryAccount(sb, username, status, isAction, nameStaff);
+        setSortOrderAccount(sortField, sortOrder, sb);
         Query query = createQuery(sb, username, status, isAction, nameStaff);
 
         if (pageable.getPageSize() > 0) {
@@ -106,6 +108,7 @@ public class CallCardRepositoryImpl implements CallCardRepositoryCustom {
         }
         List<CallCardResponse> list = new ArrayList<>();
         List<Object[]> result = query.getResultList();
+        Integer isAllowApproval = UserContextHolder.getUser().getIsAllowApproval();
 
         for (Object[] obj : result) {
             CallCardResponse dto = new CallCardResponse();
@@ -122,6 +125,12 @@ public class CallCardRepositoryImpl implements CallCardRepositoryCustom {
             dto.setBookName(ValueUtil.getStringByObject(obj[10]));
             dto.setIsAction(ValueUtil.getIntegerByObject(obj[11]));
             dto.setAmount(ValueUtil.getIntegerByObject(obj[12]));
+
+            if (isAllowApproval == 1) {
+                dto.setIsAllowApproval(1);
+            } else {
+                dto.setIsAllowApproval(0);
+            }
 
             list.add(dto);
         }
@@ -156,6 +165,20 @@ public class CallCardRepositoryImpl implements CallCardRepositoryCustom {
         }
     }
 
+    private void setSortOrderAccount(String sortField, String sortOrder, StringBuilder sb) {
+        if (StringUtils.isNotBlank(sortField)) {
+            sb.append(" ORDER BY ");
+            if (sortField.equalsIgnoreCase("username")) {
+                sb.append(" a.username ");
+            } else if (sortField.equalsIgnoreCase("nameStaff")) {
+                sb.append(" a.full_name ");
+            }
+            sb.append(sortOrder);
+        } else {
+            sb.append(" ORDER BY call_card_id DESC");
+        }
+    }
+
     public void appendQuery(StringBuilder sb, String username, Integer status, Integer isAction, String nameStaff) {
         if (StringUtils.isNotBlank(username)) {
             sb.append(" and a.username like :username ");
@@ -169,8 +192,21 @@ public class CallCardRepositoryImpl implements CallCardRepositoryCustom {
         if (StringUtils.isNotBlank(nameStaff)) {
             sb.append(" and s.name_staff like :nameStaff ");
         }
+    }
 
-
+    public void appendQueryAccount(StringBuilder sb, String username, Integer status, Integer isAction, String nameStaff) {
+        if (StringUtils.isNotBlank(username)) {
+            sb.append(" and a.username like :username ");
+        }
+        if (isAction != null) {
+            sb.append("and ca.is_action = :isAction ");
+        }
+        if (status != null) {
+            sb.append("and ca.status = :status ");
+        }
+        if (StringUtils.isNotBlank(nameStaff)) {
+            sb.append(" and a.full_name like :nameStaff ");
+        }
     }
 
     public Query createQuery(StringBuilder sb, String username, Integer status, Integer isAction, String nameStaff) {
@@ -219,7 +255,6 @@ public class CallCardRepositoryImpl implements CallCardRepositoryCustom {
                 "group by month_idex ");
 
         Query query = entityManager.createNativeQuery(sb.toString());
-//        query.setParameter("year", buildFilterLike(year));
         query.setParameter("year", year);
         List<MonthDataResponse> list = new ArrayList<>();
         List<Object[]> result = query.getResultList();

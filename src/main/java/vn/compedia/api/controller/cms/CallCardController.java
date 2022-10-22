@@ -11,9 +11,9 @@ import vn.compedia.api.dto.VietTienPageDto;
 import vn.compedia.api.dto.VietTienResponseDto;
 import vn.compedia.api.exception.GlobalExceptionHandler;
 import vn.compedia.api.request.CallCardCreateRequest;
+import vn.compedia.api.request.CallCardTypeCreateRequest;
 import vn.compedia.api.response.book.CallCardResponse;
 import vn.compedia.api.service.CallCardService;
-import vn.compedia.api.request.CallCardTypeCreateRequest;
 
 import java.util.List;
 
@@ -48,8 +48,9 @@ public class CallCardController extends GlobalExceptionHandler {
         }
         return VietTienResponseDto.ok("", "Save success");
     }
-    @PostMapping("/updateIsAction")
-    public ResponseEntity<?> updateIsAction(@RequestBody CallCardTypeCreateRequest request ) {
+
+    @PostMapping("updateIsAction")
+    public ResponseEntity<?> updateIsAction(@RequestBody CallCardTypeCreateRequest request) {
         callCardService.updateIsAction(request);
         return VietTienResponseDto.ok("Thành công", "Save success");
     }
@@ -60,7 +61,7 @@ public class CallCardController extends GlobalExceptionHandler {
         return VietTienResponseDto.ok(list, "Get list account success");
     }
 
-    @GetMapping(value = "get-one")
+    @GetMapping("get-one")
     public ResponseEntity<?> getOne(@RequestParam(name = "id") Long collectMoneyId) {
         try {
             CallCardResponse loan = callCardService.getOne(collectMoneyId);
@@ -71,7 +72,7 @@ public class CallCardController extends GlobalExceptionHandler {
         }
     }
 
-    @GetMapping(value = "search")
+    @GetMapping("search")
     public ResponseEntity<?> search(@RequestParam(name = "username", required = false) String username,
                                     @RequestParam(name = "page") Integer page,
                                     @RequestParam(name = "size") Integer size,

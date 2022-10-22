@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +18,7 @@ import vn.compedia.api.dto.auth.LoginDTO;
 import vn.compedia.api.dto.auth.RefreshTokenDTO;
 import vn.compedia.api.exception.GlobalExceptionHandler;
 import vn.compedia.api.exception.VietTienInvalidParamsException;
+import vn.compedia.api.exception.user.UserCollectMoneyValid;
 import vn.compedia.api.repository.AccountRepository;
 import vn.compedia.api.service.authentication.AuthService;
 import vn.compedia.api.util.authentication.Tokens;
@@ -46,26 +48,30 @@ public class ApiAuthController extends GlobalExceptionHandler {
     }
 
     @PostMapping("login")
-    public ResponseEntity<?> login(@Valid @RequestBody LoginDTO loginDTO) throws VietTienInvalidParamsException {
-        Map<String, String> errors = Maps.newHashMap();
-        if (StringUtils.isBlank(loginDTO.getEmail())) {
-            errors.put("email", "Bạn vui lòng nhập địa chỉ email");
-        } else if (!EmailValidator.getInstance().isValid(loginDTO.getEmail())) {
-            errors.put("email", "Địa chỉ Email không đúng định dạng");
+    public ResponseEntity<?> login(@Valid @RequestBody LoginDTO loginDTO) {
+        try {
+            Map<String, String> errors = Maps.newHashMap();
+            if (StringUtils.isBlank(loginDTO.getEmail())) {
+                errors.put("email", "Bạn vui lòng nhập địa chỉ email");
+            } else if (!EmailValidator.getInstance().isValid(loginDTO.getEmail())) {
+                errors.put("email", "Địa chỉ Email không đúng định dạng");
+            }
+            if (!errors.isEmpty()) {
+                throw new VietTienInvalidParamsException(errors);
+            }
+            if (StringUtils.isBlank(loginDTO.getPassword())) {
+                errors.put("password", "Bạn vui lòng nhập mật khẩu");
+            }
+            if (!errors.isEmpty()) {
+                throw new VietTienInvalidParamsException(errors);
+            }
+            Tokens tokens = authService.login(loginDTO);
+            return toResponse(tokens, "Authentication has been passed");
+        } catch (UserCollectMoneyValid ex) {
+            return VietTienResponseDto.withMessageAndStatus("Bạn đã vi phạm chính sách mượn sách của nhà trường khi không trả sách đúng hạn. Vui lòng liên hệ quản lý thư viện để xử lý.", HttpStatus.CONFLICT);
+        } catch (Exception ex) {
+            return VietTienResponseDto.withMessageAndStatus("Có lỗi xảy ra. Bạn vui lòng thử lại sau", HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        if (!errors.isEmpty()) {
-            throw new VietTienInvalidParamsException(errors);
-        }
-
-        if (StringUtils.isBlank(loginDTO.getPassword())) {
-            errors.put("password", "Bạn vui lòng nhập mật khẩu");
-        }
-
-        if (!errors.isEmpty()) {
-            throw new VietTienInvalidParamsException(errors);
-        }
-        Tokens tokens = authService.login(loginDTO);
-        return toResponse(tokens, "Authentication has been passed");
     }
 
     @PostMapping("sign-out")

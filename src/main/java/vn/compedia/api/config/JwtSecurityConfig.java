@@ -25,7 +25,8 @@ public class JwtSecurityConfig extends WebSecurityConfigurerAdapter {
             "/v2/api-docs",
             "/webjars/**",
             // -- h2 database console
-            "/h2-console/**"
+            "/h2-console/**",
+            "/api/v1/staff/**"
     };
     private final TokenService tokenService;
 

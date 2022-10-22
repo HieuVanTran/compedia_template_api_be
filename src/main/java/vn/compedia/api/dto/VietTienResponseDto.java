@@ -41,6 +41,13 @@ public class VietTienResponseDto<T> {
                 .toResponseEntity();
     }
 
+    public static @ResponseBody
+    ResponseEntity<?> withMessageAndStatus(String message, HttpStatus httpStatus) {
+        return build().withHttpStatus(httpStatus)
+                .withMessage(message)
+                .toResponseEntity();
+    }
+
     @PostConstruct
     private void init() {
         httpStatus = HttpStatus.OK;

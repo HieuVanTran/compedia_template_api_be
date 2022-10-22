@@ -16,11 +16,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/request-form")
 @Validated
-
 public class RequestFormController extends GlobalExceptionHandler {
+
     @Autowired
     private RequestFormService requestFormService;
-
 
     @GetMapping(value = "request-form")
     public ResponseEntity<?> getAll() {

@@ -11,8 +11,8 @@ import javax.persistence.*;
 @Data
 @Entity
 @Table(name = "staff")
-
 public class Staff {
+
     @javax.persistence.Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "staff_id")

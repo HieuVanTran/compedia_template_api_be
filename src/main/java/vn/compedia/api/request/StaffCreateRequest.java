@@ -9,19 +9,19 @@ import vn.compedia.api.util.MessageUtil;
 @Getter
 @Setter
 public class StaffCreateRequest {
-    Long Id;
+    @JsonProperty("id")
+    private Long id;
 
     @JsonProperty("name_staff")
     private String nameStaff;
 
     @JsonProperty("phone_number")
-    @Length(max = 11, message = MessageUtil.PHONE_HAS_MAX_LENGTH)
     private String phoneNumber;
 
+    @JsonProperty("address")
     private String address;
 
     @JsonProperty("date_of_birth")
     private String dateOfBirth;
-
 
 }

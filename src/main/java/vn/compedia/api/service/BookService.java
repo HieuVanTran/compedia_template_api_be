@@ -119,7 +119,7 @@ public class BookService {
             callCardRepository.save(callCard);
             bookRepository.updateSumAmount(bookId,amount);
         } else if (response.getType() == 3) {
-            callCard.setIsAction(DbConstant.ACTION_TRANSGRESSION);
+            callCard.setIsAction(DbConstant.ACTION_TRANSGRESS);
             callCardRepository.save(callCard);
         }
     }

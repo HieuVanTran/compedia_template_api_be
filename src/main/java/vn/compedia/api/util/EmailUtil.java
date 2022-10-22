@@ -22,10 +22,9 @@ public class EmailUtil implements Runnable {
 
     private static Logger log = LoggerFactory.getLogger(EmailUtil.class);
 
-    private static EmailUtil INSTANCE = null;
-
-    private SmtpAuthenticator smtpAuthenticator;
     private Queue<MailDto> mailDtoQueue;
+    private static EmailUtil INSTANCE = null;
+    private SmtpAuthenticator smtpAuthenticator;
 
     public EmailUtil() {
         String email = PropertiesUtil.getEmailProperty("mail.user");
@@ -41,32 +40,19 @@ public class EmailUtil implements Runnable {
         }
         return INSTANCE;
     }
+
     @Synchronized
     public void sendForgetPassword(String emailTo, String newPassword) {
         String subject = PropertiesUtil.getProperty("email.subject.forgetPassword");
         String content = PropertiesUtil.getProperty("email.content.forgetPassword").replace("{NEW_PASSWORD}", newPassword);
         mailDtoQueue.add(new MailDto(emailTo, subject, content));
     }
-    public static void main(String args[]) {
-//        EmailUtil.getInstance().sendLostPasswordEmail( "vi", "thuannguyenduy1606@gmail.com", "https://google.com.vn", "Luong Tuan Anh");
-    }
 
-    public boolean sendLostPasswordEmail(MessageSource messageSource, Integer language, String emailTo, String code, String fullName) {
-        //  Locale locale = new Locale(language);
-        if (language.equals(Constant.VN)) {
-            String subject = messageSource.getMessage(MessageUtil.EMAIL_LOSTPASSWORD_SUBJECT_VI, null, Locale.forLanguageTag("vi"));
-            String content = messageSource.getMessage(MessageFormat.format(MessageUtil.EMAIL_LOSTPASSWORD_CONTENT_VI, fullName, code), null, Locale.forLanguageTag("vi"))
-                    .replace("{USER_NAME}", fullName)
-                    .replace("{CODE}", code);
-            return mailDtoQueue.add(new MailDto(emailTo, subject, content));
-        } else {
-            String subject = messageSource.getMessage(MessageUtil.EMAIL_LOSTPASSWORD_SUBJECTS_LO, null, Locale.forLanguageTag("vi"));
-            String content = messageSource.getMessage(MessageFormat.format(MessageUtil.EMAIL_LOSTPASSWORD_CONTENT_LO, fullName, code), null, Locale.forLanguageTag("lo"))
-                    .replace("{USER_NAME}", fullName)
-                    .replace("{CODE}", code);
-            return mailDtoQueue.add(new MailDto(emailTo, subject, content));
-        }
-
+    @Synchronized
+    public void sendNotify(String fullName, String emailTo) {
+        String subject = PropertiesUtil.getProperty("email.subject.notify");
+        String content = PropertiesUtil.getProperty("email.content.notify").replace("{NAME}", fullName);
+        mailDtoQueue.add(new MailDto(emailTo, subject, content));
     }
 
     private boolean send(MailDto mailDto) {

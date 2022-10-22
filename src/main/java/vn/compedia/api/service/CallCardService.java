@@ -7,7 +7,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import vn.compedia.api.entity.CallCard;
-import vn.compedia.api.repository.CallCardDetailsRepository;
 import vn.compedia.api.repository.CallCardRepository;
 import vn.compedia.api.request.CallCardCreateRequest;
 import vn.compedia.api.request.CallCardTypeCreateRequest;
@@ -26,15 +25,10 @@ public class CallCardService {
     @Autowired
     private CallCardRepository callCardRepository;
 
-    @Autowired
-    private CallCardDetailsRepository callCardDetailsRepository;
-
-
     public List<CallCardResponse> getAll() {
 
         return callCardRepository.findAllCustomCallCardList();
     }
-
 
     public CallCardResponse getOne(Long callCardId) throws Exception {
         Optional<CallCardResponse> loan = callCardRepository.findByIdCallCard(callCardId);
@@ -43,7 +37,6 @@ public class CallCardService {
         }
         return loan.get();
     }
-
 
     public void delete(Long id) {
         callCardRepository.deleteById(id);
@@ -81,7 +74,6 @@ public class CallCardService {
         callCard.setAmount(request.getAmount());
         callCard.setNote(request.getNote());
         callCardRepository.save(callCard);
-
     }
 
     public void update(CallCardCreateRequest request) throws Exception {
@@ -90,10 +82,9 @@ public class CallCardService {
         callCard.setAccountId(request.getAccountId());
         callCard.setStartDate(new Date());
         callCard.setEndDate(DateUtil.formatDatePattern(request.getEndDate(), DateUtil.DATE_FORMAT_YEAR));
-        if(request.getStatus() == DbConstant.STATUS_APPROVED){
+        if (request.getStatus() == DbConstant.STATUS_APPROVED) {
             callCard.setIsAction(DbConstant.ACTION_ACTIVE);
-        }
-        else  if (request.getStatus() != DbConstant.STATUS_APPROVED ) {
+        } else if (request.getStatus() != DbConstant.STATUS_APPROVED) {
             callCard.setIsAction(DbConstant.ACTION_EMPTY);
         }
         callCard.setStatus(request.getStatus());
@@ -102,23 +93,19 @@ public class CallCardService {
         callCard.setAmount(request.getAmount());
         callCard.setNote(request.getNote());
         callCardRepository.save(callCard);
-
     }
-
-
 
     public Page<CallCardResponse> search(String username, Integer status, Integer isTitle, String nameStaff,
                                          String sortField, String sortOrder, Integer page, Integer size) {
         return callCardRepository.search(username, status, isTitle, nameStaff, sortField, sortOrder, page, size, PageRequest.of(page, size));
-
     }
 
     public void updateIsAction(CallCardTypeCreateRequest request) {
         CallCard callCard = callCardRepository.findById(request.getCallCardId()).get();
-        if(request.getType() == 1 ) {
+        if (request.getType() == 1) {
             callCard.setIsAction(DbConstant.ACTION_PAID);
             callCardRepository.save(callCard);
-        } else if (request.getType() == 2){
+        } else if (request.getType() == 2) {
             callCard.setIsAction(DbConstant.ACTION_TRANSGRESS);
             callCardRepository.save(callCard);
         }
