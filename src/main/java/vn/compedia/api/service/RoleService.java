@@ -2,6 +2,8 @@ package vn.compedia.api.service;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import vn.compedia.api.entity.Role;
 import vn.compedia.api.repository.RoleRepository;
@@ -19,6 +21,10 @@ public class RoleService {
         List<Role> list = roleRepository.findAll();
         return list;
     }
+
+//    public Page<Role> search(String sortField, String sortOrder, Integer page, Integer size){
+//        return roleRepository.search(sortField, sortOrder, page, size, PageRequest.of(page, size));
+//    }
 
     public Role getOne(Long roleId) {
         Role role = roleRepository.findById(roleId).orElse(null);

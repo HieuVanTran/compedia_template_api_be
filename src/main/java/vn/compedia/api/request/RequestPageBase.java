@@ -4,18 +4,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
-@Setter
 @Getter
-public class RoleCreateRequest {
-    @JsonProperty("role_id")
+@Setter
 
+public class RequestPageBase {
     private int page;
 
     private int size;
 
-    private Long roleId;
+    @JsonProperty("sort_order")
+    private String sortOrder;
 
-    private String codeRole;
-
-    private String name;
+    @JsonProperty("sort_field")
+    private String sortField;
 }
