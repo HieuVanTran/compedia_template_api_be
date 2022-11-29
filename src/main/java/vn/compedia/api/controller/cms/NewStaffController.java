@@ -12,6 +12,7 @@ import vn.compedia.api.entity.NewStaff;
 import vn.compedia.api.exception.GlobalExceptionHandler;
 import vn.compedia.api.request.NewStaffRequest;
 import vn.compedia.api.response.NewStaffResponse;
+import vn.compedia.api.response.PositionsDepartmentResponse;
 import vn.compedia.api.service.NewStaffService;
 
 import java.util.List;
@@ -37,11 +38,15 @@ public class NewStaffController extends GlobalExceptionHandler {
 
     @GetMapping(value = "search")
     public ResponseEntity<?> search(@RequestParam(name = "keyword", required = false) String keyword,
-                                    @RequestParam(name = "page") Integer page,
-                                    @RequestParam(name = "size") Integer size,
+                                    @RequestParam(name = "positionName", required = false) String positionName,
+                                    @RequestParam(name = "departmentName", required = false) String departmentName,
                                     @RequestParam(name = "sortField", required = false) String sortField,
-                                    @RequestParam(name = "sortOrder", required = false) String sortOrder) {
-        Page<NewStaffResponse> list = newStaffService.search(keyword, sortField, sortOrder, page, size);
+                                    @RequestParam(name = "sortOrder", required = false) String sortOrder,
+                                    @RequestParam(name = "page") Integer page,
+                                    @RequestParam(name = "size") Integer size
+    ) {
+//        Page<NewStaffResponse> list = newStaffService.search(keyword, sortField, sortOrder, page, size);
+        Page<PositionsDepartmentResponse> list = newStaffService.search(keyword, positionName, departmentName, sortField, sortOrder, page, size );
         return VietTienResponseDto.ok(VietTienPageDto.build(list), "Search list book success");
     }
 

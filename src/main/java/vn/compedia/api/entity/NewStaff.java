@@ -38,11 +38,11 @@ public class NewStaff {
     @Column(name = "address")
     private String address;
 
-    @Column(name = "position")
-    private String position;
+    @Column(name = "position_id")
+    private String position_id;
 
-    @Column(name = "department")
-    private String department;
+    @Column(name = "department_id")
+    private String department_id;
 
     @Column(name = "status")
     private int status;

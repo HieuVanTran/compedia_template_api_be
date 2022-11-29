@@ -9,6 +9,7 @@ import vn.compedia.api.entity.NewStaff;
 import vn.compedia.api.repository.NewStaffRepository;
 import vn.compedia.api.request.NewStaffRequest;
 import vn.compedia.api.response.NewStaffResponse;
+import vn.compedia.api.response.PositionsDepartmentResponse;
 import vn.compedia.api.util.DateUtil;
 
 import java.util.Date;
@@ -64,8 +65,8 @@ public class NewStaffService {
         ns.setEmail(request.getEmail());
         ns.setPhone(request.getPhone());
         ns.setAddress(request.getAddress());
-        ns.setPosition(request.getPosition());
-        ns.setDepartment(request.getDepartment());
+        ns.setPosition_id(request.getPosition());
+        ns.setDepartment_id(request.getDepartment());
         ns.setStatus(request.getStatus());
         ns.setCreateDate(new Date());
         ns.setCreateBy(request.getCreator());
@@ -85,8 +86,8 @@ public class NewStaffService {
         ns.setEmail(request.getEmail());
         ns.setPhone(request.getPhone());
         ns.setAddress(request.getAddress());
-        ns.setPosition(request.getPosition());
-        ns.setDepartment(request.getDepartment());
+        ns.setPosition_id(request.getPosition());
+        ns.setDepartment_id(request.getDepartment());
         ns.setStatus(request.getStatus());
         ns.setCreateDate(new Date());
         ns.setCreateBy(request.getCreator());
@@ -97,8 +98,12 @@ public class NewStaffService {
         newStaffRepository.deleteById(id);
     }
 
-    public Page<NewStaffResponse> search(String keyword, String sortField, String sortOrder, Integer page, Integer size) {
-        return newStaffRepository.search(keyword, sortField, sortOrder, page, size, PageRequest.of(page, size));
+//    public Page<NewStaffResponse> search(String keyword, String sortField, String sortOrder, Integer page, Integer size) {
+//        return newStaffRepository.search(keyword, sortField, sortOrder, page, size, PageRequest.of(page, size));
+//    }
+
+    public Page<PositionsDepartmentResponse> search(String keyword, String positionName, String departmentName, String sortField, String sortOrder, Integer page, Integer size) {
+        return newStaffRepository.search(keyword, positionName, departmentName, sortField, sortOrder, PageRequest.of(page, size));
     }
 }
 

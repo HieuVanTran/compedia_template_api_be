@@ -33,11 +33,11 @@ public class NewStaffResponse {
     @JsonProperty("address")
     private String address;
 
-    @JsonProperty("position")
-    private String position;
+    @JsonProperty("position_id")
+    private String position_id;
 
-    @JsonProperty("department")
-    private String department;
+    @JsonProperty("department_id")
+    private String department_id;
 
     @JsonProperty("status")
     private int status;
